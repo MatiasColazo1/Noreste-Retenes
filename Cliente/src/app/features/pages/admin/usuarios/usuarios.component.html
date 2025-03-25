@@ -1,0 +1,25 @@
+<h2>Lista de Usuarios</h2>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Numero</th>
+      <th>Nombre</th>
+      <th>Email</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let user of users">
+      <td>{{ user?.numero }}</td>
+      <td>
+        <a [routerLink]="['/admin/usuario', user._id]" class="text-primary">
+          {{ user?.nombre }}
+        </a>
+          
+      </td>
+      <td>{{ user?.email }}</td>
+    </tr>
+  </tbody>
+</table>
+<a [routerLink]="['/catalogo']" class="text-primary">
+ Volver a catalogo
+</a>

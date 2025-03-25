@@ -1,0 +1,4 @@
+<button (click)="logout()" class="btn btn-danger">Cerrar sesión</button>
+<button *ngIf="authService.isAdmin()" routerLink="/admin/usuarios" class="btn btn-primary">
+    Administrar Usuarios
+</button>

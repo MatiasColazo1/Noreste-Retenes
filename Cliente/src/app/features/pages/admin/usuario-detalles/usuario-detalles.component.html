@@ -1,0 +1,230 @@
+<h2>Detalles del Usuario</h2>
+
+<p><strong>ID:</strong> {{ user._id || 'No disponible' }}</p>
+
+<p><strong>Nombre:</strong>
+  <ng-container *ngIf="!isEditing; else editNombre">
+    {{ user.nombre || 'No disponible' }}
+  </ng-container>
+  <ng-template #editNombre>
+    <input [(ngModel)]="user.nombre" name="nombre" />
+  </ng-template>
+</p>
+
+<p><strong>Apellido:</strong>
+  <ng-container *ngIf="!isEditing; else editApellido">
+    {{ user.apellido || 'No disponible' }}
+  </ng-container>
+  <ng-template #editApellido>
+    <input [(ngModel)]="user.apellido" name="apellido" />
+  </ng-template>
+</p>
+
+<p><strong>Email:</strong>
+  <ng-container *ngIf="!isEditing; else editEmail">
+    {{ user.email || 'No disponible' }}
+  </ng-container>
+  <ng-template #editEmail>
+    <input [(ngModel)]="user.email" name="email" />
+  </ng-template>
+</p>
+
+<p><strong>Fecha de Nacimiento:</strong>
+    <ng-container *ngIf="!isEditing; else editFechaNacimiento">
+      {{ user.fechaNacimiento | date: 'dd-MM-yyyy' || 'No disponible' }}
+    </ng-container>
+    <ng-template #editFechaNacimiento>
+      <input [(ngModel)]="user.fechaNacimiento" type="date" [value]="user.fechaNacimiento | date: 'yyyy-MM-dd'" name="fechaNacimiento" />
+    </ng-template>
+</p>
+
+<p><strong>Tipo de Cliente:</strong>
+  <ng-container *ngIf="!isEditing; else editTipoCliente">
+    {{ user.tipoCliente || 'No disponible' }}
+  </ng-container>
+  <ng-template #editTipoCliente>
+    <select [(ngModel)]="user.tipoCliente" name="tipoCliente">
+      <option value="Mayorista">Mayorista</option>
+      <option value="Minorista">Minorista</option>
+    </select>
+  </ng-template>
+</p>
+
+<p><strong>Cuit:</strong>
+  <ng-container *ngIf="!isEditing; else editCuit">
+    {{ user.cuit || 'No disponible' }}
+  </ng-container>
+  <ng-template #editCuit>
+    <input [(ngModel)]="user.cuit" name="cuit" />
+  </ng-template>
+</p>
+
+<p><strong>Dirección:</strong>
+  <ng-container *ngIf="!isEditing; else editDireccion">
+    {{ user.direccion || 'No disponible' }}
+  </ng-container>
+  <ng-template #editDireccion>
+    <input [(ngModel)]="user.direccion" name="direccion" />
+  </ng-template>
+</p>
+
+<p><strong>Domicilio de Entrega:</strong>
+  <ng-container *ngIf="!isEditing; else editDomicilioEntrega">
+    {{ user.domicilioEntrega || 'No disponible' }}
+  </ng-container>
+  <ng-template #editDomicilioEntrega>
+    <input [(ngModel)]="user.domicilioEntrega" name="domicilioEntrega" />
+  </ng-template>
+</p>
+
+<p><strong>Celular:</strong>
+  <ng-container *ngIf="!isEditing; else editCelular">
+    {{ user.celular || 'No disponible' }}
+  </ng-container>
+  <ng-template #editCelular>
+    <input [(ngModel)]="user.celular" name="celular" />
+  </ng-template>
+</p>
+
+<p><strong>Ciudad:</strong>
+  <ng-container *ngIf="!isEditing; else editCiudad">
+    {{ user.ciudad || 'No disponible' }}
+  </ng-container>
+  <ng-template #editCiudad>
+    <input [(ngModel)]="user.ciudad" name="ciudad" />
+  </ng-template>
+</p>
+
+<p><strong>Teléfono:</strong>
+  <ng-container *ngIf="!isEditing; else editTelefono">
+    {{ user.telefono || 'No disponible' }}
+  </ng-container>
+  <ng-template #editTelefono>
+    <input [(ngModel)]="user.telefono" name="telefono" />
+  </ng-template>
+</p>
+
+<p><strong>Situación IVA:</strong>
+  <ng-container *ngIf="!isEditing; else editSituacionIVA">
+    {{ user.situacionIVA || 'No disponible' }}
+  </ng-container>
+  <ng-template #editSituacionIVA>
+    <select [(ngModel)]="user.situacionIVA" name="situacionIVA">
+      <option value="Responsable Inscripto">Responsable Inscripto</option>
+      <option value="Monotributista">Monotributista</option>
+      <option value="Exento">Exento</option>
+      <option value="Consumidor Final">Consumidor Final</option>
+      <option value="No Responsable">No Responsable</option>
+      <option value="Sujeto No Categorizado">Sujeto No Categorizado</option>
+    </select>
+  </ng-template>
+</p>
+
+<p><strong>Estado Civil:</strong>
+  <ng-container *ngIf="!isEditing; else editEstadoCivil">
+    {{ user.estadoCivil || 'No disponible' }}
+  </ng-container>
+  <ng-template #editEstadoCivil>
+    <input [(ngModel)]="user.estadoCivil" name="estadoCivil" />
+  </ng-template>
+</p>
+
+<p><strong>Sitio Web:</strong>
+  <ng-container *ngIf="!isEditing; else editSitioWeb">
+    {{ user.sitioWeb || 'No disponible' }}
+  </ng-container>
+  <ng-template #editSitioWeb>
+    <input [(ngModel)]="user.sitioWeb" name="sitioWeb" />
+  </ng-template>
+</p>
+
+<p><strong>Comentario:</strong>
+  <ng-container *ngIf="!isEditing; else editComentario">
+    {{ user.comentario || 'No disponible' }}
+  </ng-container>
+  <ng-template #editComentario>
+    <textarea [(ngModel)]="user.comentario" name="comentario"></textarea>
+  </ng-template>
+</p>
+
+<p><strong>Rol:</strong>
+  <ng-container *ngIf="!isEditing; else editRole">
+    {{ user.role || 'No disponible' }}
+  </ng-container>
+  <ng-template #editRole>
+    <select [(ngModel)]="user.role" name="role">
+      <option value="user">User</option>
+      <option value="admin">Admin</option>
+    </select>
+  </ng-template>
+</p>
+
+<!-- Nuevos campos añadidos -->
+<p><strong>Número:</strong>
+  <ng-container *ngIf="!isEditing; else editNumero">
+    {{ user.numero || 'No disponible' }}
+  </ng-container>
+  <ng-template #editNumero>
+    <input [(ngModel)]="user.numero" name="numero" />
+  </ng-template>
+</p>
+
+<p><strong>Lista de Precio:</strong>
+    <ng-container *ngIf="!isEditing; else editListaPrecio">
+      {{ user.listaPrecio || 'No disponible' }}
+    </ng-container>
+    <ng-template #editListaPrecio>
+      <select [(ngModel)]="user.listaPrecio" name="listaPrecio" required>
+        <option value="Lista 1" selected>Lista 1</option>
+        <option value="Lista 2">Lista 2</option>
+      </select>
+    </ng-template>
+  </p>
+  
+
+<p><strong>Transporte:</strong>
+  <ng-container *ngIf="!isEditing; else editTransporte">
+    {{ user.transporte || 'No disponible' }}
+  </ng-container>
+  <ng-template #editTransporte>
+    <input [(ngModel)]="user.transporte" name="transporte" />
+  </ng-template>
+</p>
+
+<p><strong>Asociado Vendedor:</strong>
+  <ng-container *ngIf="!isEditing; else editAsociadoVendedor">
+    {{ user.asociadoVendedor || 'No disponible' }}
+  </ng-container>
+  <ng-template #editAsociadoVendedor>
+    <input [(ngModel)]="user.asociadoVendedor" name="asociadoVendedor" />
+  </ng-template>
+</p>
+
+<p><strong>Barrio:</strong>
+  <ng-container *ngIf="!isEditing; else editBarrio">
+    {{ user.barrio || 'No disponible' }}
+  </ng-container>
+  <ng-template #editBarrio>
+    <input [(ngModel)]="user.barrio" name="barrio" />
+  </ng-template>
+</p>
+
+<p><strong>Ruta de Venta:</strong>
+  <ng-container *ngIf="!isEditing; else editRutaVenta">
+    {{ user.rutaVenta || 'No disponible' }}
+  </ng-container>
+  <ng-template #editRutaVenta>
+    <input [(ngModel)]="user.rutaVenta" name="rutaVenta" />
+  </ng-template>
+</p>
+
+<!-- Mostrar el botón de editar y guardar -->
+<div *ngIf="!isEditing">
+  <button (click)="toggleEdit()">Editar</button>
+</div>
+<div *ngIf="isEditing">
+  <button (click)="saveChanges()">Guardar</button>
+  <button (click)="toggleEdit()">Cancelar</button>
+</div>
+
+<a routerLink="/admin/usuarios">Volver a la lista</a>
