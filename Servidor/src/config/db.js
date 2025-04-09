@@ -1,15 +1,17 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const redis = require('redis');
 
 dotenv.config(); // Cargar variables de entorno desde .env
 
 const MONGO_URI = process.env.MONGO_URI;
+const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
 
 // Función para conectar a MongoDB
 const connectDB = async () => {
     try {
         await mongoose.connect(MONGO_URI, {
-            serverSelectionTimeoutMS: 5000, // Mantén el timeout si quieres
+            serverSelectionTimeoutMS: 5000,
         });
 
         console.log('✅ Conexión a MongoDB exitosa');
@@ -18,14 +20,20 @@ const connectDB = async () => {
         setTimeout(async () => {
             console.log('🔄 Reintentando conexión con MongoDB...');
             await connectDB();
-        }, 5000); // Reintentar cada 5 segundos
+        }, 5000);
     }
 };
 
-// Eventos para monitorear la conexión con MongoDB
-mongoose.connection.on('connected', () => console.log('🟢 MongoDB conectado'));
-mongoose.connection.on('error', (err) => console.error('🔴 Error en MongoDB:', err));
-mongoose.connection.on('disconnected', () => console.log('🟠 MongoDB desconectado'));
+// Conexión a Redis
+const redisClient = redis.createClient({
+    url: REDIS_URL,
+    legacyMode: true,  // ⚠️ Agregar esta opción para compatibilidad con Redis v3 y v4
+});
 
-// Exportar la función
-module.exports = connectDB;
+redisClient.on('connect', () => console.log('🟢 Conectado a Redis'));
+redisClient.on('error', (err) => console.error('🔴 Error en Redis:', err));
+
+redisClient.connect().catch(console.error);
+
+// Exportar las conexiones
+module.exports = { connectDB, redisClient };

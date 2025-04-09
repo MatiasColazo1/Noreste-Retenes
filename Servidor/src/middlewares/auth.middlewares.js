@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const User = require('../models/user.model');
 
 // Middleware para verificar el token
 const verifyToken = (req, res, next) => {
@@ -12,7 +13,7 @@ const verifyToken = (req, res, next) => {
 
     // Asegurarse de que el token comienza con 'Bearer'
     if (!token.startsWith('Bearer ')) {
-        return res.status(400).json({ error: 'Token mal formado. Debe comenzar con "Bearer ". '});
+        return res.status(400).json({ error: 'Token mal formado. Debe comenzar con "Bearer ". ' });
     }
 
     // Extraer el token (sin la palabra 'Bearer ')
@@ -28,4 +29,30 @@ const verifyToken = (req, res, next) => {
     }
 };
 
-module.exports = { verifyToken };
+// Middleware para verificar si el usuario es admin
+const isAdmin = async (req, res, next) => {
+    try {
+        if (!req.user || !req.user.userId) {  // Cambié 'id' a 'userId' para que coincida con el token
+            return res.status(400).json({ message: 'Información de usuario no válida en el token.' });
+        }
+
+        const user = await User.findById(req.user.userId);  // Usar 'userId' para buscar al usuario
+
+        if (!user) {
+            return res.status(404).json({ message: 'Usuario no encontrado.' });
+        }
+
+        console.log('Usuario encontrado:', user); // Para depurar y asegurarte de que el usuario se está encontrando correctamente
+
+        if (user.role !== 'admin') {
+            return res.status(403).json({ message: 'Acceso denegado. Se requiere rol de administrador.' });
+        }
+
+        next();
+    } catch (error) {
+        console.error('Error en la verificación del rol de administrador:', error);
+        res.status(500).json({ message: 'Error en la verificación del rol de administrador.', error: error.message });
+    }
+};
+
+module.exports = { verifyToken, isAdmin };

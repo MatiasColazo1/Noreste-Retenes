@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const userRoutes = require('./src/routes/user.routes');
+const productRoutes = require('./src/routes/products.routes'); // 🔹 Importa las rutas de productos
 
 dotenv.config(); // Cargar variables de entorno
 
@@ -16,8 +17,8 @@ app.get('/', (req, res) => {
     res.send('¡Servidor Express funcionando!');
 });
 
-// Importar y usar rutas aquí si es necesario
+// Rutas
 app.use('/api/users', userRoutes);
-// app.use('/api/usuarios', require('./routes/usuarios'));
+app.use('/api/products', productRoutes); // 🔹 Agrega las rutas de productos
 
 module.exports = app;
