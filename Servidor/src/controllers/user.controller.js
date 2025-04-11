@@ -46,12 +46,17 @@ const UserController = {
             });
         }
 
-        // Generar el token
+        // Generar el token incluyendo listaPrecio
         const token = jwt.sign(
-            { userId: user._id, email: user.email, role: user.role },  // Agregar role aquí
+            {
+                userId: user._id,
+                email: user.email,
+                role: user.role,
+                listaPrecio: user.listaPrecio, // 👈 Agregado aquí
+            },
             process.env.JWT_SECRET,
             { expiresIn: '1h' }
-          );
+        );
 
         res.status(200).json({
             message: 'Inicio de sesión exitoso',
@@ -61,6 +66,7 @@ const UserController = {
                 email: user.email,
                 name: user.nombre,
                 role: user.role,
+                listaPrecio: user.listaPrecio, // 👈 También podés retornarlo por separado si lo usás en el frontend
             },
         });
     } catch (error) {
@@ -70,6 +76,7 @@ const UserController = {
         });
     }
 },
+
 
     // Obtener usuario por ID
 

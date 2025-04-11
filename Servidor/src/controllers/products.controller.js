@@ -95,4 +95,24 @@ const updateProductImage = async (req, res) => {
     }
 };
 
-module.exports = { uploadExcel, getProducts, getProductById, uploadPrices, updateProductImage };
+const getProductsByUser = async (req, res) => {
+    try {
+        const { page = 1, limit = 20 } = req.query;
+        const { listaPrecio } = req.user; // Asumimos que viene del token JWT
+        const redisClient = req.app.locals.redisClient;
+
+        if (!listaPrecio) {
+            return res.status(400).json({ error: "No se pudo determinar la lista de precios del usuario" });
+        }
+
+        const products = await ProductDAO.getProductsByUser(listaPrecio, redisClient, parseInt(page), parseInt(limit));
+
+        return res.status(200).json(products);
+    } catch (error) {
+        console.error("❌ Error en getProductsByUser:", error);
+        return res.status(500).json({ error: "Error al obtener productos para el usuario" });
+    }
+};
+
+
+module.exports = { uploadExcel, getProducts, getProductById, uploadPrices, updateProductImage, getProductsByUser };

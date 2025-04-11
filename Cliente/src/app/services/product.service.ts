@@ -56,4 +56,11 @@ uploadPrices(file: File): Observable<any> {
   });
 }
 
+// Obtener productos filtrados según el usuario (precios según rol)
+getProductsByUser(): Observable<Product[]> {
+  return this.http.get<Product[]>(`${this.apiUrl}/by-user`, {
+    headers: this.getAuthHeaders(),
+  });
+}
+
 }

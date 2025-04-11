@@ -65,6 +65,7 @@ export class AuthService {
 
     return this.http.get<any>(this.apiUrl, { headers });
   }
+  
 
     // Obtener usuario por ID con token
     getUserById(id: string): Observable<any> {
@@ -81,4 +82,5 @@ export class AuthService {
     
     return this.http.put<any>(`${this.apiUrl}/${id}`, userData, { headers });
   }
+  
 }

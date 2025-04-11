@@ -12,13 +12,14 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// 🔹 **Rutas de productos**
+// 🔹 Rutas de productos
 router.get('/', verifyToken, ProductController.getProducts); // Obtener productos con paginación
-router.get('/:id', verifyToken, ProductController.getProductById);
+router.get('/by-user', verifyToken, ProductController.getProductsByUser); // 🔁 CAMBIADA PARA EVITAR CONFLICTO
+router.get('/:id', verifyToken, ProductController.getProductById); // Obtener producto por ID
+
 router.put('/:id/image', verifyToken, isAdmin, ProductController.updateProductImage);
+
 router.post('/upload', verifyToken, isAdmin, upload.single('file'), ProductController.uploadExcel); // Subir archivo Excel (solo admin)
-router.post('/upload-prices', verifyToken, isAdmin, upload.single('file'), ProductController.uploadPrices);
-
-
+router.post('/upload-prices', verifyToken, isAdmin, upload.single('file'), ProductController.uploadPrices); // Subir lista de precios
 
 module.exports = router;

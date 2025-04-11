@@ -16,7 +16,7 @@ export interface User {
     situacionIVA?: string;
     estadoCivil?: string;
     numero?: string;
-    listaPrecio?: string;
+    listaPrecio?: 'Lista 1' | 'Lista 2';
     transporte?: string;
     asociadoVendedor?: string;
     barrio?: string;

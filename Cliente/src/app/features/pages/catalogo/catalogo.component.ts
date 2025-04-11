@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { Product } from 'src/app/models/product';
 import { AuthService } from 'src/app/services/auth.service';
 import { ProductService } from 'src/app/services/product.service';
@@ -22,6 +23,9 @@ export class CatalogoComponent implements OnInit {
 
   ngOnInit() {
     this.loadProducts();
+    // this.loadProducts();
+this.loadProductsByUser();
+
   }
 
   // Cargar productos con paginación
@@ -36,12 +40,33 @@ export class CatalogoComponent implements OnInit {
     );
   }
 
+  loadProductsByUser() {
+    this.productService.getProductsByUser().subscribe(
+      (data) => {
+        console.log("Productos con precios según lista:", data);
+        this.products = data;
+      },
+      (error) => {
+        console.error('Error al obtener productos con precio por lista', error);
+      }
+    );
+  }
+  
+  
   selectProduct(id: string) {
-    this.productService.getProductById(id).subscribe(product => {
-      console.log('Producto recibido:', product);
-      this.selectedProduct = product;
+    forkJoin({
+      detalles: this.productService.getProductById(id),
+      precios: this.productService.getProductsByUser()
+    }).subscribe(({ detalles, precios }) => {
+      const productoConPrecio = precios.find(p => p._id === id);
+  
+      this.selectedProduct = {
+        ...detalles,
+        Precio: productoConPrecio?.Precio // si lo encuentra, lo asigna; si no, deja undefined
+      };
     });
   }
+  
   // Cambiar de página
   changePage(page: number) {
     this.currentPage = page;

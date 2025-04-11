@@ -84,38 +84,50 @@ static async getProductById(id) {
 // Actualizar precios desde otro Excel
 static async syncPrices(pricesFromExcel) {
     try {
-        const bulkOps = [];
-
-        pricesFromExcel.forEach(item => {
-            const filter = {
-                Prefijo: item.PREF,
-                Codigo: item.CODIGO,
-                MARCA: item.MARCA,
-                NombreRubro: item.RUBRO
-            };
-
-            const update = {
-                $set: { Precio: item.PRECIO }
-            };
-
-            bulkOps.push({
-                updateOne: {
-                    filter,
-                    update
-                }
-            });
-        });
-
-        if (bulkOps.length > 0) {
-            await Product.bulkWrite(bulkOps);
+      // Poner todos los precios en null antes de cargar los nuevos
+      await Product.updateMany({}, {
+        $set: {
+          PrecioLista1: null,
+          PrecioLista2: null
         }
-
-        return { message: "Precios actualizados correctamente" };
+      });
+  
+      const bulkOps = [];
+  
+      pricesFromExcel.forEach(item => {
+        const filter = {
+          Prefijo: item.PREF,
+          Codigo: item.CODIGO,
+          MARCA: item.MARCA,
+          NombreRubro: item.RUBRO
+        };
+  
+        const update = {
+          $set: {
+            PrecioLista1: item.PrecioLista1 || null,
+            PrecioLista2: item.PrecioLista2 || null
+          }
+        };
+  
+        bulkOps.push({
+          updateOne: {
+            filter,
+            update
+          }
+        });
+      });
+  
+      if (bulkOps.length > 0) {
+        await Product.bulkWrite(bulkOps);
+      }
+  
+      return { message: "Precios actualizados correctamente" };
     } catch (error) {
-        console.error("❌ Error al actualizar precios:", error);
-        throw error;
+      console.error("❌ Error al actualizar precios:", error);
+      throw error;
     }
-}
+  }
+  
 
 static async updateImage(id, ImagenUrl) {
     try {
@@ -127,7 +139,48 @@ static async updateImage(id, ImagenUrl) {
     }
 }
 
+static async getProductsByUser(userListaPrecio, redisClient, page = 1, limit = 20) {
+  const cacheKey = `products:user:${userListaPrecio}:page:${page}:limit:${limit}`;
 
+  try {
+    const cachedData = await redisClient.get(cacheKey);
+    if (cachedData) {
+      return JSON.parse(cachedData);
+    }
+
+    // 🔸 Determinar qué campo de precio incluir
+    const priceField = userListaPrecio === 'Lista 2' ? 'PrecioLista2' : 'PrecioLista1';
+
+    // 🔸 Proyección: solo campos necesarios
+    const projection = {
+      Nombre: 1,
+      Codigo: 1,
+      MARCA: 1,
+      NombreRubro: 1,
+      Imagen: 1,
+      [priceField]: 1,
+    };
+
+    const products = await Product.find({}, projection)
+      .sort({ _id: 1 })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .lean();
+
+    // 🔸 Renombrar el campo de precio
+    const productsWithUserPrice = products.map(prod => ({
+      ...prod,
+      Precio: prod[priceField],
+    }));
+
+    await redisClient.setEx(cacheKey, 600, JSON.stringify(productsWithUserPrice));
+
+    return productsWithUserPrice;
+  } catch (error) {
+    console.error('❌ Error al obtener productos según la lista de precios:', error);
+    throw error;
+  }
+}
 
 }
 

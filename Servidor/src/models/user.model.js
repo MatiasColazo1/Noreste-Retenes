@@ -40,7 +40,7 @@ const UserSchema = new mongoose.Schema({
         type: String, 
         enum: ['Lista 1', 'Lista 2'],  // Lista de opciones permitidas
         default: 'Lista 1',            // Valor predeterminado
-        required: true                 // Requiere que no esté vacío
+        required: false,                 // Requiere que no esté vacío
     },
     transporte: { type: String, default: '' },
     asociadoVendedor: { type: String, default: '' },
