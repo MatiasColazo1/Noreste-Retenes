@@ -1,27 +1,28 @@
 const UserDAO = require('../daos/user.daos');
 const bcrypt = require('bcrypt');
-const validatePassword = require('../utils/validatePassword'); // Importamos la validación
+const validateUser = require('../utils/validateUser');
+
 
 const UserService = {
     registerUser: async (userData) => {
         try {
-            // Validar la contraseña antes de hashearla
-            const passwordValidation = validatePassword(userData.password);
-            if (!passwordValidation.isValid) {
-                throw new Error(passwordValidation.message);
+            // Validar todos los datos del usuario (incluye password y cuit)
+            const validationResult = validateUser(userData);
+            if (!validationResult.isValid) {
+                throw new Error(validationResult.message);
             }
-
+    
             // Hashear la contraseña antes de guardar
             const salt = await bcrypt.genSalt(10);
             userData.password = await bcrypt.hash(userData.password, salt);
-
+    
             // Crear el usuario en la base de datos
             const newUser = await UserDAO.create(userData);
             return newUser;
         } catch (error) {
             throw new Error('Error al registrar usuario: ' + error.message);
         }
-    },
+    },    
 
     loginUser: async (email, password) => {
         try {

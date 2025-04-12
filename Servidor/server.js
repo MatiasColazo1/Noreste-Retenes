@@ -15,8 +15,6 @@ const startServer = async () => {
         // Guardar redisClient en app.locals para que esté accesible en los controladores
         app.locals.redisClient = redisClient;
 
-
-
         app.listen(PORT, () => {
             console.log(`✅ Servidor corriendo en http://localhost:${PORT}`);
         });
