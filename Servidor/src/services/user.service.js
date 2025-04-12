@@ -55,22 +55,19 @@ const UserService = {
             console.log("Buscando usuario con email:", email);
             const user = await UserDAO.findByEmail(email);
             
-            if (!user) {
-                throw new Error('Email incorrecto');
-            }            
-    
-            const isMatch = await bcrypt.compare(password, user.password);
-            
-            if (!isMatch) {
-                throw new Error('Contraseña incorrecta');
+            if (!user || !(await bcrypt.compare(password, user.password))) {
+                console.log("❌ Email o contraseña incorrectos");
+                throw new Error('Email o contraseña incorrectos');
             }
     
+            console.log("✅ Usuario autenticado correctamente");
             return user;
         } catch (error) {
-            // NO sobreescribas el mensaje acá
-            throw error;
+            console.log("🔥 Error en login:", error.message);
+            throw new Error('Error al iniciar sesión: ' + error.message);
         }
     },
+    
     
 
     getUserById: async (userId) => {
