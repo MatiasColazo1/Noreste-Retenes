@@ -1,28 +1,54 @@
 const UserDAO = require('../daos/user.daos');
 const bcrypt = require('bcrypt');
 const validateUser = require('../utils/validateUser');
+const { checkDuplicateFields } = require('../validators/userValidator');
 
 
 const UserService = {
     registerUser: async (userData) => {
         try {
-            // Validar todos los datos del usuario (incluye password y cuit)
             const validationResult = validateUser(userData);
             if (!validationResult.isValid) {
-                throw new Error(validationResult.message);
+                const error = new Error('Datos de usuario inválidos');
+                error.details = validationResult.errors;
+                throw error;
             }
     
-            // Hashear la contraseña antes de guardar
+            const duplicateErrors = await checkDuplicateFields(userData);
+            if (duplicateErrors.length > 0) {
+                const error = new Error('Datos duplicados');
+                error.details = duplicateErrors;
+                throw error;
+            }
+    
+            // Encriptar y crear
             const salt = await bcrypt.genSalt(10);
             userData.password = await bcrypt.hash(userData.password, salt);
     
-            // Crear el usuario en la base de datos
-            const newUser = await UserDAO.create(userData);
-            return newUser;
+            return await UserDAO.create(userData);
+    
         } catch (error) {
-            throw new Error('Error al registrar usuario: ' + error.message);
+            // Si el error tiene detalles, responder con esos detalles
+            if (error.details) {
+                return {
+                    status: 400,
+                    message: error.message || 'Error al procesar los datos del usuario',
+                    details: error.details  // Detalles de los errores
+                };
+            }
+    
+            // Enviar un error general si no se proporcionan detalles específicos
+            return {
+                status: error.status || 500,
+                message: error.message || 'Error interno del servidor',
+                details: []  // Aquí no hay detalles de errores específicos
+            };
         }
-    },    
+
+    },
+    
+    
+
 
     loginUser: async (email, password) => {
         try {
@@ -30,25 +56,22 @@ const UserService = {
             const user = await UserDAO.findByEmail(email);
             
             if (!user) {
-                console.log("❌ Usuario no encontrado");
-                throw new Error('Usuario no encontrado');
-            }
+                throw new Error('Email incorrecto');
+            }            
     
-            console.log("Comparando contraseña...");
             const isMatch = await bcrypt.compare(password, user.password);
             
             if (!isMatch) {
-                console.log("❌ Contraseña incorrecta");
                 throw new Error('Contraseña incorrecta');
             }
     
-            console.log("✅ Usuario autenticado correctamente");
             return user;
         } catch (error) {
-            console.log("🔥 Error en login:", error.message);
-            throw new Error('Error al iniciar sesión: ' + error.message);
+            // NO sobreescribas el mensaje acá
+            throw error;
         }
     },
+    
 
     getUserById: async (userId) => {
         try {

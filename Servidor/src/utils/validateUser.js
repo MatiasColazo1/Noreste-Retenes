@@ -1,7 +1,7 @@
-// utils/validateUser.js
 const validateUser = (userData) => {
-    const errors = [];
 
+    const errors = [];
+ 
     // Validar contraseña
     const password = userData.password;
     const passwordErrors = [];

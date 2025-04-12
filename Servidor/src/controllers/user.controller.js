@@ -7,21 +7,46 @@ const UserController = {
     // Registro de usuario
 
     //Registra un nuevo usuario. Recibe los datos desde el cuerpo de la solicitud (req.body) y los pasa al servicio registerUser
-    registerUser: async (req, res) => {
-        try {
-            const userData = req.body;
-            const newUser = await UserService.registerUser(userData);
-            res.status(201).json({
-                message: 'Usuario registrado exitosamente',
-                user: newUser,
-            });
-        } catch (error) {
-            res.status(400).json({
-                message: 'Error al registrar usuario',
-                error: error.message,
+// controllers/user.controller.js
+registerUser: async (req, res) => {
+    try {
+        console.log("Datos recibidos:", req.body);  // Esto imprimirá los datos recibidos
+        const userData = req.body;
+        const result = await UserService.registerUser(userData);  // Llamar al servicio
+
+        // Si la respuesta tiene detalles, devolver esos detalles
+        if (result.details) {
+            return res.status(result.status).json({
+                message: result.message,
+                details: result.details  // Enviar los detalles de los errores
             });
         }
-    },
+
+        // Si la creación del usuario fue exitosa
+        res.status(201).json({
+            message: 'Usuario registrado exitosamente',
+            user: result.user,  // Devuelve el nuevo usuario
+        });
+
+    } catch (error) {
+        console.error('Error al registrar usuario:', error);
+
+        // Si el error tiene detalles, responder con esos detalles
+        if (error.details) {
+            return res.status(400).json({
+                message: error.message,
+                details: error.details  // Detalles de los errores
+            });
+        }
+
+        // Error general del servidor
+        res.status(500).json({
+            message: 'Error interno del servidor',
+            error: error.message,
+        });
+    }
+},
+
 
     // Inicio de sesión de usuario
 
@@ -71,8 +96,7 @@ const UserController = {
         });
     } catch (error) {
         res.status(400).json({
-            message: 'Error al iniciar sesión',
-            error: error.message,
+            message: error.message // 👈 mandás el mensaje real como 'Usuario no encontrado'
         });
     }
 },

@@ -30,7 +30,7 @@ const UserSchema = new mongoose.Schema({
             'No Responsable', 
             'Sujeto No Categorizado'
         ], 
-        required: true 
+        required: false 
     },
     estadoCivil: { type: String, default: '' },
 

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { NotificationService } from 'src/app/services/notification.service';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +17,7 @@ export class LoginComponent {
 
   errorMessage: string = '';
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router,  private notificationService: NotificationService) {}
 
   onLogin(form: NgForm) {
     if (form.invalid) {
@@ -31,8 +32,9 @@ export class LoginComponent {
         this.router.navigate(['/catalogo']);
       },
       error: (err) => {
-        this.errorMessage = err.error.message || 'Error al iniciar sesión';
-      }
+        const msg = err.error.message || 'Error al iniciar sesión';
+        this.notificationService.error(msg); // 👈 Muestra 'Usuario no encontrado' o 'Contraseña incorrecta'
+      }      
     });
 }
 }
