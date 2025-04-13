@@ -15,28 +15,25 @@ export class CatalogoComponent implements OnInit {
   currentPage: number = 1;
   limit: number = 20;
 
-  
   selectedProduct: any = null;
   selectedFile: File | null = null;
   selectedPriceFile: File | null = null;
 
-totalProductos: number = 0;
-codigoBuscado: string = '';
-  
+  totalProductos: number = 0;
+  codigoBuscado: string = '';
 
-hasNextPage: boolean = true;
+  hasNextPage: boolean = true;
 
-  constructor(public  authService: AuthService, private productService: ProductService, private router: Router) {}
- 
+  constructor(public authService: AuthService, private productService: ProductService, private router: Router) { }
+
   ngOnInit() {
     this.productService.getProducts(this.currentPage, this.limit).subscribe((response) => {
       console.log('Datos recibidos:', response);
       this.products = response;
-  
+
       this.hasNextPage = response.length === this.limit;
     });
   }
-  
 
   selectProduct(id: string) {
     forkJoin({
@@ -44,30 +41,28 @@ hasNextPage: boolean = true;
       precios: this.productService.getProductsByUser()
     }).subscribe(({ detalles, precios }) => {
       const productoConPrecio = precios.find(p => p._id === id);
-  
+
       this.selectedProduct = {
         ...detalles,
         Precio: productoConPrecio?.Precio // si lo encuentra, lo asigna; si no, deja undefined
       };
     });
   }
-  
-// Cambiar de página
-changePage(pagina: number) {
-  this.currentPage = pagina;
+  // Cambiar de página
+  changePage(pagina: number) {
+    this.currentPage = pagina;
 
-  if (this.codigoBuscado && this.codigoBuscado.trim() !== '') {
-    this.getProductsByPartialCode(this.codigoBuscado, pagina);
-  } else {
-    this.productService.getProducts(this.currentPage, this.limit).subscribe((response) => {
-      console.log('Datos recibidos:', response);
-      this.products = response;
+    if (this.codigoBuscado && this.codigoBuscado.trim() !== '') {
+      this.getProductsByPartialCode(this.codigoBuscado, pagina);
+    } else {
+      this.productService.getProducts(this.currentPage, this.limit).subscribe((response) => {
+        console.log('Datos recibidos:', response);
+        this.products = response;
 
-      this.hasNextPage = response.length === this.limit;
-    });
+        this.hasNextPage = response.length === this.limit;
+      });
+    }
   }
-}
-
 
   verDetalles(id: string) {
     this.router.navigate(['/producto', id]);
@@ -76,12 +71,10 @@ changePage(pagina: number) {
   logout() {
     this.authService.logout();
   }
-
-    // Manejar selección de archivo
+  // Manejar selección de archivo
   onFileSelected(event: any) {
     this.selectedFile = event.target.files[0] || null;
   }
-
   // Subir archivo Excel
   uploadFile() {
     if (this.selectedFile) {
@@ -114,7 +107,8 @@ changePage(pagina: number) {
           console.error(err);
         },
       });
-}}
+    }
+  }
   // Buscar productos por código parcial con paginación
   getProductsByPartialCode(codigo: string | null = null, pagina: number = 1): void {
     this.productService.getProductsByPartialCode(codigo, pagina, this.limit).subscribe({
@@ -122,7 +116,7 @@ changePage(pagina: number) {
         this.products = data.products;
         this.totalProductos = data.total;
         this.currentPage = pagina;
-  
+
         const productosMostrados = pagina * this.limit;
         this.hasNextPage = productosMostrados < data.total;
       },
@@ -134,7 +128,6 @@ changePage(pagina: number) {
       }
     });
   }
-  
   // Este método lo usa <app-filters> para emitir el código a buscar
   buscarPorCodigoParcial(codigo: string) {
     this.codigoBuscado = codigo;
