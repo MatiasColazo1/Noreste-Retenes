@@ -23,16 +23,21 @@ export class CatalogoComponent implements OnInit {
 totalProductos: number = 0;
 codigoBuscado: string = '';
   
+
+hasNextPage: boolean = true;
+
   constructor(public  authService: AuthService, private productService: ProductService, private router: Router) {}
+ 
   ngOnInit() {
     this.productService.getProducts(this.currentPage, this.limit).subscribe((response) => {
-        console.log('Datos recibidos:', response);
-        this.products = response;
-    });
- }
-
-
+      console.log('Datos recibidos:', response);
+      this.products = response;
   
+      this.hasNextPage = response.length === this.limit;
+    });
+  }
+  
+
   selectProduct(id: string) {
     forkJoin({
       detalles: this.productService.getProductById(id),
@@ -51,13 +56,14 @@ codigoBuscado: string = '';
 changePage(pagina: number) {
   this.currentPage = pagina;
 
-  // Cargar productos según el código buscado o la página seleccionada
   if (this.codigoBuscado && this.codigoBuscado.trim() !== '') {
     this.getProductsByPartialCode(this.codigoBuscado, pagina);
   } else {
     this.productService.getProducts(this.currentPage, this.limit).subscribe((response) => {
       console.log('Datos recibidos:', response);
       this.products = response;
+
+      this.hasNextPage = response.length === this.limit;
     });
   }
 }
@@ -116,15 +122,19 @@ changePage(pagina: number) {
         this.products = data.products;
         this.totalProductos = data.total;
         this.currentPage = pagina;
+  
+        const productosMostrados = pagina * this.limit;
+        this.hasNextPage = productosMostrados < data.total;
       },
       error: (err) => {
         console.error('Error al buscar productos por código parcial', err);
         this.products = [];
         this.totalProductos = 0;
+        this.hasNextPage = false;
       }
     });
   }
-
+  
   // Este método lo usa <app-filters> para emitir el código a buscar
   buscarPorCodigoParcial(codigo: string) {
     this.codigoBuscado = codigo;

@@ -50,9 +50,11 @@
         Anterior
       </button>
       <span>Página {{ currentPage }}</span>
-      <button (click)="changePage(currentPage + 1)">Siguiente</button>
+      <button (click)="changePage(currentPage + 1)" [disabled]="!hasNextPage">
+        Siguiente
+      </button>
     </div>
-  </div>
+    
   
 
 
