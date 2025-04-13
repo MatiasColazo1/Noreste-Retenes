@@ -15,43 +15,23 @@ export class CatalogoComponent implements OnInit {
   currentPage: number = 1;
   limit: number = 20;
 
+  
   selectedProduct: any = null;
   selectedFile: File | null = null;
   selectedPriceFile: File | null = null;
+
+totalProductos: number = 0;
+codigoBuscado: string = '';
   
   constructor(public  authService: AuthService, private productService: ProductService, private router: Router) {}
-
   ngOnInit() {
-    this.loadProducts();
-    // this.loadProducts();
-this.loadProductsByUser();
+    this.productService.getProducts(this.currentPage, this.limit).subscribe((response) => {
+        console.log('Datos recibidos:', response);
+        this.products = response;
+    });
+ }
 
-  }
 
-  // Cargar productos con paginación
-  loadProducts() {
-    this.productService.getProducts(this.currentPage, this.limit).subscribe(
-      (data) => {
-        this.products = data;
-      },
-      (error) => {
-        console.error('Error al obtener productos', error);
-      }
-    );
-  }
-
-  loadProductsByUser() {
-    this.productService.getProductsByUser().subscribe(
-      (data) => {
-        console.log("Productos con precios según lista:", data);
-        this.products = data;
-      },
-      (error) => {
-        console.error('Error al obtener productos con precio por lista', error);
-      }
-    );
-  }
-  
   
   selectProduct(id: string) {
     forkJoin({
@@ -67,11 +47,21 @@ this.loadProductsByUser();
     });
   }
   
-  // Cambiar de página
-  changePage(page: number) {
-    this.currentPage = page;
-    this.loadProducts();
+// Cambiar de página
+changePage(pagina: number) {
+  this.currentPage = pagina;
+
+  // Cargar productos según el código buscado o la página seleccionada
+  if (this.codigoBuscado && this.codigoBuscado.trim() !== '') {
+    this.getProductsByPartialCode(this.codigoBuscado, pagina);
+  } else {
+    this.productService.getProducts(this.currentPage, this.limit).subscribe((response) => {
+      console.log('Datos recibidos:', response);
+      this.products = response;
+    });
   }
+}
+
 
   verDetalles(id: string) {
     this.router.navigate(['/producto', id]);
@@ -119,4 +109,25 @@ this.loadProductsByUser();
         },
       });
 }}
+  // Buscar productos por código parcial con paginación
+  getProductsByPartialCode(codigo: string | null = null, pagina: number = 1): void {
+    this.productService.getProductsByPartialCode(codigo, pagina, this.limit).subscribe({
+      next: (data) => {
+        this.products = data.products;
+        this.totalProductos = data.total;
+        this.currentPage = pagina;
+      },
+      error: (err) => {
+        console.error('Error al buscar productos por código parcial', err);
+        this.products = [];
+        this.totalProductos = 0;
+      }
+    });
+  }
+
+  // Este método lo usa <app-filters> para emitir el código a buscar
+  buscarPorCodigoParcial(codigo: string) {
+    this.codigoBuscado = codigo;
+    this.getProductsByPartialCode(codigo, 1); // reinicia la paginación
+  }
 }

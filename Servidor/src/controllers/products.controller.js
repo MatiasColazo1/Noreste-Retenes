@@ -114,5 +114,39 @@ const getProductsByUser = async (req, res) => {
     }
 };
 
+//filtro codigo
+const getProductsByCodigoParcial = async (req, res) => {
+    try {
+      const { codigo } = req.query;
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 20;
+      const skip = (page - 1) * limit;
+      const redisClient = req.app.locals.redisClient;
+  
+      const cacheKey = `products_codigo:${codigo}_page:${page}_limit:${limit}`;
+  
+      // Buscar en caché
+      const cached = await redisClient.get(cacheKey);
+      if (cached) {
+        return res.status(200).json(JSON.parse(cached));
+      }
+  
+      // Buscar en DB
+      const { products, total } = await ProductDAO.getProductsByCodigoParcial(codigo, skip, limit);
+  
+      const result = { products, total };
+  
+      // Guardar en caché por 5 minutos
+      await redisClient.setEx(cacheKey, 300, JSON.stringify(result));
+  
+      return res.status(200).json(result);
+    } catch (error) {
+      console.error("❌ Error en getProductsByCodigoParcial:", error);
+      return res.status(500).json({ error: "Error al buscar productos por código parcial" });
+    }
+  };
+  
 
-module.exports = { uploadExcel, getProducts, getProductById, uploadPrices, updateProductImage, getProductsByUser };
+
+
+module.exports = { uploadExcel, getProducts, getProductById, uploadPrices, updateProductImage, getProductsByUser, getProductsByCodigoParcial };

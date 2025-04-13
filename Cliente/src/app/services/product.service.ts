@@ -63,4 +63,18 @@ getProductsByUser(): Observable<Product[]> {
   });
 }
 
+//filtro codigo
+getProductsByPartialCode(codigo: string | null, pagina: number = 1, limite: number = 20): Observable<any> {
+  let url = `${this.apiUrl}/buscar?page=${pagina}&limit=${limite}`;
+
+  // Si hay código, lo agregamos como parámetro
+  if (codigo) {
+    url += `&codigo=${codigo}`;
+  }
+
+  return this.http.get(url, {
+    headers: this.getAuthHeaders(),
+  });
+}
+
 }

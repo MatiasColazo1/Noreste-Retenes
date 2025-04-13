@@ -182,6 +182,25 @@ static async getProductsByUser(userListaPrecio, redisClient, page = 1, limit = 2
   }
 }
 
+// Buscar productos cuyo código contenga el valor ingresado (parcial)
+static async getProductsByCodigoParcial(codigo, skip = 0, limit = 20) {
+  try {
+    const regex = new RegExp(codigo, 'i');
+    const filter = codigo ? { Codigo: { $regex: regex } } : {};
+
+    const products = await Product.find(filter).skip(skip).limit(limit).lean();
+    const total = await Product.countDocuments(filter);
+
+    return { products, total };
+  } catch (error) {
+    console.error('❌ Error en getProductsByCodigoParcial:', error);
+    throw error;
+  }
+}
+
+
+
+
 }
 
 

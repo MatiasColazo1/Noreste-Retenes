@@ -13,6 +13,9 @@
   <button (click)="uploadPrices()" [disabled]="!selectedPriceFile">Subir Precios</button>
 </div>
 
+
+<app-filters (buscarPorCodigo)="buscarPorCodigoParcial($event)"></app-filters>
+
 <div class="container mt-4">
   <h2>Catálogo de Productos</h2>
 
