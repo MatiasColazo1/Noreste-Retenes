@@ -1,7 +1,8 @@
-<button (click)="logout()" class="btn btn-danger">Cerrar sesión</button>
-<button *ngIf="authService.isAdmin()" routerLink="/admin/usuarios" class="btn btn-primary">
-    Administrar Usuarios
-</button>
+<app-buttons text="Cerrar sesión" type="secondary" (buttonClick)="logout()"></app-buttons>
+
+<app-buttons [isAdmin]="authService.isAdmin()" text="Administrar Usuarios" type="primary"
+  route="/admin/usuarios"></app-buttons>
+
 
 <div *ngIf="authService.isAdmin()">
   <!-- Subir productos -->
@@ -12,7 +13,6 @@
   <input type="file" (change)="onPriceFileSelected($event)" accept=".xlsx" />
   <button (click)="uploadPrices()" [disabled]="!selectedPriceFile">Subir Precios</button>
 </div>
-
 
 <app-filters (buscarPorCodigo)="buscarPorCodigoParcial($event)"></app-filters>
 
@@ -40,10 +40,6 @@
       </table>
     </div>
 
-
-
-    
-  
     <!-- Paginación -->
     <div class="pagination">
       <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">
@@ -54,42 +50,30 @@
         Siguiente
       </button>
     </div>
-    
-  
 
+    <!-- Detalle del producto -->
+    <div class="col-md-4" *ngIf="selectedProduct">
+      <div class="card">
+        <div class="card-header">
+          <h5>Detalle del Producto</h5>
+        </div>
+        <div class="card-body">
+          <img *ngIf="selectedProduct.ImagenUrl" [src]="selectedProduct.ImagenUrl" alt="Imagen del producto"
+            class="img-fluid mb-3" />
 
+          <p><strong>Imagen:</strong></p>
+          <img [src]="selectedProduct.Imagen" alt="Imagen del producto" width="150" height="150">
+          <p><strong>Nombre:</strong> {{ selectedProduct.Nombre }}</p>
+          <p><strong>Nombre:</strong> {{ selectedProduct.NombreRubro }}</p>
+          <p><strong>Precio:</strong>
+            {{ selectedProduct?.Precio ?? selectedProduct?.PrecioLista1 ?? selectedProduct?.PrecioLista2 | currency }}
+          </p>
 
-      <!-- Detalle del producto -->
-      <div class="col-md-4" *ngIf="selectedProduct">
-        <div class="card">
-          <div class="card-header">
-            <h5>Detalle del Producto</h5>
-          </div>
-          <div class="card-body">
-            <img
-              *ngIf="selectedProduct.ImagenUrl"
-              [src]="selectedProduct.ImagenUrl"
-              alt="Imagen del producto"
-              class="img-fluid mb-3"
-            />
-  
-            <p><strong>Imagen:</strong></p>
-            <img [src]="selectedProduct.Imagen" alt="Imagen del producto" width="150" height="150">          
-            <p><strong>Nombre:</strong> {{ selectedProduct.Nombre }}</p>
-            <p><strong>Nombre:</strong> {{ selectedProduct.NombreRubro }}</p>
-            <p><strong>Precio:</strong> 
-              {{ selectedProduct?.Precio ?? selectedProduct?.PrecioLista1 ?? selectedProduct?.PrecioLista2 | currency }}
-            </p>
-            
-            
-
-
-            <p><strong>Interior:</strong> {{ selectedProduct.INTERIOR }}</p>
-            <p><strong>Exterior:</strong> {{ selectedProduct.EXTERIOR }}</p>
-            <p><strong>Ancho:</strong> {{ selectedProduct.ANCHO }}</p>
-            <p><strong>Observacion:</strong> {{ selectedProduct.Observacion }}</p>
-          </div>
+          <p><strong>Interior:</strong> {{ selectedProduct.INTERIOR }}</p>
+          <p><strong>Exterior:</strong> {{ selectedProduct.EXTERIOR }}</p>
+          <p><strong>Ancho:</strong> {{ selectedProduct.ANCHO }}</p>
+          <p><strong>Observacion:</strong> {{ selectedProduct.Observacion }}</p>
         </div>
       </div>
     </div>
-  
+  </div>

@@ -1,0 +1,9 @@
+<!-- boton rol admin -->
+<button [ngClass]="{
+    'btn-primary': type === 'primary',
+    'btn-secondary': type === 'secondary',
+    'btn-icon': type === 'icon'
+  }" (click)="handleClick()" *ngIf="isAdmin === undefined || isAdmin">
+  <i *ngIf="icon" [ngClass]="icon"></i>
+  {{ text }}
+</button>
