@@ -131,7 +131,7 @@ static async syncPrices(pricesFromExcel) {
 
 static async updateImage(id, ImagenUrl) {
     try {
-        const updated = await Product.findByIdAndUpdate(id, { ImagenUrl }, { new: true }).lean();
+      const updated = await Product.findByIdAndUpdate(id, { Imagen: ImagenUrl }, { new: true }).lean();
         return updated;
     } catch (error) {
         console.error('❌ Error al actualizar imagen del producto:', error);
