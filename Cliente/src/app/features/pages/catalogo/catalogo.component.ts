@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { Product } from 'src/app/models/product';
 import { AuthService } from 'src/app/services/auth.service';
@@ -14,76 +13,40 @@ export class CatalogoComponent implements OnInit {
   products: Product[] = [];
   currentPage: number = 1;
   limit: number = 20;
+  hasNextPage: boolean = true;
 
   selectedProduct: any = null;
+  imageFile: File | null = null;
+  timestamp: number = Date.now();
+
   selectedFile: File | null = null;
   selectedPriceFile: File | null = null;
 
-  totalProductos: number = 0;
   codigoBuscado: string = '';
 
-  hasNextPage: boolean = true;
-
-  imageFile: File | null = null;
-  timestamp: number = Date.now();
-  constructor(public authService: AuthService, private productService: ProductService, private router: Router) { }
+  constructor(
+    public authService: AuthService,
+    private productService: ProductService
+  ) {}
 
   ngOnInit() {
-    this.productService.getProducts(this.currentPage, this.limit).subscribe((response) => {
-      console.log('Datos recibidos:', response);
-      this.products = response;
-
-      this.hasNextPage = response.length === this.limit;
-    });
-  }
-
-  selectProduct(id: string) {
-    forkJoin({
-      detalles: this.productService.getProductById(id),
-      precios: this.productService.getProductsByUser()
-    }).subscribe(({ detalles, precios }) => {
-      const productoConPrecio = precios.find(p => p._id === id);
-
-      this.selectedProduct = {
-        ...detalles,
-        Precio: productoConPrecio?.Precio // si lo encuentra, lo asigna; si no, deja undefined
-      };
-    });
-  }
-  // Cambiar de página
-  changePage(pagina: number) {
-    this.currentPage = pagina;
-
-    if (this.codigoBuscado && this.codigoBuscado.trim() !== '') {
-      this.getProductsByPartialCode(this.codigoBuscado, pagina);
-    } else {
-      this.productService.getProducts(this.currentPage, this.limit).subscribe((response) => {
-        console.log('Datos recibidos:', response);
-        this.products = response;
-
-        this.hasNextPage = response.length === this.limit;
-      });
-    }
-  }
-
-  verDetalles(id: string) {
-    this.router.navigate(['/producto', id]);
+    this.cargarProductos();
   }
 
   logout() {
     this.authService.logout();
   }
-  // Manejar selección de archivo
+
   onFileSelected(event: any) {
     this.selectedFile = event.target.files[0] || null;
   }
-  // Subir archivo Excel
+
   uploadFile() {
     if (this.selectedFile) {
       this.productService.uploadExcel(this.selectedFile).subscribe({
-        next: (response) => {
+        next: () => {
           alert('📂 Archivo subido correctamente');
-          window.location.reload(); // Recargar para actualizar la lista de productos
+          window.location.reload();
         },
         error: (err) => {
           alert('❌ Error al subir el archivo');
@@ -100,9 +63,9 @@ export class CatalogoComponent implements OnInit {
   uploadPrices() {
     if (this.selectedPriceFile) {
       this.productService.uploadPrices(this.selectedPriceFile).subscribe({
-        next: (response) => {
+        next: () => {
           alert('💸 Archivo de precios subido correctamente');
-          window.location.reload(); // Opcional, si querés refrescar los productos
+          window.location.reload();
         },
         error: (err) => {
           alert('❌ Error al subir el archivo de precios');
@@ -111,73 +74,87 @@ export class CatalogoComponent implements OnInit {
       });
     }
   }
-  // Buscar productos por código parcial con paginación
-  getProductsByPartialCode(codigo: string | null = null, pagina: number = 1): void {
+
+  buscarPorCodigoParcial(codigo: string) {
+    this.codigoBuscado = codigo;
+    this.getProductsByPartialCode(codigo, 1);
+  }
+
+  getProductsByPartialCode(codigo: string, pagina: number) {
     this.productService.getProductsByPartialCode(codigo, pagina, this.limit).subscribe({
       next: (data) => {
         this.products = data.products;
-        this.totalProductos = data.total;
         this.currentPage = pagina;
-
-        const productosMostrados = pagina * this.limit;
-        this.hasNextPage = productosMostrados < data.total;
+        this.hasNextPage = (pagina * this.limit) < data.total;
       },
       error: (err) => {
-        console.error('Error al buscar productos por código parcial', err);
+        console.error('Error al buscar productos', err);
         this.products = [];
-        this.totalProductos = 0;
         this.hasNextPage = false;
       }
     });
   }
-  // Este método lo usa <app-filters> para emitir el código a buscar
-  buscarPorCodigoParcial(codigo: string) {
-    this.codigoBuscado = codigo;
-    this.getProductsByPartialCode(codigo, 1); // reinicia la paginación
+
+  changePage(pagina: number) {
+    this.currentPage = pagina;
+
+    if (this.codigoBuscado?.trim()) {
+      this.getProductsByPartialCode(this.codigoBuscado, pagina);
+    } else {
+      this.cargarProductos();
+    }
   }
 
-  // Selección de imagen
-onImageSelected(event: any) {
-  this.imageFile = event.target.files[0];
-}
+  cargarProductos() {
+    this.productService.getProducts(this.currentPage, this.limit).subscribe((response) => {
+      this.products = response;
+      this.hasNextPage = response.length === this.limit;
+    });
+  }
 
-uploadProductImage() {
-  if (!this.imageFile || !this.selectedProduct) return;
+  selectProduct(id: string) {
+    forkJoin({
+      detalles: this.productService.getProductById(id),
+      precios: this.productService.getProductsByUser()
+    }).subscribe(({ detalles, precios }) => {
+      const productoConPrecio = precios.find(p => p._id === id);
+      this.selectedProduct = {
+        ...detalles,
+        Precio: productoConPrecio?.Precio
+      };
+    });
+  }
 
-  const formData = new FormData();
-  formData.append('file', this.imageFile);
-  formData.append('upload_preset', 'mi_present'); // Reemplazá con tu upload_preset real
-  formData.append('folder', 'productos');
+  uploadProductImage() {
+    if (!this.imageFile || !this.selectedProduct) return;
 
-  fetch('https://api.cloudinary.com/v1_1/dlish6q5r/image/upload', {
-    method: 'POST',
-    body: formData
-  })
-    .then(res => res.json())
-    .then(data => {
-      console.log('URL subida a Cloudinary:', data.secure_url); // 👈
-    
-      const imageUrl = data.secure_url;
-    
-      this.productService.updateProductImage(this.selectedProduct._id, imageUrl).subscribe({
-        next: (updatedProduct) => {
-          console.log('Producto actualizado:', updatedProduct); // 👈
-    
-          alert('✅ Imagen actualizada correctamente');
-          this.selectedProduct = {
-            ...this.selectedProduct,
-            Imagen: updatedProduct.product.Imagen
-          };
-          this.timestamp = Date.now();
-          
-          
-        },
-        error: (err) => {
-          console.error('Error al actualizar imagen:', err);
-          alert('❌ Error al actualizar imagen');
-        }
-      });
+    const formData = new FormData();
+    formData.append('file', this.imageFile);
+    formData.append('upload_preset', 'mi_present');
+    formData.append('folder', 'productos');
+
+    fetch('https://api.cloudinary.com/v1_1/dlish6q5r/image/upload', {
+      method: 'POST',
+      body: formData
     })
-    
-}
+      .then(res => res.json())
+      .then(data => {
+        const imageUrl = data.secure_url;
+
+        this.productService.updateProductImage(this.selectedProduct._id, imageUrl).subscribe({
+          next: (updatedProduct) => {
+            alert('✅ Imagen actualizada correctamente');
+            this.selectedProduct = {
+              ...this.selectedProduct,
+              Imagen: updatedProduct.product.Imagen
+            };
+            this.timestamp = Date.now();
+          },
+          error: (err) => {
+            console.error('Error al actualizar imagen:', err);
+            alert('❌ Error al actualizar imagen');
+          }
+        });
+      });
+  }
 }

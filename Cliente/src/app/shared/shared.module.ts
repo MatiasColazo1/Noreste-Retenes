@@ -8,6 +8,6 @@ import { PaginacionComponent } from './paginacion/paginacion.component';
 @NgModule({
   declarations: [ButtonsComponent, PaginacionComponent],
   imports: [CommonModule],
-  exports: [ButtonsComponent] // 👈 Esto lo hace reutilizable
+  exports: [ButtonsComponent, PaginacionComponent]  // 👈 Esto lo hace reutilizable
 })
 export class SharedModule { }

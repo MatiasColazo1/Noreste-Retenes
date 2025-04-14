@@ -1,1 +1,17 @@
-<p>producto-listado works!</p>
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Prefijo</th>
+        <th>Código</th>
+        <th>Marca</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of products" (click)="seleccionarProducto(product._id)" style="cursor: pointer;">
+        <td>{{ product.Prefijo }}</td>
+        <td>{{ product.Codigo }}</td>
+        <td>{{ product.MARCA }}</td>
+      </tr>
+    </tbody>
+  </table>
+  

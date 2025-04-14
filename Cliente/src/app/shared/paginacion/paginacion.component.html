@@ -1,1 +1,6 @@
-<p>paginacion works!</p>
+<div class="pagination">
+    <button (click)="cambiarPagina(currentPage - 1)" [disabled]="currentPage === 1">Anterior</button>
+    <span>Página {{ currentPage }}</span>
+    <button (click)="cambiarPagina(currentPage + 1)" [disabled]="!hasNextPage">Siguiente</button>
+  </div>
+  
