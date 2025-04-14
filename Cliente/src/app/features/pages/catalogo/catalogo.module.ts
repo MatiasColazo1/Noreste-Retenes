@@ -7,11 +7,13 @@ import { FiltersComponent } from './filters/filters.component';
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from 'src/app/shared/shared.module';
 
+
 @NgModule({
   declarations: [
     CatalogoComponent,
     ProductoDetalleComponent,
     FiltersComponent,
+
   ],
   imports: [
     CommonModule,
