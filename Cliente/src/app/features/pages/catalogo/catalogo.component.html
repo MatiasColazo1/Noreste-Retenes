@@ -1,7 +1,8 @@
-<button (click)="logout()" class="btn btn-danger">Cerrar sesión</button>
-<button *ngIf="authService.isAdmin()" routerLink="/admin/usuarios" class="btn btn-primary">
-  Administrar Usuarios
-</button>
+<app-buttons text="Cerrar sesión" type="secondary" (buttonClick)="logout()"></app-buttons>
+
+<app-buttons [isAdmin]="authService.isAdmin()" text="Administrar Usuarios" type="primary"
+  route="/admin/usuarios"></app-buttons>
+
 
 <div *ngIf="authService.isAdmin()">
   <!-- Subir productos -->
