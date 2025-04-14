@@ -84,16 +84,17 @@ const uploadPrices = async (req, res) => {
 
 const updateProductImage = async (req, res) => {
     try {
-        const { id } = req.params;
-        const { ImagenUrl } = req.body;
-
-        const product = await ProductDAO.updateImage(id, ImagenUrl);
-        return res.status(200).json({ message: 'Imagen actualizada correctamente', product });
+      const { id } = req.params;
+      const { Imagen } = req.body;
+  
+      const product = await ProductDAO.updateImage(id, Imagen);
+      return res.status(200).json({ message: 'Imagen actualizada correctamente', product });
     } catch (error) {
-        console.error("❌ Error en updateProductImage:", error);
-        return res.status(500).json({ error: "Error al actualizar la imagen" });
+      console.error("❌ Error en updateProductImage:", error);
+      return res.status(500).json({ error: "Error al actualizar la imagen" });
     }
-};
+  };
+  
 
 const getProductsByUser = async (req, res) => {
     try {

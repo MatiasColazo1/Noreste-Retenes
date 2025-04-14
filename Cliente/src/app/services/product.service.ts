@@ -77,4 +77,12 @@ getProductsByPartialCode(codigo: string | null, pagina: number = 1, limite: numb
   });
 }
 
+updateProductImage(productId: string, imageUrl: string): Observable<any> {
+  return this.http.put(`${this.apiUrl}/${productId}/image`, { Imagen: imageUrl }, {
+    headers: this.getAuthHeaders()
+  });
+  
+}
+
+
 }

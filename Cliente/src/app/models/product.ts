@@ -13,6 +13,6 @@ export interface Product {
   Observacion: string;
   Precio?: number;
   Imagen: string;
-  PrecioLista1?: number; // 💵 Agregá esto
-  PrecioLista2?: number; // 💵 Y esto también
+  PrecioLista1?: number;
+  PrecioLista2?: number;
 }

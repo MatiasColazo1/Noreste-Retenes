@@ -24,6 +24,8 @@ export class CatalogoComponent implements OnInit {
 
   hasNextPage: boolean = true;
 
+  imageFile: File | null = null;
+  timestamp: number = Date.now();
   constructor(public authService: AuthService, private productService: ProductService, private router: Router) { }
 
   ngOnInit() {
@@ -133,4 +135,49 @@ export class CatalogoComponent implements OnInit {
     this.codigoBuscado = codigo;
     this.getProductsByPartialCode(codigo, 1); // reinicia la paginación
   }
+
+  // Selección de imagen
+onImageSelected(event: any) {
+  this.imageFile = event.target.files[0];
+}
+
+uploadProductImage() {
+  if (!this.imageFile || !this.selectedProduct) return;
+
+  const formData = new FormData();
+  formData.append('file', this.imageFile);
+  formData.append('upload_preset', 'mi_present'); // Reemplazá con tu upload_preset real
+  formData.append('folder', 'productos');
+
+  fetch('https://api.cloudinary.com/v1_1/dlish6q5r/image/upload', {
+    method: 'POST',
+    body: formData
+  })
+    .then(res => res.json())
+    .then(data => {
+      console.log('URL subida a Cloudinary:', data.secure_url); // 👈
+    
+      const imageUrl = data.secure_url;
+    
+      this.productService.updateProductImage(this.selectedProduct._id, imageUrl).subscribe({
+        next: (updatedProduct) => {
+          console.log('Producto actualizado:', updatedProduct); // 👈
+    
+          alert('✅ Imagen actualizada correctamente');
+          this.selectedProduct = {
+            ...this.selectedProduct,
+            Imagen: updatedProduct.product.Imagen
+          };
+          this.timestamp = Date.now();
+          
+          
+        },
+        error: (err) => {
+          console.error('Error al actualizar imagen:', err);
+          alert('❌ Error al actualizar imagen');
+        }
+      });
+    })
+    
+}
 }
