@@ -15,6 +15,7 @@ const routes: Routes = [
     children: [
       { path: 'usuarios', component: UsuariosComponent },
       { path: 'usuario/:id', component: UsuarioDetallesComponent },
+      { path: 'dashboard', component: DashboardComponent }
     ]
   }
 ];

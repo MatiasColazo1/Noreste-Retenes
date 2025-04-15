@@ -1,8 +1,9 @@
 <app-buttons text="Cerrar sesión" type="secondary" (buttonClick)="logout()"></app-buttons>
 
-<app-buttons [isAdmin]="authService.isAdmin()" text="Administrar Usuarios" type="primary"
-  route="/admin/usuarios"></app-buttons>
 
+
+  <app-buttons [isAdmin]="authService.isAdmin()" text="Panel de administrador" type="primary"
+  route="/admin/dashboard"></app-buttons>
 
 <div *ngIf="authService.isAdmin()">
   <!-- Subir productos -->
