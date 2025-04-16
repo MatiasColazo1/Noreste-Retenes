@@ -196,8 +196,86 @@ static async getProductsByCodigoParcial(codigo, skip = 0, limit = 20) {
     console.error('❌ Error en getProductsByCodigoParcial:', error);
     throw error;
   }
-}
+};
 
+
+  // Actualizar todas las equivalencias (sobrescribe)
+  static async updateEquivalencias(productId, equivalencias, redisClient) {
+    try {
+      const equivalenciasFiltradas = (equivalencias || []).filter(eq =>
+        typeof eq === 'string' && eq.trim() !== ''
+      );
+
+      const updatedProduct = await Product.findByIdAndUpdate(
+        productId,
+        { $set: { equivalencias: equivalenciasFiltradas } },
+        { new: true }
+      ).lean();
+
+      if (!updatedProduct) {
+        throw new Error('Producto no encontrado para actualizar equivalencias');
+      }
+
+      await redisClient.del(`product:${productId}`);
+
+      return updatedProduct;
+    } catch (error) {
+      console.error('❌ Error al actualizar equivalencias:', error);
+      throw error;
+    }
+  };
+
+  // Agregar una sola equivalencia
+  static async addEquivalencia(productId, nuevaEquivalencia, redisClient) {
+    try {
+      const updated = await Product.findByIdAndUpdate(
+        productId,
+        { $addToSet: { equivalencias: nuevaEquivalencia.trim() } },
+        { new: true }
+      ).lean();
+
+      if (!updated) throw new Error('Producto no encontrado al agregar equivalencia');
+
+      await redisClient.del(`product:${productId}`);
+
+      return updated;
+    } catch (error) {
+      console.error("❌ Error al agregar equivalencia:", error);
+      throw error;
+    }
+  };
+
+  // Eliminar una sola equivalencia
+  static async removeEquivalencia(productId, equivalencia, redisClient) {
+    try {
+      const updated = await Product.findByIdAndUpdate(
+        productId,
+        { $pull: { equivalencias: equivalencia.trim() } },
+        { new: true }
+      ).lean();
+
+      if (!updated) throw new Error('Producto no encontrado al eliminar equivalencia');
+
+      await redisClient.del(`product:${productId}`);
+
+      return updated;
+    } catch (error) {
+      console.error("❌ Error al eliminar equivalencia:", error);
+      throw error;
+    }
+  };
+
+  // Buscar productos por coincidencia parcial en equivalencias
+  static async getProductsByEquivalencia(equivalenciaParcial) {
+    try {
+      const regex = new RegExp(equivalenciaParcial, 'i');
+      const products = await Product.find({ equivalencias: { $elemMatch: { $regex: regex } } }).lean();
+      return products;
+    } catch (error) {
+      console.error('❌ Error en getProductsByEquivalencia:', error);
+      throw error;
+    }
+  };
 
 
 
