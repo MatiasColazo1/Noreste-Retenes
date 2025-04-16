@@ -24,9 +24,9 @@ router.post('/upload', verifyToken, isAdmin, upload.single('file'), ProductContr
 router.post('/upload-prices', verifyToken, isAdmin, upload.single('file'), ProductController.uploadPrices); // Subir lista de precios
 
 // rutas de equivalencias
-router.put('/:id/equivalencias', verifyToken, isAdmin, ProductController.updateEquivalencias); // Reemplazar todas las equivalencias
 router.post('/:id/equivalencias', verifyToken, isAdmin, ProductController.addEquivalencia);   // Agregar una equivalencia
-router.delete('/:id/equivalencias', verifyToken, isAdmin, ProductController.removeEquivalencia); // Eliminar una equivalencia
+router.put('/:id/equivalencias/:equivalencia', verifyToken, isAdmin, ProductController.updateEquivalencia); // Reemplazar la equivalencia
+router.delete('/:id/equivalencias/:equivalencia', verifyToken, isAdmin, ProductController.removeEquivalencia); // Eliminar una equivalencia
 router.get('/equivalencias/buscar', verifyToken, ProductController.getProductsByEquivalencia); // Buscar productos por equivalencia parcial
 
 module.exports = router;

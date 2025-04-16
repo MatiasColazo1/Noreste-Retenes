@@ -199,39 +199,36 @@ static async getProductsByCodigoParcial(codigo, skip = 0, limit = 20) {
 };
 
 
-  // Actualizar todas las equivalencias (sobrescribe)
-  static async updateEquivalencias(productId, equivalencias, redisClient) {
-    try {
-      const equivalenciasFiltradas = (equivalencias || []).filter(eq =>
-        typeof eq === 'string' && eq.trim() !== ''
-      );
-
-      const updatedProduct = await Product.findByIdAndUpdate(
-        productId,
-        { $set: { equivalencias: equivalenciasFiltradas } },
-        { new: true }
+// Actualizar una equivalencia específica
+static async updateEquivalencia(productId, equivalencia, nuevaEquivalencia, redisClient) {
+  try {
+      const updated = await Product.findByIdAndUpdate(
+          productId,
+          { $set: { "equivalencias.$[el]": nuevaEquivalencia.trim() } },
+          {
+              new: true,
+              arrayFilters: [{ "el": equivalencia }] // Filtra la equivalencia específica a actualizar
+          }
       ).lean();
 
-      if (!updatedProduct) {
-        throw new Error('Producto no encontrado para actualizar equivalencias');
-      }
+      if (!updated) throw new Error('Producto no encontrado para actualizar equivalencia');
 
       await redisClient.del(`product:${productId}`);
 
-      return updatedProduct;
-    } catch (error) {
-      console.error('❌ Error al actualizar equivalencias:', error);
+      return updated;
+  } catch (error) {
+      console.error("❌ Error al actualizar equivalencia:", error);
       throw error;
-    }
-  };
+  }
+};
 
-  // Agregar una sola equivalencia
-  static async addEquivalencia(productId, nuevaEquivalencia, redisClient) {
-    try {
+// Agregar una sola equivalencia
+static async addEquivalencia(productId, nuevaEquivalencia, redisClient) {
+  try {
       const updated = await Product.findByIdAndUpdate(
-        productId,
-        { $addToSet: { equivalencias: nuevaEquivalencia.trim() } },
-        { new: true }
+          productId,
+          { $addToSet: { equivalencias: nuevaEquivalencia.trim() } },
+          { new: true }
       ).lean();
 
       if (!updated) throw new Error('Producto no encontrado al agregar equivalencia');
@@ -239,19 +236,19 @@ static async getProductsByCodigoParcial(codigo, skip = 0, limit = 20) {
       await redisClient.del(`product:${productId}`);
 
       return updated;
-    } catch (error) {
+  } catch (error) {
       console.error("❌ Error al agregar equivalencia:", error);
       throw error;
-    }
-  };
+  }
+};
 
-  // Eliminar una sola equivalencia
-  static async removeEquivalencia(productId, equivalencia, redisClient) {
-    try {
+// Eliminar una sola equivalencia
+static async removeEquivalencia(productId, equivalencia, redisClient) {
+  try {
       const updated = await Product.findByIdAndUpdate(
-        productId,
-        { $pull: { equivalencias: equivalencia.trim() } },
-        { new: true }
+          productId,
+          { $pull: { equivalencias: equivalencia.trim() } },
+          { new: true }
       ).lean();
 
       if (!updated) throw new Error('Producto no encontrado al eliminar equivalencia');
@@ -259,23 +256,23 @@ static async getProductsByCodigoParcial(codigo, skip = 0, limit = 20) {
       await redisClient.del(`product:${productId}`);
 
       return updated;
-    } catch (error) {
+  } catch (error) {
       console.error("❌ Error al eliminar equivalencia:", error);
       throw error;
-    }
-  };
+  }
+};
 
-  // Buscar productos por coincidencia parcial en equivalencias
-  static async getProductsByEquivalencia(equivalenciaParcial) {
-    try {
+// Buscar productos por coincidencia parcial en equivalencias
+static async getProductsByEquivalencia(equivalenciaParcial) {
+  try {
       const regex = new RegExp(equivalenciaParcial, 'i');
       const products = await Product.find({ equivalencias: { $elemMatch: { $regex: regex } } }).lean();
       return products;
-    } catch (error) {
+  } catch (error) {
       console.error('❌ Error en getProductsByEquivalencia:', error);
       throw error;
-    }
-  };
+  }
+};
 
 
 
