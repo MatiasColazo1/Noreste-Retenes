@@ -191,8 +191,7 @@ const addEquivalencia = async (req, res) => {
 // Eliminar una sola equivalencia
 const removeEquivalencia = async (req, res) => {
     try {
-        const { id } = req.params;
-        const { equivalencia } = req.body;
+        const { id, equivalencia } = req.params;  // Obtener equivalencia directamente de los params
         const redisClient = req.app.locals.redisClient;
 
         if (!equivalencia || equivalencia.trim() === '') {
@@ -207,6 +206,7 @@ const removeEquivalencia = async (req, res) => {
         return res.status(500).json({ error: "Error al eliminar equivalencia" });
     }
 };
+
 
 // Buscar por coincidencia parcial
 const getProductsByEquivalencia = async (req, res) => {
