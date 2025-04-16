@@ -7,13 +7,15 @@ import { UsuariosComponent } from './usuarios/usuarios.component';
 import { UsuarioDetallesComponent } from './usuario-detalles/usuario-detalles.component';
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { ProductosAdminComponent } from './productos-admin/productos-admin.component';
 
 @NgModule({
   declarations: [
     AdminComponent,
     DashboardComponent,
     UsuariosComponent,
-    UsuarioDetallesComponent
+    UsuarioDetallesComponent,
+    ProductosAdminComponent
   ],
   imports: [
     CommonModule,

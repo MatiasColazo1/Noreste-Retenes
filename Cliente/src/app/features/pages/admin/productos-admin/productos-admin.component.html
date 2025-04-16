@@ -1,0 +1,21 @@
+<p>productos-admin works!</p>
+<div *ngIf="authService.isAdmin()">
+  <!-- Subir productos -->
+  <input type="file" (change)="onFileSelected($event)" accept=".xlsx" />
+  <button (click)="uploadFile()" [disabled]="!selectedFile">Subir Productos</button>
+
+  <!-- Subir precios -->
+  <input type="file" (change)="onPriceFileSelected($event)" accept=".xlsx" />
+  <button (click)="uploadPrices()" [disabled]="!selectedPriceFile">Subir Precios</button>
+</div>
+
+<div>
+  <a [routerLink]="['/admin/dashboard']" class="text-primary">
+    Volver a panel de administrador
+  </a>
+</div>
+<div>
+  <a [routerLink]="['/catalogo']" class="text-primary">
+    Volver a catalogo
+  </a>
+</div>

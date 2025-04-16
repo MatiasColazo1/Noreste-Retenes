@@ -6,6 +6,7 @@ import { UsuariosComponent } from './usuarios/usuarios.component';
 import { AuthGuard } from 'src/app/core/guards/auth.guard'; // Asegúrate de que esta ruta es correcta
 import { AdminGuard } from 'src/app/core/guards/admin.guard';
 import { UsuarioDetallesComponent } from './usuario-detalles/usuario-detalles.component';
+import { ProductosAdminComponent } from './productos-admin/productos-admin.component';
 
 const routes: Routes = [
   {
@@ -15,6 +16,7 @@ const routes: Routes = [
     children: [
       { path: 'usuarios', component: UsuariosComponent },
       { path: 'usuario/:id', component: UsuarioDetallesComponent },
+      { path: 'productos', component: ProductosAdminComponent },
       { path: 'dashboard', component: DashboardComponent }
     ]
   }
