@@ -148,6 +148,79 @@ const getProductsByCodigoParcial = async (req, res) => {
   };
   
 
+// Actualizar todas las equivalencias
+const updateEquivalencias = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { equivalencias } = req.body;
+      const redisClient = req.app.locals.redisClient;
+  
+      const product = await ProductDAO.updateEquivalencias(id, equivalencias, redisClient);
+  
+      return res.status(200).json({ message: 'Equivalencias actualizadas correctamente', product });
+    } catch (error) {
+      console.error("❌ Error en updateEquivalencias:", error);
+      return res.status(500).json({ error: "Error al actualizar equivalencias" });
+    }
+  };
+  
+  // Agregar una sola equivalencia
+  const addEquivalencia = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { equivalencia } = req.body;
+      const redisClient = req.app.locals.redisClient;
+  
+      if (!equivalencia || equivalencia.trim() === '') {
+        return res.status(400).json({ error: "Equivalencia vacía o inválida" });
+      }
+  
+      const product = await ProductDAO.addEquivalencia(id, equivalencia, redisClient);
+  
+      return res.status(200).json({ message: 'Equivalencia agregada correctamente', product });
+    } catch (error) {
+      console.error("❌ Error en addEquivalencia:", error);
+      return res.status(500).json({ error: "Error al agregar equivalencia" });
+    }
+  };
+  
+  // Eliminar una sola equivalencia
+  const removeEquivalencia = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { equivalencia } = req.body;
+      const redisClient = req.app.locals.redisClient;
+  
+      if (!equivalencia || equivalencia.trim() === '') {
+        return res.status(400).json({ error: "Equivalencia vacía o inválida" });
+      }
+  
+      const product = await ProductDAO.removeEquivalencia(id, equivalencia, redisClient);
+  
+      return res.status(200).json({ message: 'Equivalencia eliminada correctamente', product });
+    } catch (error) {
+      console.error("❌ Error en removeEquivalencia:", error);
+      return res.status(500).json({ error: "Error al eliminar equivalencia" });
+    }
+  };
+  
+  // Buscar por coincidencia parcial
+  const getProductsByEquivalencia = async (req, res) => {
+    try {
+      const { equivalencia } = req.query;
+  
+      if (!equivalencia || equivalencia.trim() === '') {
+        return res.status(400).json({ error: "Se requiere una equivalencia para buscar" });
+      }
+  
+      const products = await ProductDAO.getProductsByEquivalencia(equivalencia);
+  
+      return res.status(200).json(products);
+    } catch (error) {
+      console.error("❌ Error en getProductsByEquivalencia:", error);
+      return res.status(500).json({ error: "Error al buscar productos por equivalencia" });
+    }
+  };
+  
 
-
-module.exports = { uploadExcel, getProducts, getProductById, uploadPrices, updateProductImage, getProductsByUser, getProductsByCodigoParcial };
+module.exports = { uploadExcel, getProducts, getProductById, uploadPrices, updateProductImage, getProductsByUser, getProductsByCodigoParcial, updateEquivalencias, addEquivalencia, removeEquivalencia, getProductsByEquivalencia };

@@ -23,4 +23,10 @@ router.put('/:id/image', verifyToken, isAdmin, ProductController.updateProductIm
 router.post('/upload', verifyToken, isAdmin, upload.single('file'), ProductController.uploadExcel); // Subir archivo Excel (solo admin)
 router.post('/upload-prices', verifyToken, isAdmin, upload.single('file'), ProductController.uploadPrices); // Subir lista de precios
 
+// rutas de equivalencias
+router.put('/:id/equivalencias', verifyToken, isAdmin, ProductController.updateEquivalencias); // Reemplazar todas las equivalencias
+router.post('/:id/equivalencias', verifyToken, isAdmin, ProductController.addEquivalencia);   // Agregar una equivalencia
+router.delete('/:id/equivalencias', verifyToken, isAdmin, ProductController.removeEquivalencia); // Eliminar una equivalencia
+router.get('/equivalencias/buscar', verifyToken, ProductController.getProductsByEquivalencia); // Buscar productos por equivalencia parcial
+
 module.exports = router;
