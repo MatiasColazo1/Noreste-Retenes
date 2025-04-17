@@ -14,7 +14,7 @@ export class CatalogoComponent implements OnInit {
   currentPage: number = 1;
   limit: number = 20;
   hasNextPage: boolean = true;
-
+  totalProducts: number = 0;
   selectedProduct: any = null;
   imageFile: File | null = null;
   timestamp: number = Date.now();
@@ -157,4 +157,18 @@ export class CatalogoComponent implements OnInit {
         });
       });
   }
+
+  buscarPorEquivalencia(equivalencia: string) {
+    this.productService.getProductsByEquivalencia(equivalencia, this.currentPage, this.limit).subscribe({
+      next: (data: any) => {
+        this.products = data.products; // ✅ ahora sí es un array
+        this.totalProducts = data.total;
+        console.log('Productos filtrados por equivalencia:', data.products);
+      },
+      error: (error) => {
+        console.error('Error al buscar por equivalencia', error);
+      }
+    });
+  }
+  
 }

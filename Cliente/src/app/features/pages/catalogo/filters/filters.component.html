@@ -1,9 +1,26 @@
-<div class="input-group mb-3">
+<div class="mb-3">
+  <button class="btn btn-outline-primary me-2" (click)="setFiltro('codigo')">Código</button>
+  <button class="btn btn-outline-secondary" (click)="setFiltro('equivalencia')">Equivalencia</button>
+</div>
+
+<!-- Input para buscar por código -->
+<div class="input-group mb-3" *ngIf="tipoFiltro === 'codigo'">
   <input
     type="text"
     class="form-control"
     placeholder="Ingresá el código exacto"
     [(ngModel)]="codigo"
   />
-  <button class="btn btn-primary" type="button" (click)="onBuscar()">Buscar</button>
+  <button class="btn btn-primary" type="button" (click)="onBuscarCodigo()">Buscar</button>
+</div>
+
+<!-- Input para buscar por equivalencia -->
+<div class="input-group mb-3" *ngIf="tipoFiltro === 'equivalencia'">
+  <input
+    type="text"
+    class="form-control"
+    placeholder="Ingresá la equivalencia"
+    [(ngModel)]="equivalencia"
+  />
+  <button class="btn btn-secondary" type="button" (click)="onBuscarEquivalencia()">Buscar</button>
 </div>

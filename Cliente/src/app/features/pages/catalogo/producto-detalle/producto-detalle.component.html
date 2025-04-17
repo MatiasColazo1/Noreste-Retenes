@@ -1,23 +1,39 @@
 <div class="card">
-    <div class="card-header"><h5>Detalle del Producto</h5></div>
-    <div class="card-body">
-      <p><strong>Imagen:</strong></p>
-      <img [src]="producto.Imagen + '?t=' + timestamp" alt="Imagen del producto" width="150" height="150">
-  
-      <p><strong>Nombre:</strong> {{ producto.Nombre }}</p>
-      <p><strong>Nombre Rubro:</strong> {{ producto.NombreRubro }}</p>
-      <p><strong>Precio:</strong> {{ producto?.Precio ?? producto?.PrecioLista1 ?? producto?.PrecioLista2 | currency }}</p>
-  
-      <p><strong>Interior:</strong> {{ producto.INTERIOR }}</p>
-      <p><strong>Exterior:</strong> {{ producto.EXTERIOR }}</p>
-      <p><strong>Ancho:</strong> {{ producto.ANCHO }}</p>
-      <p><strong>Observación:</strong> {{ producto.Observacion }}</p>
-    </div>
-  
-    <div *ngIf="isAdmin">
-      <label for="imageUpload">Editar imagen:</label>
-      <input type="file" id="imageUpload" (change)="onImageSelected($event)">
-      <button class="btn btn-primary mt-2" (click)="subirImagen()">Subir Imagen</button>
-    </div>
+  <div class="card-header"><h5>Detalle del Producto</h5></div>
+  <div class="card-body">
+    <p><strong>Imagen:</strong></p>
+    <img [src]="producto.Imagen + '?t=' + timestamp" alt="Imagen del producto" width="150" height="150">
+
+    <p><strong>Nombre:</strong> {{ producto.Nombre }}</p>
+    <p><strong>Nombre Rubro:</strong> {{ producto.NombreRubro }}</p>
+    <p><strong>Precio:</strong> {{ producto?.Precio ?? producto?.PrecioLista1 ?? producto?.PrecioLista2 | currency }}</p>
+
+    <p><strong>Interior:</strong> {{ producto.INTERIOR }}</p>
+    <p><strong>Exterior:</strong> {{ producto.EXTERIOR }}</p>
+    <p><strong>Ancho:</strong> {{ producto.ANCHO }}</p>
+    <p><strong>Observación:</strong> {{ producto.Observacion }}</p>
   </div>
-  
+
+  <!-- EQUIVALENCIAS -->
+  <div *ngIf="producto?.equivalencias && producto.equivalencias.length > 0" class="card-body">
+    <p><strong>Equivalencias:</strong></p>
+    <ul>
+      <li *ngFor="let eq of producto.equivalencias; let i = index">
+        {{ eq }}
+        <button *ngIf="isAdmin" class="btn btn-sm btn-danger ms-2" (click)="eliminarEquivalencia(eq)">Eliminar</button>
+      </li>
+    </ul>
+  </div>
+
+  <!-- AGREGAR NUEVA EQUIVALENCIA -->
+  <div *ngIf="isAdmin" class="card-body">
+    <input [(ngModel)]="nuevaEquivalencia" placeholder="Nueva equivalencia" class="form-control" />
+    <button class="btn btn-success mt-2" (click)="agregarEquivalencia()">Agregar Equivalencia</button>
+  </div>
+
+  <div *ngIf="isAdmin">
+    <label for="imageUpload">Editar imagen:</label>
+    <input type="file" id="imageUpload" (change)="onImageSelected($event)">
+    <button class="btn btn-primary mt-2" (click)="subirImagen()">Subir Imagen</button>
+  </div>
+</div>

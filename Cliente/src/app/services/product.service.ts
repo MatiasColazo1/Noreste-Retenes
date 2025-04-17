@@ -84,5 +84,36 @@ updateProductImage(productId: string, imageUrl: string): Observable<any> {
   
 }
 
+// Agregar una equivalencia a un producto
+addEquivalencia(productId: string, equivalencia: string): Observable<any> {
+  return this.http.post(`${this.apiUrl}/${productId}/equivalencias`, { equivalencia }, {
+    headers: this.getAuthHeaders(),
+  });
+}
+
+// Actualizar (reemplazar) una equivalencia específica de un producto
+updateEquivalencia(productId: string, equivalenciaAntigua: string, nuevaEquivalencia: string): Observable<any> {
+  return this.http.put(`${this.apiUrl}/${productId}/equivalencias/${equivalenciaAntigua}`, 
+    { nuevaEquivalencia }, {
+    headers: this.getAuthHeaders(),
+  });
+}
+
+// Eliminar una equivalencia de un producto
+removeEquivalencia(productId: string, equivalencia: string): Observable<any> {
+  return this.http.delete(`${this.apiUrl}/${productId}/equivalencias/${equivalencia}`, {
+    headers: this.getAuthHeaders(),
+  });
+}
+
+// Obtener productos filtrados por equivalencia
+getProductsByEquivalencia(equivalencia: string, page: number = 1, limit: number = 20): Observable<Product[]> {
+  const url = `${this.apiUrl}/equivalencias/buscar?equivalencia=${equivalencia}&page=${page}&limit=${limit}`;
+  return this.http.get<Product[]>(url, {
+    headers: this.getAuthHeaders(),
+  });
+}
+
+
 
 }

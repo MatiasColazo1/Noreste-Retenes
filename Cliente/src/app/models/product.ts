@@ -15,4 +15,5 @@ export interface Product {
   Imagen: string;
   PrecioLista1?: number;
   PrecioLista2?: number;
+  equivalencias: string[];
 }
