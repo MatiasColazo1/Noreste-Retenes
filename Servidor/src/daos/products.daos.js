@@ -263,16 +263,20 @@ static async removeEquivalencia(productId, equivalencia, redisClient) {
 };
 
 // Buscar productos por coincidencia parcial en equivalencias
-static async getProductsByEquivalencia(equivalenciaParcial) {
+static async getProductsByEquivalencia(equivalenciaParcial = '', skip = 0, limit = 20) {
   try {
-      const regex = new RegExp(equivalenciaParcial, 'i');
-      const products = await Product.find({ equivalencias: { $elemMatch: { $regex: regex } } }).lean();
-      return products;
+    const regex = new RegExp(equivalenciaParcial, 'i');
+    const filter = equivalenciaParcial ? { equivalencias: { $elemMatch: { $regex: regex } } } : {};
+
+    const products = await Product.find(filter).skip(skip).limit(limit).lean();
+    const total = await Product.countDocuments(filter);
+
+    return { products, total };
   } catch (error) {
-      console.error('❌ Error en getProductsByEquivalencia:', error);
-      throw error;
+    console.error('❌ Error en getProductsByEquivalencia:', error);
+    throw error;
   }
-};
+}
 
 
 

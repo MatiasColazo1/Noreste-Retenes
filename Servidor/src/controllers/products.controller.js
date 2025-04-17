@@ -211,20 +211,20 @@ const removeEquivalencia = async (req, res) => {
 // Buscar por coincidencia parcial
 const getProductsByEquivalencia = async (req, res) => {
     try {
-        const { equivalencia } = req.query;
-
-        if (!equivalencia || equivalencia.trim() === '') {
-            return res.status(400).json({ error: "Se requiere una equivalencia para buscar" });
-        }
-
-        const products = await ProductDAO.getProductsByEquivalencia(equivalencia);
-
-        return res.status(200).json(products);
+      const { equivalencia = '' } = req.query;
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 20;
+      const skip = (page - 1) * limit;
+  
+      const { products, total } = await ProductDAO.getProductsByEquivalencia(equivalencia, skip, limit);
+  
+      return res.status(200).json({ products, total });
     } catch (error) {
-        console.error("❌ Error en getProductsByEquivalencia:", error);
-        return res.status(500).json({ error: "Error al buscar productos por equivalencia" });
+      console.error("❌ Error en getProductsByEquivalencia:", error);
+      return res.status(500).json({ error: "Error al buscar productos por equivalencia" });
     }
-};
+  };
+  
 
   
 
