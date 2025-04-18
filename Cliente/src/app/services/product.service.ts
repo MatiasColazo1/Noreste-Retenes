@@ -113,7 +113,4 @@ getProductsByEquivalencia(equivalencia: string, page: number = 1, limit: number 
     headers: this.getAuthHeaders(),
   });
 }
-
-
-
 }
