@@ -23,15 +23,18 @@ export class CatalogoComponent implements OnInit {
   selectedPriceFile: File | null = null;
 
   codigoBuscado: string = '';
-
+  mensajeUsuario: string = '';
   constructor(
     public authService: AuthService,
     private productService: ProductService
   ) {}
 
   ngOnInit() {
-    this.cargarProductos();
-  }
+      this.codigoBuscado = '';
+      this.mensajeUsuario = '';
+      this.currentPage = 1;
+      this.cargarProductos();
+    }    
 
   logout() {
     this.authService.logout();
@@ -76,9 +79,31 @@ export class CatalogoComponent implements OnInit {
   }
 
   buscarPorCodigoParcial(codigo: string) {
-    this.codigoBuscado = codigo;
-    this.getProductsByPartialCode(codigo, 1);
-  }
+    const valor = codigo.trim();
+  
+    if (!valor) {
+      this.mensajeUsuario = '';
+      this.currentPage = 1;
+      this.cargarProductos();
+      return;
+    }
+  
+    this.productService.getProductsByPartialCode(valor, 1, this.limit).subscribe({
+      next: (data) => {
+        this.products = data.products;
+        this.hasNextPage = data.products.length === this.limit;
+        this.mensajeUsuario = data.products.length
+          ? '' // Si se encuentran productos, limpio el mensaje
+          : 'No se encontraron productos con ese código.';
+      },
+      error: (err) => {
+        console.error('Error al buscar productos por código', err);
+        this.products = [];
+        this.hasNextPage = false;
+        this.mensajeUsuario = 'Ocurrió un error al buscar productos.';
+      }
+    });
+  }  
 
   getProductsByPartialCode(codigo: string, pagina: number) {
     this.productService.getProductsByPartialCode(codigo, pagina, this.limit).subscribe({
@@ -109,8 +134,9 @@ export class CatalogoComponent implements OnInit {
     this.productService.getProducts(this.currentPage, this.limit).subscribe((response) => {
       this.products = response;
       this.hasNextPage = response.length === this.limit;
+      this.mensajeUsuario = '';
     });
-  }
+  }  
 
   selectProduct(id: string) {
     forkJoin({
@@ -159,16 +185,36 @@ export class CatalogoComponent implements OnInit {
   }
 
   buscarPorEquivalencia(equivalencia: string) {
-    this.productService.getProductsByEquivalencia(equivalencia, this.currentPage, this.limit).subscribe({
+    const valor = equivalencia.trim();
+  
+    if (!valor) {
+      this.mensajeUsuario = '';
+      this.currentPage = 1;
+      this.cargarProductos();
+      return;
+    }
+  
+    this.productService.getProductsByEquivalencia(valor, 1, this.limit).subscribe({
       next: (data: any) => {
-        this.products = data.products; // ✅ ahora sí es un array
+        this.products = data.products;
         this.totalProducts = data.total;
-        console.log('Productos filtrados por equivalencia:', data.products);
+        this.hasNextPage = data.products.length === this.limit;
+        this.mensajeUsuario = data.products.length ? '' : 'No se encontraron productos con esa equivalencia.';
       },
       error: (error) => {
         console.error('Error al buscar por equivalencia', error);
+        this.products = [];
+        this.hasNextPage = false;
+        this.mensajeUsuario = 'Ocurrió un error al buscar productos.';
       }
     });
   }
   
+  resetearResultados() {
+    this.codigoBuscado = '';
+    this.selectedProduct = null;
+    this.currentPage = 1;
+    this.cargarProductos();
+    this.mensajeUsuario = ' ';
+  }
 }

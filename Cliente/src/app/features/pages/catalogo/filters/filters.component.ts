@@ -16,7 +16,15 @@ export class FiltersComponent {
 
   setFiltro(tipo: 'codigo' | 'equivalencia') {
     this.tipoFiltro = tipo;
+  
+    // Limpiar el valor del input anterior al cambiar de filtro
+    if (tipo === 'codigo') {
+      this.equivalencia = '';
+    } else if (tipo === 'equivalencia') {
+      this.codigo = '';
+    }
   }
+  
 
   onBuscarCodigo() {
     this.buscarPorCodigo.emit(this.codigo.trim());
