@@ -29,4 +29,7 @@ router.put('/:id/equivalencias/:equivalencia', verifyToken, isAdmin, ProductCont
 router.delete('/:id/equivalencias/:equivalencia', verifyToken, isAdmin, ProductController.removeEquivalencia); // Eliminar una equivalencia
 router.get('/equivalencias/buscar', verifyToken, ProductController.getProductsByEquivalencia); // Buscar productos por equivalencia parcial
 
+// filtro medidas
+router.get('/medidas/buscar', verifyToken, ProductController.getProductsByMedidas);
+
 module.exports = router;
