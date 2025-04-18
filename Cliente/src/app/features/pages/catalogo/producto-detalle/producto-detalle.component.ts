@@ -14,8 +14,10 @@ export class ProductoDetalleComponent {
   @Output() imagenSubida = new EventEmitter<void>();
 
   nuevaEquivalencia: string = '';
+  editandoIndice: number | null = null;
+  equivalenciaEditada: string = '';
 
-  constructor(private productService: ProductService) {}
+  constructor(private productService: ProductService) { }
 
   onImageSelected(event: any) {
     const file = event.target.files[0];
@@ -51,6 +53,35 @@ export class ProductoDetalleComponent {
       },
       error: (err) => {
         console.error('Error al eliminar equivalencia:', err);
+      }
+    });
+  }
+
+  editarEquivalencia(eq: string, index: number) {
+    this.editandoIndice = index;
+    this.equivalenciaEditada = eq;
+  }
+
+  cancelarEdicion() {
+    this.editandoIndice = null;
+    this.equivalenciaEditada = '';
+  }
+
+  guardarEdicionEquivalencia(equivalenciaAntigua: string, index: number) {
+    const nuevaEquivalencia = this.equivalenciaEditada.trim();
+
+    if (!nuevaEquivalencia || nuevaEquivalencia === equivalenciaAntigua) {
+      this.cancelarEdicion();
+      return;
+    }
+
+    this.productService.updateEquivalencia(this.producto._id, equivalenciaAntigua, nuevaEquivalencia).subscribe({
+      next: () => {
+        this.producto.equivalencias[index] = nuevaEquivalencia;
+        this.cancelarEdicion();
+      },
+      error: (err) => {
+        console.error('Error al actualizar equivalencia:', err);
       }
     });
   }
