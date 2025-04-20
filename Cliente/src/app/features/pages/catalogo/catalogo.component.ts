@@ -214,17 +214,21 @@ export class CatalogoComponent implements OnInit {
     this.mensajeUsuario = '';
     this.products = [];
   
+    const interior = filtros.interior && !isNaN(filtros.interior) ? filtros.interior : undefined;
+    const exterior = filtros.exterior && !isNaN(filtros.exterior) ? filtros.exterior : undefined;
+    const ancho = filtros.ancho && !isNaN(filtros.ancho) ? filtros.ancho : undefined;
+  
     // Si todos los filtros están vacíos, traigo todos los productos
-    if (!filtros.interior && !filtros.exterior && !filtros.ancho) {
+    if (interior === undefined && exterior === undefined && ancho === undefined) {
       this.currentPage = 1;
       this.cargarProductos();
       return;
     }
   
     this.productService.getProductsByMedidas(
-      filtros.interior,
-      filtros.exterior,
-      filtros.ancho,
+      interior,
+      exterior,
+      ancho,
       this.currentPage,
       this.limit
     ).subscribe({
@@ -242,6 +246,7 @@ export class CatalogoComponent implements OnInit {
       },
     });
   }
+  
   
   
   resetearResultados() {
