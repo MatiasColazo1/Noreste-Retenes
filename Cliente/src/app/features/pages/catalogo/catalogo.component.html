@@ -17,7 +17,8 @@
 
 <app-filters 
   (buscarPorCodigo)="buscarPorCodigoParcial($event)"
-  (buscarPorEquivalencia)="buscarPorEquivalencia($event)">
+  (buscarPorEquivalencia)="buscarPorEquivalencia($event)"
+  (buscarPorMedidas)="buscarPorMedidas($event)">
 </app-filters>
 <div *ngIf="mensajeUsuario" class="mensaje-usuario">
   {{ mensajeUsuario }}

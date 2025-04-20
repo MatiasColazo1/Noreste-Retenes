@@ -1,6 +1,7 @@
 <div class="mb-3">
   <button class="btn btn-outline-primary me-2" (click)="setFiltro('codigo')">Código</button>
-  <button class="btn btn-outline-secondary" (click)="setFiltro('equivalencia')">Equivalencia</button>
+  <button class="btn btn-outline-secondary me-2" (click)="setFiltro('equivalencia')">Equivalencia</button>
+  <button class="btn btn-outline-success" (click)="setFiltro('medidas')">Medidas</button>
 </div>
 
 <!-- Input para buscar por código -->
@@ -23,4 +24,20 @@
     [(ngModel)]="equivalencia"
   />
   <button class="btn btn-secondary" type="button" (click)="onBuscarEquivalencia()">Buscar</button>
+</div>
+
+<!-- Filtro por medidas -->
+<div class="row mb-3" *ngIf="tipoFiltro === 'medidas'">
+  <div class="col">
+    <input type="number" class="form-control" placeholder="Interior" [(ngModel)]="interior" />
+  </div>
+  <div class="col">
+    <input type="number" class="form-control" placeholder="Exterior" [(ngModel)]="exterior" />
+  </div>
+  <div class="col">
+    <input type="number" class="form-control" placeholder="Ancho" [(ngModel)]="ancho" />
+  </div>
+  <div class="col-auto">
+    <button class="btn btn-success" (click)="onBuscarMedidas()">Buscar</button>
+  </div>
 </div>

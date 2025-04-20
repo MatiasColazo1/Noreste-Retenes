@@ -209,6 +209,40 @@ export class CatalogoComponent implements OnInit {
       }
     });
   }
+
+  buscarPorMedidas(filtros: { interior?: number, exterior?: number, ancho?: number }) {
+    this.mensajeUsuario = '';
+    this.products = [];
+  
+    // Si todos los filtros están vacíos, traigo todos los productos
+    if (!filtros.interior && !filtros.exterior && !filtros.ancho) {
+      this.currentPage = 1;
+      this.cargarProductos();
+      return;
+    }
+  
+    this.productService.getProductsByMedidas(
+      filtros.interior,
+      filtros.exterior,
+      filtros.ancho,
+      this.currentPage,
+      this.limit
+    ).subscribe({
+      next: (res: any) => {
+        this.products = res.products;
+        this.totalProducts = res.total;
+        this.hasNextPage = this.products.length === this.limit;
+        if (this.products.length === 0) {
+          this.mensajeUsuario = 'No se encontraron productos con esas medidas.';
+        }
+      },
+      error: (err) => {
+        console.error('❌ Error al buscar por medidas:', err);
+        this.mensajeUsuario = 'Ocurrió un error al buscar.';
+      },
+    });
+  }
+  
   
   resetearResultados() {
     this.codigoBuscado = '';

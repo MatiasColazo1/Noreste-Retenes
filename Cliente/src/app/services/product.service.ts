@@ -113,4 +113,20 @@ getProductsByEquivalencia(equivalencia: string, page: number = 1, limit: number 
     headers: this.getAuthHeaders(),
   });
 }
+
+getProductsByMedidas(interior?: number, exterior?: number, ancho?: number, page: number = 1, limit: number = 20): Observable<any> {
+  let url = `${this.apiUrl}/medidas/buscar?page=${page}&limit=${limit}`;
+  if (interior !== undefined) {
+    url += `&INTERIOR=${interior}`;
+  }
+  if (exterior !== undefined) {
+    url += `&EXTERIOR=${exterior}`;
+  }
+  if (ancho !== undefined) {
+    url += `&ANCHO=${ancho}`;
+  }
+  return this.http.get(url, {
+    headers: this.getAuthHeaders(),
+  });
+}
 }
