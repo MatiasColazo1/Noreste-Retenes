@@ -22,5 +22,6 @@ export interface User {
     barrio?: string;
     rutaVenta?: string;
     comentario?: string;
+    descuentos?: { [nombreRubro: string]: number }; 
     role?: 'user' | 'admin';
   }

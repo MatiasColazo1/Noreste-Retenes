@@ -1,3 +1,4 @@
+
 export interface Product {
   _id: string;
   Prefijo: string;
@@ -15,5 +16,8 @@ export interface Product {
   Imagen: string;
   PrecioLista1?: number;
   PrecioLista2?: number;
+  precioOriginal?: number;
+  precioFinal?: number;
+  descuentoAplicado?: number;
   equivalencias: string[];
 }

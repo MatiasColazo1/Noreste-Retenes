@@ -1,7 +1,8 @@
 const ProductDAO = require('../daos/products.daos');
 const xlsx = require('xlsx');
 const fs = require('fs');
-
+const Product = require('../models/products.model');
+const User = require('../models/user.model'); 
 // Subir y procesar el archivo Excel
 const uploadExcel = async (req, res) => {
     try {
@@ -96,24 +97,92 @@ const updateProductImage = async (req, res) => {
   };
   
 
-const getProductsByUser = async (req, res) => {
+  const getProductsByUser = async (req, res) => {
     try {
-        const { page = 1, limit = 20 } = req.query;
-        const { listaPrecio } = req.user; // Asumimos que viene del token JWT
-        const redisClient = req.app.locals.redisClient;
-
-        if (!listaPrecio) {
-            return res.status(400).json({ error: "No se pudo determinar la lista de precios del usuario" });
-        }
-
-        const products = await ProductDAO.getProductsByUser(listaPrecio, redisClient, parseInt(page), parseInt(limit));
-
-        return res.status(200).json(products);
+      const { page = 1, limit = 20 } = req.query;
+      const redisClient = req.app.locals.redisClient;
+  
+      // Buscamos el usuario actualizado por ID
+      const user = await User.findById(req.user._id); // Asegurate de que req.user._id esté disponible
+  
+      if (!user || !user.listaPrecio) {
+        return res.status(400).json({ error: "No se pudo determinar la lista de precios del usuario" });
+      }
+  
+      const { listaPrecio, descuentos = [] } = user;
+  
+      const products = await ProductDAO.getProductsByUser(
+        listaPrecio,
+        redisClient,
+        parseInt(page),
+        parseInt(limit)
+      );
+  
+      const productosConDescuento = products.map(p => {
+        const keyPrecio = "Precio" + listaPrecio.replace(/\s+/g, '');
+        const precioBase = p[keyPrecio] || 0;
+  
+        const nombreRubro = p.NombreRubro?.toUpperCase().trim() || '';
+  
+        const descuentoRubro = descuentos.find(d =>
+          d.rubro?.toUpperCase().trim() === nombreRubro
+        );
+  
+        const porcentaje = descuentoRubro?.porcentaje || 0;
+        const precioConDescuento = precioBase - (precioBase * (porcentaje / 100));
+  
+        return {
+          ...p,
+          Precio: precioBase,
+          precioOriginal: precioBase,
+          precioFinal: parseFloat(precioConDescuento.toFixed(2)),
+          descuentoAplicado: porcentaje
+        };
+      });
+  
+      res.json({ productos: productosConDescuento });
+  
     } catch (error) {
-        console.error("❌ Error en getProductsByUser:", error);
-        return res.status(500).json({ error: "Error al obtener productos para el usuario" });
+      console.error("Error en getProductsByUser:", error);
+      res.status(500).json({ error: "Ocurrió un error al obtener los productos." });
     }
-};
+  };
+
+  const getPrecioProductoById = async (req, res) => {
+    try {
+      const redisClient = req.app.locals.redisClient;
+      const user = await User.findById(req.user._id);
+      const product = await Product.findById(req.params.id);
+  
+      if (!user || !user.listaPrecio || !product) {
+        return res.status(404).json({ error: "Datos no encontrados" });
+      }
+  
+      const keyPrecio = "Precio" + user.listaPrecio.replace(/\s+/g, '');
+      const precioBase = product[keyPrecio] || 0;
+  
+      const nombreRubro = product.NombreRubro?.toUpperCase().trim() || '';
+      const descuentoRubro = user.descuentos?.find(d =>
+        d.rubro?.toUpperCase().trim() === nombreRubro
+      );
+  
+      const porcentaje = descuentoRubro?.porcentaje || 0;
+      const precioConDescuento = precioBase - (precioBase * (porcentaje / 100));
+  
+      res.json({
+        _id: product._id,
+        nombre: product.NombreProducto,
+        precioOriginal: precioBase,
+        precioFinal: parseFloat(precioConDescuento.toFixed(2)),
+        descuentoAplicado: porcentaje
+      });
+  
+    } catch (err) {
+      console.error("Error en getPrecioProductoById:", err);
+      res.status(500).json({ error: "Error al obtener el precio del producto" });
+    }
+  };
+  
 
 //filtro codigo
 const getProductsByCodigoParcial = async (req, res) => {
@@ -248,7 +317,19 @@ const getProductsByEquivalencia = async (req, res) => {
     }
   };
   
-  
+  // Nuevo controlador para obtener todos los nombres de rubros
+
+
+  const getRubroNames = async (req, res) => {
+    try {
+      const rubrosUnicos = await Product.distinct('NombreRubro');
+      return res.status(200).json(rubrosUnicos);
+    } catch (error) {
+      console.error("❌ Error al obtener nombres de rubros:", error);
+      return res.status(500).json({ error: "Error al obtener nombres de rubros" });
+    }
+  };
   
 
-module.exports = { uploadExcel, getProducts, getProductById, uploadPrices, updateProductImage, getProductsByUser, getProductsByCodigoParcial, updateEquivalencia, addEquivalencia, removeEquivalencia, getProductsByEquivalencia, getProductsByMedidas};
+
+module.exports = { uploadExcel, getProducts, getProductById, uploadPrices, updateProductImage, getProductsByUser, getPrecioProductoById, getProductsByCodigoParcial, updateEquivalencia, addEquivalencia, removeEquivalencia, getProductsByEquivalencia, getProductsByMedidas, getRubroNames};

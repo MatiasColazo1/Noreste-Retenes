@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const UserController = require('../controllers/user.controller');
-const { verifyToken } = require('../middlewares/auth.middlewares'); // Middleware para verificar el token
+const { verifyToken, isAdmin } = require('../middlewares/auth.middlewares'); // Middleware para verificar el token
 
 // Ruta para registrar un usuario
 router.post('/register', UserController.registerUser);
@@ -20,5 +20,8 @@ router.delete('/:userId', verifyToken, UserController.deleteUser);
 
 // Ruta para obtener todos los usuarios (requiere ser admin)
 router.get('/', verifyToken, UserController.getAllUsers);
+
+// Actualizar descuentos de un usuario
+router.put('/:userId/descuentos', verifyToken, UserController.updateUserDiscounts);
 
 module.exports = router;

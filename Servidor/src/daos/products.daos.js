@@ -2,28 +2,28 @@ const Product = require('../models/products.model');
 
 class ProductDAO {
 // Obtener productos con paginación y cache en Redis
+// Obtener productos con paginación y cache en Redis
 static async getProducts(redisClient, page = 1, limit = 20) {
   const cacheKey = `products:page:${page}:limit:${limit}`;
 
   try {
-      const cachedData = await redisClient.get(cacheKey);
-      if (cachedData) {
-          return JSON.parse(cachedData);
-      }
+    const cachedData = await redisClient.get(cacheKey);
+    if (cachedData) {
+      return JSON.parse(cachedData);
+    }
 
-      // Mejorar paginación con base en _id
-      const products = await Product.find()
+    const products = await Product.find()
       .sort({ _id: 1 })
       .skip((page - 1) * limit)
       .limit(limit)
-      .lean(); // Reduce el tiempo de respuesta
-      
-      await redisClient.setEx(cacheKey, 600, JSON.stringify(products));
+      .lean();
 
-      return products;
+    await redisClient.setEx(cacheKey, 600, JSON.stringify(products));
+
+    return products;
   } catch (error) {
-      console.error('❌ Error al obtener productos:', error);
-      throw error;
+    console.error('❌ Error al obtener productos:', error);
+    throw error;
   }
 }
 

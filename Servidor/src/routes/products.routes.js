@@ -16,7 +16,9 @@ const upload = multer({ storage });
 router.get('/', verifyToken, ProductController.getProducts); // Obtener productos con paginación
 router.get('/by-user', verifyToken, ProductController.getProductsByUser); // 🔁 CAMBIADA PARA EVITAR CONFLICTO
 router.get('/buscar', verifyToken, ProductController.getProductsByCodigoParcial);// Obtener producto por código
+router.get('/rubros', verifyToken, ProductController.getRubroNames); // esta primero
 router.get('/:id', verifyToken, ProductController.getProductById); // Obtener producto por ID
+router.get('/:id/precio', verifyToken, ProductController.getPrecioProductoById);
 
 router.put('/:id/image', verifyToken, isAdmin, ProductController.updateProductImage);
 
@@ -31,5 +33,11 @@ router.get('/equivalencias/buscar', verifyToken, ProductController.getProductsBy
 
 // filtro medidas
 router.get('/medidas/buscar', verifyToken, ProductController.getProductsByMedidas);
+
+
+
+
+
+
 
 module.exports = router;

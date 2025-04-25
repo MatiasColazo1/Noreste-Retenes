@@ -137,19 +137,28 @@ export class CatalogoComponent implements OnInit {
       this.mensajeUsuario = '';
     });
   }  
-
   selectProduct(id: string) {
     forkJoin({
       detalles: this.productService.getProductById(id),
-      precios: this.productService.getProductsByUser()
-    }).subscribe(({ detalles, precios }) => {
-      const productoConPrecio = precios.find(p => p._id === id);
+      precio: this.productService.getPrecioProductoById(id)
+    }).subscribe(({ detalles, precio }: { detalles: Product, precio: any }) => {
+      
       this.selectedProduct = {
         ...detalles,
-        Precio: productoConPrecio?.Precio
+        Precio: precio?.precioFinal || detalles.PrecioLista1,
+        PrecioOriginal: precio?.precioOriginal,
+        Descuento: precio?.descuentoAplicado
       };
+  
+      console.log("Detalles:", detalles);
+      console.log("Precio con descuento:", precio);
     });
   }
+  
+  
+  
+  
+  
 
   uploadProductImage() {
     if (!this.imageFile || !this.selectedProduct) return;

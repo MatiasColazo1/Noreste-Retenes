@@ -218,6 +218,50 @@
   </ng-template>
 </p>
 
+<div *ngIf="isEditing">
+  <h3>Descuentos por Rubro</h3>
+
+  <div *ngFor="let descuento of descuentos; let i = index" class="mb-2 d-flex align-items-center gap-2">
+    <!-- Select de rubros -->
+    <select class="form-select w-auto"
+            [(ngModel)]="descuento.rubro"
+            [ngModelOptions]="{ standalone: true }">
+      <option *ngFor="let rubro of rubros" [value]="rubro">{{ rubro }}</option>
+    </select>
+
+    <!-- Input de porcentaje -->
+    <input class="form-control w-auto"
+           type="number"
+           min="0"
+           max="100"
+           [(ngModel)]="descuento.porcentaje"
+           [ngModelOptions]="{ standalone: true }"
+           placeholder="% Descuento" />
+
+    <!-- Botón eliminar -->
+    <button type="button" class="btn btn-danger btn-sm" (click)="removeDescuento(i)">Eliminar</button>
+  </div>
+
+  <!-- Botón para agregar nuevo descuento -->
+  <button type="button" class="btn btn-secondary mt-2" (click)="addDescuento()">Agregar descuento</button>
+</div>
+
+<!-- Vista solo lectura -->
+<div *ngIf="!isEditing && descuentos.length">
+  <h3>Descuentos asignados</h3>
+  <ul class="list-group">
+    <li class="list-group-item" *ngFor="let d of descuentos">
+      <strong>{{ d.rubro }}:</strong> {{ d.porcentaje }}%
+    </li>
+  </ul>
+</div>
+
+
+
+
+
+
+
 <!-- Mostrar el botón de editar y guardar -->
 <div *ngIf="!isEditing">
   <button (click)="toggleEdit()">Editar</button>

@@ -12,8 +12,21 @@
   
     <p><strong>Nombre:</strong> {{ producto.Nombre }}</p>
     <p><strong>Nombre Rubro:</strong> {{ producto.NombreRubro }}</p>
-    <p><strong>Precio:</strong> {{ producto?.Precio ?? producto?.PrecioLista1 ?? producto?.PrecioLista2 | currency }}</p>
-
+   
+    <p><strong>Precio:</strong>
+      <span *ngIf="producto?.Descuento && producto?.Descuento > 0">
+        <s>{{ producto?.PrecioOriginal | currency }}</s>
+        <strong class="text-danger ms-2">{{ producto?.Precio | currency }}</strong>
+        <span class="text-success ms-1" style="font-size: 0.9em;">
+          (-{{ producto?.Descuento }}%)
+        </span>
+      </span>
+      <span *ngIf="!producto?.Descuento || producto?.Descuento <= 0">
+        {{ producto?.Precio ?? producto?.PrecioLista1 ?? producto?.PrecioLista2 | currency }}
+      </span>
+    </p>
+    
+    
     <p><strong>Interior:</strong> {{ producto.INTERIOR }}</p>
     <p><strong>Exterior:</strong> {{ producto.EXTERIOR }}</p>
     <p><strong>Ancho:</strong> {{ producto.ANCHO }}</p>

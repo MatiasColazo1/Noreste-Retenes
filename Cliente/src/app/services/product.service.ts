@@ -129,4 +129,19 @@ getProductsByMedidas(interior?: number, exterior?: number, ancho?: number, page:
     headers: this.getAuthHeaders(),
   });
 }
+
+// Obtener nombres únicos de rubros
+getRubros(): Observable<string[]> {
+  const token = localStorage.getItem('token');
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  return this.http.get<string[]>(`${this.apiUrl}/rubros`, { headers });
+}
+
+// Obtener el precio individual de un producto con descuento aplicado
+getPrecioProductoById(id: string): Observable<any> {
+  return this.http.get<any>(`${this.apiUrl}/${id}/precio`, {
+    headers: this.getAuthHeaders(),
+  });
+}
+
 }

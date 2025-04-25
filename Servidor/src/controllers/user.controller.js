@@ -74,10 +74,11 @@ registerUser: async (req, res) => {
         // Generar el token incluyendo listaPrecio
         const token = jwt.sign(
             {
-                userId: user._id,
+                _id: user._id,
                 email: user.email,
                 role: user.role,
                 listaPrecio: user.listaPrecio, // 👈 Agregado aquí
+                descuentos: user.descuentos
             },
             process.env.JWT_SECRET,
             { expiresIn: '1h' }
@@ -92,6 +93,7 @@ registerUser: async (req, res) => {
                 name: user.nombre,
                 role: user.role,
                 listaPrecio: user.listaPrecio, // 👈 También podés retornarlo por separado si lo usás en el frontend
+                descuentos: user.descuentos
             },
         });
     } catch (error) {
@@ -174,6 +176,32 @@ registerUser: async (req, res) => {
             });
         }
     },
+
+    updateUserDiscounts: async (req, res) => {
+        try {
+            const { userId } = req.params;
+            const { descuentos } = req.body;
+    
+            if (!Array.isArray(descuentos)) {
+                return res.status(400).json({
+                    message: 'El campo descuentos debe ser un array',
+                });
+            }
+    
+            const updatedUser = await UserService.updateUserDiscounts(userId, descuentos);
+    
+            res.status(200).json({
+                message: 'Descuentos actualizados correctamente',
+                user: updatedUser,
+            });
+        } catch (error) {
+            res.status(400).json({
+                message: 'Error al actualizar descuentos',
+                error: error.message,
+            });
+        }
+    }
+    
 };
 
 module.exports = UserController;

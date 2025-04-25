@@ -26,15 +26,19 @@ export class LoginComponent {
   
     this.authService.login(this.loginData.email, this.loginData.password).subscribe({
       next: (response) => {
-        console.log(response); // Verifica que `role` esté presente aquí
-        // Guarda el token y el role en localStorage
+        console.log(response); // Verifica que `role` y `user` estén presentes aquí
+  
+        // Guarda el token, el role y el usuario completo en localStorage
         this.authService.saveAuthData(response.token, response.user.role);
-        this.router.navigate(['/catalogo']);
+        this.authService.saveUser(response.user); // 👈 Guardamos el usuario completo
+  
+        this.router.navigate(['/catalogo']); // Redirige después de login
       },
       error: (err) => {
         const msg = err.error.message || 'Error al iniciar sesión';
-        this.notificationService.error(msg); // 👈 Muestra 'Usuario no encontrado' o 'Contraseña incorrecta'
-      }      
+        this.notificationService.error(msg); // Muestra el mensaje de error
+      }
     });
-}
+  }
+  
 }

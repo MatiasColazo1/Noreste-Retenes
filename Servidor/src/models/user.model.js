@@ -3,10 +3,10 @@ const mongoose = require('mongoose');
 const UserSchema = new mongoose.Schema({
     nombre: { type: String, required: true, trim: true },
     apellido: { type: String, required: true, trim: true },
-    tipoCliente: { 
-        type: String, 
-        enum: ['Mayorista', 'Minorista'], 
-        required: true 
+    tipoCliente: {
+        type: String,
+        enum: ['Mayorista', 'Minorista'],
+        required: true
     },
     fechaNacimiento: { type: Date, required: true },
     cuit: { type: String, required: true, unique: true },
@@ -20,24 +20,24 @@ const UserSchema = new mongoose.Schema({
     // Datos opcionales
     sitioWeb: { type: String, default: '' },
     telefono: { type: String, default: '' },
-    situacionIVA: { 
-        type: String, 
+    situacionIVA: {
+        type: String,
         enum: [
-            'Responsable Inscripto', 
-            'Monotributista', 
-            'Exento', 
-            'Consumidor Final', 
-            'No Responsable', 
+            'Responsable Inscripto',
+            'Monotributista',
+            'Exento',
+            'Consumidor Final',
+            'No Responsable',
             'Sujeto No Categorizado'
-        ], 
-        required: false 
+        ],
+        required: false
     },
     estadoCivil: { type: String, default: '' },
 
     // Datos solo editables por el administrador
     numero: { type: String, default: '' },
-    listaPrecio: { 
-        type: String, 
+    listaPrecio: {
+        type: String,
         enum: ['Lista 1', 'Lista 2'],  // Lista de opciones permitidas
         default: 'Lista 1',            // Valor predeterminado
         required: false,                 // Requiere que no esté vacío
@@ -48,13 +48,21 @@ const UserSchema = new mongoose.Schema({
     rutaVenta: { type: String, default: '' },
     comentario: { type: String, default: '' },
 
+    // Descuentos personalizados por rubro
+    descuentos: [
+        {
+            rubro: { type: String },
+            porcentaje: { type: Number } // ejemplo: 25 para 25%
+        }
+    ],
+
     // Rol del usuario (por defecto es "user")
-    role: { 
-        type: String, 
-        enum: ['user', 'admin'], 
-        default: 'user' 
+    role: {
+        type: String,
+        enum: ['user', 'admin'],
+        default: 'user'
     }
-}, { 
+}, {
     timestamps: true // Agrega `createdAt` y `updatedAt` automáticamente
 });
 

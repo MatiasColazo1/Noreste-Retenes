@@ -105,7 +105,16 @@ const UserService = {
         } catch (error) {
             throw new Error('Error al obtener usuarios: ' + error.message);
         }
+    },
+
+    updateUserDiscounts: async (userId, descuentos) => {
+        try {
+            return await UserDAO.updateById(userId, { descuentos });
+        } catch (error) {
+            throw new Error('Error al actualizar descuentos del usuario: ' + error.message);
+        }
     }
+    
 };
 
 module.exports = UserService;

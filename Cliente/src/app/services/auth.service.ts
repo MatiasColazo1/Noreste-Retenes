@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 import { User } from '../models/user';
 import { Router } from '@angular/router';
 
@@ -82,5 +82,33 @@ export class AuthService {
     
     return this.http.put<any>(`${this.apiUrl}/${id}`, userData, { headers });
   }
+
+  // Guardar usuario completo
+saveUser(user: any): void {
+  localStorage.setItem('user', JSON.stringify(user));
+}
+
+// Obtener usuario completo
+getUser(): any | null {
+  const user = localStorage.getItem('user');
+  return user ? JSON.parse(user) : null;
+}
+
+// Obtener los descuentos del usuario
+getDescuentos(): any[] {
+  return this.getUser()?.descuentos ?? [];
+}
+
+  // Actualizar descuentos de un usuario por ID
+ // PUT /api/users/:userId/descuentos
+// En auth.service.ts
+updateUserDiscounts(userId: string, descuentos: any): Observable<any> {
+  const token = localStorage.getItem('token');
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  return this.http.put<any>(`${this.apiUrl}/${userId}/descuentos`, { descuentos }, { headers });
+}
+
+
+
   
 }
