@@ -3,6 +3,8 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const userRoutes = require('./src/routes/user.routes');
 const productRoutes = require('./src/routes/products.routes'); // 🔹 Importa las rutas de productos
+const pdfRoutes = require('./src/routes/pdf.routes');
+const carritoRoutes = require('./src/routes/carrito.routes')
 
 dotenv.config(); // Cargar variables de entorno
 
@@ -20,5 +22,7 @@ app.get('/', (req, res) => {
 // Rutas
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes); // 🔹 Agrega las rutas de productos
+app.use('/api/pdf', pdfRoutes);
+app.use('/api/carrito', carritoRoutes);
 
 module.exports = app;

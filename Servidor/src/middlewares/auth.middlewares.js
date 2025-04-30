@@ -32,11 +32,12 @@ const verifyToken = (req, res, next) => {
 // Middleware para verificar si el usuario es admin
 const isAdmin = async (req, res, next) => {
     try {
-        if (!req.user || !req.user.userId) {  // Cambié 'id' a 'userId' para que coincida con el token
+        if (!req.user || !req.user._id) {
             return res.status(400).json({ message: 'Información de usuario no válida en el token.' });
         }
-
-        const user = await User.findById(req.user.userId);  // Usar 'userId' para buscar al usuario
+        
+        const user = await User.findById(req.user._id);
+        
 
         if (!user) {
             return res.status(404).json({ message: 'Usuario no encontrado.' });
