@@ -1,4 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Carrito } from 'src/app/models/carrito';
+import { CarritoService } from 'src/app/services/carrito.service';
 import { ProductService } from 'src/app/services/product.service';
 
 @Component({
@@ -17,7 +19,9 @@ export class ProductoDetalleComponent {
   editandoIndice: number | null = null;
   equivalenciaEditada: string = '';
 
-  constructor(private productService: ProductService) { }
+  cantidad: number = 1;
+
+  constructor(private productService: ProductService, private carritoService: CarritoService) { }
 
   onImageSelected(event: any) {
     const file = event.target.files[0];
@@ -90,4 +94,24 @@ export class ProductoDetalleComponent {
       }
     });
   }
+
+  agregarAlCarrito(): void {
+    const item: Carrito = {
+      idProducto: this.producto._id,
+      codigo: this.producto.Codigo,
+      cantidad: this.cantidad
+    };
+  
+    this.carritoService.addToCart(item).subscribe({
+      next: () => {
+        alert('Producto agregado al carrito');
+      },
+      error: (error) => {
+        console.error('Error al agregar al carrito:', error);
+        alert('Error al agregar al carrito');
+      }
+    });
+  }
+  
+
 }

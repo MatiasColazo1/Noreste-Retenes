@@ -7,6 +7,7 @@ import { FiltersComponent } from './filters/filters.component';
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { ProductosListadoComponent } from './producto-listado/producto-listado.component';
+import { CarritoModule } from '../carrito/carrito.module';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import { ProductosListadoComponent } from './producto-listado/producto-listado.c
     CommonModule,
     CatalogoRoutingModule,
     FormsModule, SharedModule,
+    CarritoModule
   ]
 })
 export class CatalogoModule { }

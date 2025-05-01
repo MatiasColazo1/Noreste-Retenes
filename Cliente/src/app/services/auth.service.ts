@@ -91,7 +91,7 @@ saveUser(user: any): void {
 // Obtener usuario completo
 getUser(): any | null {
   const user = localStorage.getItem('user');
-  return user ? JSON.parse(user) : null;
+  return user ? JSON.parse(user) : null; // Verifica que el usuario esté bien formateado
 }
 
 // Obtener los descuentos del usuario

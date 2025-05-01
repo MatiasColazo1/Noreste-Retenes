@@ -1,0 +1,21 @@
+<div class="container mt-4">
+    <h3>Carrito de Compras</h3>
+  
+    <div *ngIf="carrito.length === 0">
+      <p>No hay productos en el carrito.</p>
+    </div>
+  
+    <ul *ngIf="carrito.length > 0" class="list-group">
+      <li *ngFor="let item of carrito" class="list-group-item d-flex justify-content-between align-items-center">
+        <span>{{ item.codigo }} (x{{ item.cantidad }})</span>
+        <button class="btn btn-danger btn-sm" (click)="eliminarDelCarrito(item.idProducto)">Eliminar</button>
+      </li>
+    </ul>
+  
+    <button class="btn btn-secondary mt-3" *ngIf="carrito.length > 0" (click)="vaciarCarrito()">Vaciar Carrito</button>
+  </div>
+
+  <button (click)="generarPDF()">Descargar Carrito en PDF</button>
+
+  
+  

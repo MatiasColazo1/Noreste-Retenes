@@ -33,6 +33,21 @@
     <p><strong>Observación:</strong> {{ producto.Observacion }}</p>
   </div>
 
+  <button class="btn btn-primary mt-3" (click)="agregarAlCarrito()">Agregar al carrito</button>
+  <div class="mb-3">
+    <label for="cantidad" class="form-label">Cantidad:</label>
+    <input
+      type="number"
+      id="cantidad"
+      [(ngModel)]="cantidad"
+      min="1"
+      class="form-control"
+      style="max-width: 100px;"
+    />
+  </div>
+  
+  
+
 <!-- EQUIVALENCIAS -->
 <div *ngIf="producto?.equivalencias && producto.equivalencias.length > 0" class="card-body">
   <p><strong>Equivalencias:</strong></p>
