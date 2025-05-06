@@ -297,20 +297,17 @@ const getProductsByEquivalencia = async (req, res) => {
   //filtro medidas
   const getProductsByMedidas = async (req, res) => {
     try {
-      // Obtener los parámetros de la query
-      const { INTERIOR, EXTERIOR, ANCHO, page = 1, limit = 20 } = req.query;
+      const { INTERIOR, EXTERIOR, ANCHO, NombreRubro, page = 1, limit = 20 } = req.query;
   
-      // Crear el objeto de filtros solo si existen los valores
       const filters = {};
-  
       if (INTERIOR) filters.INTERIOR = Number(INTERIOR);
       if (EXTERIOR) filters.EXTERIOR = Number(EXTERIOR);
       if (ANCHO) filters.ANCHO = Number(ANCHO);
+      if (NombreRubro) filters.NombreRubro = NombreRubro;
   
-      // Llamar al DAO para obtener los productos filtrados
       const result = await ProductDAO.getProductsByMedidas(filters, parseInt(page), parseInt(limit));
   
-      return res.json(result); // Retornar los productos encontrados
+      return res.json(result);
     } catch (error) {
       console.error('❌ Error en getProductsByMedidas:', error);
       return res.status(500).json({ error: 'Error al buscar productos por medidas' });

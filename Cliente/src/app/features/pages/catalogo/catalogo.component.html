@@ -24,11 +24,11 @@ route="/admin/dashboard"></app-buttons>
   {{ mensajeUsuario }}
 </div>
 
-<div class="container mt-4">
+<div class="contenedor">
   <h2>Listado de Productos</h2>
 
-  <div class="row">
-    <div class="col-md-8">
+  <div class="layout">
+    <div class="listado">
       <app-producto-listado 
         [products]="products" 
         (productSelected)="selectProduct($event)">
@@ -41,7 +41,7 @@ route="/admin/dashboard"></app-buttons>
       </app-paginacion>
     </div>
 
-    <div class="col-md-4" *ngIf="selectedProduct">
+    <div class="detalle" *ngIf="selectedProduct">
       <app-producto-detalle 
         [producto]="selectedProduct" 
         [isAdmin]="authService.isAdmin()" 
@@ -52,3 +52,4 @@ route="/admin/dashboard"></app-buttons>
     </div>
   </div>
 </div>
+

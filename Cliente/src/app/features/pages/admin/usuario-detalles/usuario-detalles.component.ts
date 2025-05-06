@@ -31,11 +31,9 @@ export class UsuarioDetallesComponent implements OnInit {
         next: (data) => {
           this.user = data.user;
           this.userBackup = { ...this.user };
-          const descuentosRaw = this.user.descuentos || {};
-          this.descuentos = Object.entries(descuentosRaw).map(([rubro, porcentaje]) => ({
-            rubro,
-            porcentaje
-          }));
+          const descuentosRaw = this.user.descuentos || [];
+          this.descuentos = Array.isArray(descuentosRaw) ? descuentosRaw : [];
+          
           
         },
         error: (err) => {

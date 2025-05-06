@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { Product } from 'src/app/models/product';
 import { AuthService } from 'src/app/services/auth.service';
@@ -24,9 +25,14 @@ export class CatalogoComponent implements OnInit {
 
   codigoBuscado: string = '';
   mensajeUsuario: string = '';
+
+  lastSearchType: 'codigo' | 'equivalencia' | 'medidas' | null = null;
+lastSearchParams: any = null;
+
   constructor(
     public authService: AuthService,
-    private productService: ProductService
+    private productService: ProductService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -34,6 +40,10 @@ export class CatalogoComponent implements OnInit {
       this.mensajeUsuario = '';
       this.currentPage = 1;
       this.cargarProductos();
+      
+      if (!this.authService.isAuthenticated()) {
+        this.router.navigate(['/login']);
+      }
     }    
 
   logout() {
@@ -80,30 +90,33 @@ export class CatalogoComponent implements OnInit {
 
   buscarPorCodigoParcial(codigo: string) {
     const valor = codigo.trim();
+    this.codigoBuscado = valor;
   
     if (!valor) {
       this.mensajeUsuario = '';
       this.currentPage = 1;
+      this.lastSearchType = null;
       this.cargarProductos();
       return;
     }
+  
+    this.lastSearchType = 'codigo';
+    this.lastSearchParams = { codigo: valor };
   
     this.productService.getProductsByPartialCode(valor, 1, this.limit).subscribe({
       next: (data) => {
         this.products = data.products;
         this.hasNextPage = data.products.length === this.limit;
-        this.mensajeUsuario = data.products.length
-          ? '' // Si se encuentran productos, limpio el mensaje
-          : 'No se encontraron productos con ese código.';
+        this.mensajeUsuario = data.products.length ? '' : 'No se encontraron productos con ese código.';
       },
-      error: (err) => {
-        console.error('Error al buscar productos por código', err);
+      error: () => {
         this.products = [];
         this.hasNextPage = false;
         this.mensajeUsuario = 'Ocurrió un error al buscar productos.';
       }
     });
-  }  
+  }
+  
 
   getProductsByPartialCode(codigo: string, pagina: number) {
     this.productService.getProductsByPartialCode(codigo, pagina, this.limit).subscribe({
@@ -122,13 +135,19 @@ export class CatalogoComponent implements OnInit {
 
   changePage(pagina: number) {
     this.currentPage = pagina;
-
-    if (this.codigoBuscado?.trim()) {
-      this.getProductsByPartialCode(this.codigoBuscado, pagina);
+  
+    if (this.lastSearchType === 'codigo') {
+      this.getProductsByPartialCode(this.lastSearchParams.codigo, pagina);
+    } else if (this.lastSearchType === 'equivalencia') {
+      this.productService.getProductsByEquivalencia(this.lastSearchParams.equivalencia, pagina, this.limit)
+        .subscribe(/* manejar resultados */);
+    } else if (this.lastSearchType === 'medidas') {
+      this.buscarPorMedidas(this.lastSearchParams);
     } else {
       this.cargarProductos();
     }
   }
+  
 
   cargarProductos() {
     this.productService.getProducts(this.currentPage, this.limit).subscribe((response) => {
@@ -202,6 +221,9 @@ export class CatalogoComponent implements OnInit {
       this.cargarProductos();
       return;
     }
+
+    this.lastSearchType = 'equivalencia'; 
+    this.lastSearchParams = { equivalencia: valor };
   
     this.productService.getProductsByEquivalencia(valor, 1, this.limit).subscribe({
       next: (data: any) => {
@@ -219,25 +241,30 @@ export class CatalogoComponent implements OnInit {
     });
   }
 
-  buscarPorMedidas(filtros: { interior?: number, exterior?: number, ancho?: number }) {
+  buscarPorMedidas(filtros: { interior?: number, exterior?: number, ancho?: number, nombreRubro?: string }) {
     this.mensajeUsuario = '';
     this.products = [];
   
     const interior = filtros.interior && !isNaN(filtros.interior) ? filtros.interior : undefined;
     const exterior = filtros.exterior && !isNaN(filtros.exterior) ? filtros.exterior : undefined;
     const ancho = filtros.ancho && !isNaN(filtros.ancho) ? filtros.ancho : undefined;
+    const nombreRubro = filtros.nombreRubro || undefined;
   
-    // Si todos los filtros están vacíos, traigo todos los productos
-    if (interior === undefined && exterior === undefined && ancho === undefined) {
+    if (interior === undefined && exterior === undefined && ancho === undefined && !nombreRubro) {
       this.currentPage = 1;
       this.cargarProductos();
       return;
     }
+
+    this.lastSearchType = 'medidas';
+this.lastSearchParams = { interior, exterior, ancho, nombreRubro };
+
   
     this.productService.getProductsByMedidas(
       interior,
       exterior,
       ancho,
+      nombreRubro,
       this.currentPage,
       this.limit
     ).subscribe({
@@ -246,7 +273,7 @@ export class CatalogoComponent implements OnInit {
         this.totalProducts = res.total;
         this.hasNextPage = this.products.length === this.limit;
         if (this.products.length === 0) {
-          this.mensajeUsuario = 'No se encontraron productos con esas medidas.';
+          this.mensajeUsuario = 'No se encontraron productos con esos filtros.';
         }
       },
       error: (err) => {
@@ -258,11 +285,15 @@ export class CatalogoComponent implements OnInit {
   
   
   
+  
   resetearResultados() {
     this.codigoBuscado = '';
     this.selectedProduct = null;
     this.currentPage = 1;
+    this.lastSearchType = null;
+    this.lastSearchParams = null;
     this.cargarProductos();
     this.mensajeUsuario = ' ';
   }
+  
 }

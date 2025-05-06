@@ -114,7 +114,7 @@ getProductsByEquivalencia(equivalencia: string, page: number = 1, limit: number 
   });
 }
 
-getProductsByMedidas(interior?: number, exterior?: number, ancho?: number, page: number = 1, limit: number = 20): Observable<any> {
+getProductsByMedidas(interior?: number, exterior?: number, ancho?: number, nombreRubro?: string, page: number = 1, limit: number = 20): Observable<any> {
   let url = `${this.apiUrl}/medidas/buscar?page=${page}&limit=${limit}`;
   if (interior !== undefined) {
     url += `&INTERIOR=${interior}`;
@@ -124,6 +124,9 @@ getProductsByMedidas(interior?: number, exterior?: number, ancho?: number, page:
   }
   if (ancho !== undefined) {
     url += `&ANCHO=${ancho}`;
+  }
+  if (nombreRubro) {
+    url += `&NombreRubro=${encodeURIComponent(nombreRubro)}`;
   }
   return this.http.get(url, {
     headers: this.getAuthHeaders(),

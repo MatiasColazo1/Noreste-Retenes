@@ -37,6 +37,13 @@
   <div class="col">
     <input type="number" class="form-control" placeholder="Ancho" [(ngModel)]="ancho" />
   </div>
+  <div class="col">
+    <select class="form-select" [(ngModel)]="nombreRubro">
+      <option value="">Todos los rubros</option>
+      <option *ngFor="let rubro of rubros" [value]="rubro">{{ rubro }}</option>
+    </select>
+  </div>
+  
   <div class="col-auto">
     <button class="btn btn-success" (click)="onBuscarMedidas()">Buscar</button>
   </div>

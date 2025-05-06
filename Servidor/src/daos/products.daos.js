@@ -283,7 +283,6 @@ static async getProductsByMedidas(filters = {}, page = 1, limit = 20) {
   try {
     const query = {};
 
-    // Agregar los filtros de medidas si existen
     if (filters.INTERIOR !== undefined) {
       query.INTERIOR = Number(filters.INTERIOR);
     }
@@ -293,15 +292,16 @@ static async getProductsByMedidas(filters = {}, page = 1, limit = 20) {
     if (filters.ANCHO !== undefined) {
       query.ANCHO = Number(filters.ANCHO);
     }
+    if (filters.NombreRubro) {
+      query.NombreRubro = filters.NombreRubro;
+    }
 
-    // Buscar los productos con los filtros aplicados
     const products = await Product.find(query)
       .sort({ _id: 1 })
       .skip((page - 1) * limit)
       .limit(limit)
       .lean();
 
-    // Contar el total de productos que coinciden con el filtro
     const total = await Product.countDocuments(query);
 
     return { products, total };
@@ -310,6 +310,7 @@ static async getProductsByMedidas(filters = {}, page = 1, limit = 20) {
     throw error;
   }
 }
+
 
 
 }
