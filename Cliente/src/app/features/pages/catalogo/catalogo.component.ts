@@ -295,5 +295,4 @@ this.lastSearchParams = { interior, exterior, ancho, nombreRubro };
     this.cargarProductos();
     this.mensajeUsuario = ' ';
   }
-  
 }
