@@ -8,6 +8,14 @@ import { UsuarioDetallesComponent } from './usuario-detalles/usuario-detalles.co
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { ProductosAdminComponent } from './productos-admin/productos-admin.component';
+import { ProductosEditarComponent } from './productos-editar/productos-editar.component';
+import { EquivalenciasFormComponent } from './productos-editar/equivalencias-form/equivalencias-form.component';
+import { ImagenUploaderComponent } from './productos-editar/imagen-uploader/imagen-uploader.component';
+import { MedidasFormComponent } from './productos-editar/medidas-form/medidas-form.component';
+import { IdentificadorFormComponent } from './productos-editar/identificador-form/identificador-form.component';
+import { DescripcionFormComponent } from './productos-editar/descripcion-form/descripcion-form.component';
+import { DatosGeneralesFormComponent } from './productos-editar/datos-generales-form/datos-generales-form.component';
+import { MarcaFormComponent } from './productos-editar/marca-form/marca-form.component';
 
 @NgModule({
   declarations: [
@@ -15,12 +23,20 @@ import { ProductosAdminComponent } from './productos-admin/productos-admin.compo
     DashboardComponent,
     UsuariosComponent,
     UsuarioDetallesComponent,
-    ProductosAdminComponent
+    ProductosAdminComponent,
+    ProductosEditarComponent,
+    EquivalenciasFormComponent,
+    ImagenUploaderComponent,
+    MedidasFormComponent,
+    IdentificadorFormComponent,
+    DescripcionFormComponent,
+    DatosGeneralesFormComponent,
+    MarcaFormComponent
   ],
   imports: [
     CommonModule,
     AdminRoutingModule,
-    FormsModule, SharedModule
+    FormsModule, SharedModule,
   ]
 })
 export class AdminModule { }

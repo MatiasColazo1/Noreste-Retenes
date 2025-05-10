@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Router } from '@angular/router';
 import { Carrito } from 'src/app/models/carrito';
 import { CarritoService } from 'src/app/services/carrito.service';
 import { ProductService } from 'src/app/services/product.service';
@@ -15,13 +16,10 @@ export class ProductoDetalleComponent {
   @Output() imagenSeleccionada = new EventEmitter<File>();
   @Output() imagenSubida = new EventEmitter<void>();
 
-  nuevaEquivalencia: string = '';
-  editandoIndice: number | null = null;
-  equivalenciaEditada: string = '';
 
   cantidad: number = 1;
 
-  constructor(private productService: ProductService, private carritoService: CarritoService) { }
+  constructor(private productService: ProductService, private carritoService: CarritoService, private router: Router) { }
 
   onImageSelected(event: any) {
     const file = event.target.files[0];
@@ -37,63 +35,7 @@ export class ProductoDetalleComponent {
     this.imagenSubida.emit();
   }
 
-  agregarEquivalencia() {
-    if (!this.nuevaEquivalencia.trim()) return;
 
-    this.productService.addEquivalencia(this.producto._id, this.nuevaEquivalencia).subscribe({
-      next: () => {
-        if (!this.producto.equivalencias) {
-          this.producto.equivalencias = [];
-        }
-
-        this.producto.equivalencias.push(this.nuevaEquivalencia);
-        this.nuevaEquivalencia = '';
-      },
-      error: (err) => {
-        console.error('Error al agregar equivalencia:', err);
-      }
-    });
-  }
-
-  eliminarEquivalencia(eq: string) {
-    this.productService.removeEquivalencia(this.producto._id, eq).subscribe({
-      next: () => {
-        this.producto.equivalencias = this.producto.equivalencias?.filter((e: string) => e !== eq) || [];
-      },
-      error: (err) => {
-        console.error('Error al eliminar equivalencia:', err);
-      }
-    });
-  }
-
-  editarEquivalencia(eq: string, index: number) {
-    this.editandoIndice = index;
-    this.equivalenciaEditada = eq;
-  }
-
-  cancelarEdicion() {
-    this.editandoIndice = null;
-    this.equivalenciaEditada = '';
-  }
-
-  guardarEdicionEquivalencia(equivalenciaAntigua: string, index: number) {
-    const nuevaEquivalencia = this.equivalenciaEditada.trim();
-
-    if (!nuevaEquivalencia || nuevaEquivalencia === equivalenciaAntigua) {
-      this.cancelarEdicion();
-      return;
-    }
-
-    this.productService.updateEquivalencia(this.producto._id, equivalenciaAntigua, nuevaEquivalencia).subscribe({
-      next: () => {
-        this.producto.equivalencias[index] = nuevaEquivalencia;
-        this.cancelarEdicion();
-      },
-      error: (err) => {
-        console.error('Error al actualizar equivalencia:', err);
-      }
-    });
-  }
 
   agregarAlCarrito(): void {
     const item: Carrito = {
@@ -113,5 +55,11 @@ export class ProductoDetalleComponent {
     });
   }
   
+  irAEditar() {
+    if (this.producto && this.producto._id) {
+      this.router.navigate(['/admin/productos', this.producto._id]);
+    }
+    
+  }
 
 }

@@ -1,0 +1,16 @@
+<p><strong>Imagen:</strong></p>
+<img
+  *ngIf="imagenUrl"
+  [src]="imagenUrl + '?t=' + timestamp"
+  (error)="onImageError($event)"
+  alt="Imagen del producto"
+  width="150"
+  height="150"
+/>
+
+
+<div *ngIf="isAdmin">
+  <label for="imageUpload">Editar imagen:</label>
+  <input type="file" id="imageUpload" (change)="onImageSelected($event)">
+  <button class="btn btn-primary mt-2" (click)="subirImagen()">Subir Imagen</button>
+</div>

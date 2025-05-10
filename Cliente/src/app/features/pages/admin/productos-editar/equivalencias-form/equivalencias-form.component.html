@@ -1,0 +1,22 @@
+<div class="card-body">
+    <p><strong>Equivalencias:</strong></p>
+    <ul>
+      <li *ngFor="let eq of equivalencias; let i = index">
+        <ng-container *ngIf="editandoIndice === i; else vistaNormal">
+          <input [(ngModel)]="equivalenciaEditada" class="form-control d-inline-block w-auto" />
+          <button class="btn btn-sm btn-primary ms-2" (click)="guardarEdicionEquivalencia(eq, i)">Guardar</button>
+          <button class="btn btn-sm btn-secondary ms-2" (click)="cancelarEdicion()">Cancelar</button>
+        </ng-container>
+        <ng-template #vistaNormal>
+          {{ eq }}
+          <button class="btn btn-sm btn-warning ms-2" (click)="editarEquivalencia(eq, i)">Editar</button>
+          <button class="btn btn-sm btn-danger ms-2" (click)="eliminarEquivalencia(eq)">Eliminar</button>
+        </ng-template>
+      </li>
+    </ul>
+  
+    <!-- Agregar nueva -->
+    <input [(ngModel)]="nuevaEquivalencia" placeholder="Nueva equivalencia" class="form-control mt-3" />
+    <button class="btn btn-success mt-2" (click)="agregarEquivalencia()">Agregar Equivalencia</button>
+  </div>
+  

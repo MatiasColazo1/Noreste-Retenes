@@ -38,11 +38,11 @@ static async syncProducts(productsFromExcel, redisClient) {
         
         // Crear operaciones de bulkWrite y actualizar caché en Redis
         productsFromExcel.forEach(product => {
-            const identifier = `${product.Prefijo}-${product.Codigo}-${product.MARCA}-${product.NombreRubro}`;
+            const identifier = `${product.Codigo}`;
 
             bulkOps.push({
                 updateOne: {
-                    filter: { Prefijo: product.Prefijo, Codigo: product.Codigo, MARCA: product.MARCA, NombreRubro: product.NombreRubro },
+                    filter: { Codigo: product.Codigo },
                     update: { $set: product },
                     upsert: true
                 }

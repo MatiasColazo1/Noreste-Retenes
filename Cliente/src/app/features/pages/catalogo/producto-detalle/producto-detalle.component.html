@@ -46,32 +46,19 @@
     />
   </div>
   
-  
+  <button *ngIf="isAdmin" (click)="irAEditar()">Editar</button>
 
-<!-- EQUIVALENCIAS -->
-<div *ngIf="producto?.equivalencias && producto.equivalencias.length > 0" class="card-body">
+
+<!-- EQUIVALENCIAS - SOLO LECTURA -->
+<div *ngIf="producto?.equivalencias?.length > 0" class="card-body">
   <p><strong>Equivalencias:</strong></p>
   <ul>
-    <li *ngFor="let eq of producto.equivalencias; let i = index">
-      <ng-container *ngIf="editandoIndice === i; else vistaNormal">
-        <input [(ngModel)]="equivalenciaEditada" class="form-control d-inline-block w-auto" />
-        <button class="btn btn-sm btn-primary ms-2" (click)="guardarEdicionEquivalencia(eq, i)">Guardar</button>
-        <button class="btn btn-sm btn-secondary ms-2" (click)="cancelarEdicion()">Cancelar</button>
-      </ng-container>
-      <ng-template #vistaNormal>
-        {{ eq }}
-        <button *ngIf="isAdmin" class="btn btn-sm btn-warning ms-2" (click)="editarEquivalencia(eq, i)">Editar</button>
-        <button *ngIf="isAdmin" class="btn btn-sm btn-danger ms-2" (click)="eliminarEquivalencia(eq)">Eliminar</button>
-      </ng-template>
+    <li *ngFor="let eq of producto.equivalencias">
+      {{ eq }}
     </li>
   </ul>
 </div>
 
-  <!-- AGREGAR NUEVA EQUIVALENCIA -->
-  <div *ngIf="isAdmin" class="card-body">
-    <input [(ngModel)]="nuevaEquivalencia" placeholder="Nueva equivalencia" class="form-control" />
-    <button class="btn btn-success mt-2" (click)="agregarEquivalencia()">Agregar Equivalencia</button>
-  </div>
 
   <div *ngIf="isAdmin">
     <label for="imageUpload">Editar imagen:</label>

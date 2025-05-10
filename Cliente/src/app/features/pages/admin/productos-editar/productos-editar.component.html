@@ -1,0 +1,26 @@
+<app-equivalencias-form
+  *ngIf="producto"
+  [equivalencias]="producto.equivalencias"
+  [productoId]="producto._id"
+  (equivalenciasChange)="producto.equivalencias = $event">
+</app-equivalencias-form>
+<app-imagen-uploader
+  [imagenUrl]="producto?.Imagen"
+  [isAdmin]="true" 
+  (imagenSeleccionada)="onImagenSeleccionada($event)"
+  (imagenSubida)="uploadProductImage()"
+></app-imagen-uploader>
+<app-medidas-form
+  [interior]="producto?.INTERIOR"
+  [exterior]="producto?.EXTERIOR"
+  [ancho]="producto?.ANCHO"
+></app-medidas-form>
+<app-identificador-form
+  [prefijo]="producto?.Prefijo"
+  [codigo]="producto?.Codigo"
+></app-identificador-form>
+<app-descripcion-form
+  [descripcion]="producto?.Descripcion"
+></app-descripcion-form>
+<app-datos-generales-form [producto]="producto"></app-datos-generales-form>
+<app-marca-form [producto]="producto"></app-marca-form>
