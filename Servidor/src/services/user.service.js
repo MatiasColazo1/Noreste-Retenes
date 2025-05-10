@@ -13,20 +13,20 @@ const UserService = {
                 error.details = validationResult.errors;
                 throw error;
             }
-    
+
             const duplicateErrors = await checkDuplicateFields(userData);
             if (duplicateErrors.length > 0) {
                 const error = new Error('Datos duplicados');
                 error.details = duplicateErrors;
                 throw error;
             }
-    
+
             // Encriptar y crear
             const salt = await bcrypt.genSalt(10);
             userData.password = await bcrypt.hash(userData.password, salt);
-    
+
             return await UserDAO.create(userData);
-    
+
         } catch (error) {
             // Si el error tiene detalles, responder con esos detalles
             if (error.details) {
@@ -36,7 +36,7 @@ const UserService = {
                     details: error.details  // Detalles de los errores
                 };
             }
-    
+
             // Enviar un error general si no se proporcionan detalles específicos
             return {
                 status: error.status || 500,
@@ -46,20 +46,18 @@ const UserService = {
         }
 
     },
-    
-    
 
 
     loginUser: async (email, password) => {
         try {
             console.log("Buscando usuario con email:", email);
             const user = await UserDAO.findByEmail(email);
-            
+
             if (!user || !(await bcrypt.compare(password, user.password))) {
                 console.log("❌ Email o contraseña incorrectos");
                 throw new Error('Email o contraseña incorrectos');
             }
-    
+
             console.log("✅ Usuario autenticado correctamente");
             return user;
         } catch (error) {
@@ -67,8 +65,7 @@ const UserService = {
             throw new Error('Error al iniciar sesión: ' + error.message);
         }
     },
-    
-    
+
 
     getUserById: async (userId) => {
         try {
@@ -77,19 +74,19 @@ const UserService = {
             throw new Error('Error al obtener usuario: ' + error.message);
         }
     },
+
     updateUser: async (userId, updateData) => {
         try {
             // Eliminar la contraseña del objeto de actualización siempre
             if (updateData.hasOwnProperty("password")) {
                 delete updateData.password;
             }
-    
+
             return await UserDAO.updateById(userId, updateData);
         } catch (error) {
             throw new Error('Error al actualizar usuario: ' + error.message);
         }
     },
-    
 
     deleteUser: async (userId) => {
         try {
@@ -99,13 +96,14 @@ const UserService = {
         }
     },
 
-    getAllUsers: async () => {
+    getAllUsers: async (redisClient, page, limit) => {
         try {
-            return await UserDAO.getAllUsers();
+            return await UserDAO.getAllUsers(redisClient, page, limit);
         } catch (error) {
             throw new Error('Error al obtener usuarios: ' + error.message);
         }
     },
+
 
     updateUserDiscounts: async (userId, descuentos) => {
         try {
@@ -114,7 +112,7 @@ const UserService = {
             throw new Error('Error al actualizar descuentos del usuario: ' + error.message);
         }
     }
-    
+
 };
 
 module.exports = UserService;

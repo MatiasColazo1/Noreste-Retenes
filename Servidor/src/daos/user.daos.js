@@ -58,13 +58,28 @@ const UserDAO = {
         }
     },
     // Obtiene todos los usuarios.
-    getAllUsers: async () => {
-        try {
-            return await User.find();
-        } catch (error) {
-            throw new Error('Error al obtener usuarios: ' + error.message);
+   getAllUsers: async (redisClient, page = 1, limit = 20) => {
+    const cacheKey = `users:page:${page}:limit:${limit}`;
+
+    try {
+        const cachedData = await redisClient.get(cacheKey);
+        if (cachedData) {
+            return JSON.parse(cachedData);
         }
+
+        const users = await User.find()
+            .sort({ _id: 1 })
+            .skip((page - 1) * limit)
+            .limit(limit)
+            .lean();
+
+        await redisClient.setEx(cacheKey, 600, JSON.stringify(users)); // Cache por 10 minutos
+
+        return users;
+    } catch (error) {
+        throw new Error('Error al obtener usuarios: ' + error.message);
     }
+}
 };
 
 module.exports = UserDAO;
