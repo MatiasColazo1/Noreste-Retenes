@@ -21,19 +21,13 @@ export class ProductoDetalleComponent {
 
   constructor(private productService: ProductService, private carritoService: CarritoService, private router: Router) { }
 
-  onImageSelected(event: any) {
-    const file = event.target.files[0];
-    this.imagenSeleccionada.emit(file);
-  }
+
 
   onImageError(event: Event) {
     const target = event.target as HTMLImageElement;
     target.src = 'https://res.cloudinary.com/dlish6q5r/image/upload/v1743873476/no-imagen_jyqyup.png'; // Ruta local a imagen default
   }  
 
-  subirImagen() {
-    this.imagenSubida.emit();
-  }
 
 
 
