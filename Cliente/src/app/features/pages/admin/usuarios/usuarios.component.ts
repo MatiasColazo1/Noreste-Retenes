@@ -11,6 +11,7 @@ export class UsuariosComponent {
   currentPage: number = 1;
   limit: number = 10;
   hasNextPage: boolean = true;
+  searchTerm: string = '';
 
   constructor(private authService: AuthService) {}
 
@@ -19,15 +20,27 @@ export class UsuariosComponent {
   }
 
   loadUsers() {
-    this.authService.getUsers(this.currentPage, this.limit).subscribe({
-      next: (data) => {
-        this.users = data.users || [];
-        this.hasNextPage = this.users.length === this.limit;
-      },
-      error: (err) => {
-        console.error('Error al obtener usuarios:', err);
-      }
-    });
+    if (this.searchTerm.trim()) {
+      this.authService.searchUsersByFiltroParcial(this.searchTerm, this.currentPage, this.limit).subscribe({
+        next: (data) => {
+          this.users = data.users || [];
+          this.hasNextPage = this.users.length === this.limit;
+        },
+        error: (err) => {
+          console.error('Error al buscar usuarios:', err);
+        }
+      });
+    } else {
+      this.authService.getUsers(this.currentPage, this.limit).subscribe({
+        next: (data) => {
+          this.users = data.users || [];
+          this.hasNextPage = this.users.length === this.limit;
+        },
+        error: (err) => {
+          console.error('Error al obtener usuarios:', err);
+        }
+      });
+    }
   }
 
   cambiarPagina(nuevaPagina: number) {
@@ -35,4 +48,10 @@ export class UsuariosComponent {
     this.currentPage = nuevaPagina;
     this.loadUsers();
   }
+
+ buscarUsuarios() {
+  this.currentPage = 1;
+  this.loadUsers();
+}
+
 }

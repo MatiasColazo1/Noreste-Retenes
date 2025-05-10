@@ -71,6 +71,19 @@ getUsers(page: number = 1, limit: number = 10): Observable<any> {
   return this.http.get<any>(this.apiUrl, { headers, params });
 }
 
+// Buscar usuarios con filtro parcial
+searchUsersByFiltroParcial(filtro: string, page: number = 1, limit: number = 10): Observable<any> {
+  const token = localStorage.getItem('token');
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+  const params = new HttpParams()
+    .set('filtro', filtro)
+    .set('page', page.toString())
+    .set('limit', limit.toString());
+
+  return this.http.get<any>(`${this.apiUrl}/buscar`, { headers, params });
+}
+
   // Obtener usuario por ID con token
   getUserById(id: string): Observable<any> {
     const token = localStorage.getItem('token'); // Obtiene el token del almacenamiento local
@@ -111,8 +124,5 @@ getUsers(page: number = 1, limit: number = 10): Observable<any> {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.put<any>(`${this.apiUrl}/${userId}/descuentos`, { descuentos }, { headers });
   }
-
-
-
 
 }

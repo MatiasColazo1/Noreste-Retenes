@@ -1,5 +1,15 @@
 <h2>Lista de Usuarios</h2>
 
+<div class="mb-3 d-flex gap-2">
+  <input
+    type="text"
+    [(ngModel)]="searchTerm"
+    placeholder="Buscar por nombre, apellido, número o ciudad"
+    class="form-control"
+  />
+  <button class="btn btn-primary" (click)="buscarUsuarios()">Buscar</button>
+</div>
+
 <table class="table table-striped">
   <thead>
     <tr>
@@ -10,7 +20,7 @@
   </thead>
   <tbody>
     <tr *ngFor="let user of users; let i = index">
-      <td> {{ user?.numero }}</td>
+      <td>{{ user?.numero }}</td>
       <td>
         <a [routerLink]="['/admin/usuario', user._id]" class="text-primary">
           {{ user?.nombre }}
@@ -27,7 +37,7 @@
   <button (click)="cambiarPagina(currentPage + 1)" [disabled]="!hasNextPage">Siguiente</button>
 </div>
 
-<div>
+<div class="mt-3">
   <a [routerLink]="['/admin/dashboard']" class="text-primary">Volver a panel de administrador</a>
 </div>
 <a [routerLink]="['/catalogo']" class="text-primary">Volver a catálogo</a>
