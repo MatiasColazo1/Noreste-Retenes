@@ -7,101 +7,101 @@ const UserController = {
     // Registro de usuario
 
     //Registra un nuevo usuario. Recibe los datos desde el cuerpo de la solicitud (req.body) y los pasa al servicio registerUser
-// controllers/user.controller.js
-registerUser: async (req, res) => {
-    try {
-        console.log("Datos recibidos:", req.body);  // Esto imprimirá los datos recibidos
-        const userData = req.body;
-        const result = await UserService.registerUser(userData);  // Llamar al servicio
+    // controllers/user.controller.js
+    registerUser: async (req, res) => {
+        try {
+            console.log("Datos recibidos:", req.body);  // Esto imprimirá los datos recibidos
+            const userData = req.body;
+            const result = await UserService.registerUser(userData);  // Llamar al servicio
 
-        // Si la respuesta tiene detalles, devolver esos detalles
-        if (result.details) {
-            return res.status(result.status).json({
-                message: result.message,
-                details: result.details  // Enviar los detalles de los errores
+            // Si la respuesta tiene detalles, devolver esos detalles
+            if (result.details) {
+                return res.status(result.status).json({
+                    message: result.message,
+                    details: result.details  // Enviar los detalles de los errores
+                });
+            }
+
+            // Si la creación del usuario fue exitosa
+            res.status(201).json({
+                message: 'Usuario registrado exitosamente',
+                user: result.user,  // Devuelve el nuevo usuario
+            });
+
+        } catch (error) {
+            console.error('Error al registrar usuario:', error);
+
+            // Si el error tiene detalles, responder con esos detalles
+            if (error.details) {
+                return res.status(400).json({
+                    message: error.message,
+                    details: error.details  // Detalles de los errores
+                });
+            }
+
+            // Error general del servidor
+            res.status(500).json({
+                message: 'Error interno del servidor',
+                error: error.message,
             });
         }
-
-        // Si la creación del usuario fue exitosa
-        res.status(201).json({
-            message: 'Usuario registrado exitosamente',
-            user: result.user,  // Devuelve el nuevo usuario
-        });
-
-    } catch (error) {
-        console.error('Error al registrar usuario:', error);
-
-        // Si el error tiene detalles, responder con esos detalles
-        if (error.details) {
-            return res.status(400).json({
-                message: error.message,
-                details: error.details  // Detalles de los errores
-            });
-        }
-
-        // Error general del servidor
-        res.status(500).json({
-            message: 'Error interno del servidor',
-            error: error.message,
-        });
-    }
-},
+    },
 
 
     // Inicio de sesión de usuario
 
     //Inicia sesión. Recibe el email y la contraseña, luego pasa estos datos al servicio loginUser. Si la autenticación es exitosa, genera un JWT (token) y lo devuelve en la respuesta.
-   // loginUser: Inicia sesión de usuario
-   loginUser: async (req, res) => {
-    try {
-        const { email, password } = req.body;
+    // loginUser: Inicia sesión de usuario
+    loginUser: async (req, res) => {
+        try {
+            const { email, password } = req.body;
 
-        if (!email || !password) {
-            return res.status(400).json({
-                message: 'Email y contraseña son requeridos',
+            if (!email || !password) {
+                return res.status(400).json({
+                    message: 'Email y contraseña son requeridos',
+                });
+            }
+
+            // Pasar email y password al servicio
+            const user = await UserService.loginUser(email, password);
+
+            if (!user) {
+                return res.status(400).json({
+                    message: 'Email o contraseña incorrectos',
+                });
+            }
+
+            // Generar el token incluyendo listaPrecio
+            const token = jwt.sign(
+                {
+                    _id: user._id,
+                    email: user.email,
+                    role: user.role,
+                    listaPrecio: user.listaPrecio, // 👈 Agregado aquí
+                    descuentos: user.descuentos
+                },
+                process.env.JWT_SECRET,
+                { expiresIn: '1h' }
+            );
+
+            res.status(200).json({
+                message: 'Inicio de sesión exitoso',
+                token,
+                user: {
+                    id: user._id,
+                    email: user.email,
+                    name: user.nombre,
+                    role: user.role,
+                    listaPrecio: user.listaPrecio, // 👈 También podés retornarlo por separado si lo usás en el frontend
+                    descuentos: user.descuentos
+                },
+            });
+        } catch (error) {
+            res.status(400).json({
+                message: error.message // 👈 mandás el mensaje real como 'Usuario no encontrado'
             });
         }
-
-        // Pasar email y password al servicio
-        const user = await UserService.loginUser(email, password);
-
-        if (!user) {
-            return res.status(400).json({
-                message: 'Email o contraseña incorrectos',
-            });
-        }
-
-        // Generar el token incluyendo listaPrecio
-        const token = jwt.sign(
-            {
-                _id: user._id,
-                email: user.email,
-                role: user.role,
-                listaPrecio: user.listaPrecio, // 👈 Agregado aquí
-                descuentos: user.descuentos
-            },
-            process.env.JWT_SECRET,
-            { expiresIn: '1h' }
-        );
-
-        res.status(200).json({
-            message: 'Inicio de sesión exitoso',
-            token,
-            user: {
-                id: user._id,
-                email: user.email,
-                name: user.nombre,
-                role: user.role,
-                listaPrecio: user.listaPrecio, // 👈 También podés retornarlo por separado si lo usás en el frontend
-                descuentos: user.descuentos
-            },
-        });
-    } catch (error) {
-        res.status(400).json({
-            message: error.message // 👈 mandás el mensaje real como 'Usuario no encontrado'
-        });
-    }
-},
+    },
 
 
     // Obtener usuario por ID
@@ -167,7 +167,10 @@ registerUser: async (req, res) => {
     //Recupera todos los usuarios registrados (solo para administradores).
     getAllUsers: async (req, res) => {
         try {
-            const users = await UserService.getAllUsers();
+            const { page = 1, limit = 20 } = req.query;
+            const redisClient = req.app.locals.redisClient;
+
+            const users = await UserService.getAllUsers(redisClient, parseInt(page), parseInt(limit));
             res.status(200).json({ users });
         } catch (error) {
             res.status(400).json({
@@ -177,19 +180,20 @@ registerUser: async (req, res) => {
         }
     },
 
+    //usuarios con desceuntos
     updateUserDiscounts: async (req, res) => {
         try {
             const { userId } = req.params;
             const { descuentos } = req.body;
-    
+
             if (!Array.isArray(descuentos)) {
                 return res.status(400).json({
                     message: 'El campo descuentos debe ser un array',
                 });
             }
-    
+
             const updatedUser = await UserService.updateUserDiscounts(userId, descuentos);
-    
+
             res.status(200).json({
                 message: 'Descuentos actualizados correctamente',
                 user: updatedUser,
@@ -201,7 +205,7 @@ registerUser: async (req, res) => {
             });
         }
     }
-    
+
 };
 
 module.exports = UserController;
