@@ -1,4 +1,5 @@
 <h2>Lista de Usuarios</h2>
+
 <table class="table table-striped">
   <thead>
     <tr>
@@ -8,23 +9,25 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let user of users">
-      <td>{{ user?.numero }}</td>
+    <tr *ngFor="let user of users; let i = index">
+      <td> {{ user?.numero }}</td>
       <td>
         <a [routerLink]="['/admin/usuario', user._id]" class="text-primary">
           {{ user?.nombre }}
         </a>
-          
       </td>
       <td>{{ user?.email }}</td>
     </tr>
   </tbody>
 </table>
-<div>
-  <a [routerLink]="['/admin/dashboard']" class="text-primary">
-    Volver a panel de administrador
-  </a>
+
+<div class="pagination">
+  <button (click)="cambiarPagina(currentPage - 1)" [disabled]="currentPage === 1">Anterior</button>
+  <span>Página {{ currentPage }}</span>
+  <button (click)="cambiarPagina(currentPage + 1)" [disabled]="!hasNextPage">Siguiente</button>
 </div>
-<a [routerLink]="['/catalogo']" class="text-primary">
- Volver a catalogo
-</a>
+
+<div>
+  <a [routerLink]="['/admin/dashboard']" class="text-primary">Volver a panel de administrador</a>
+</div>
+<a [routerLink]="['/catalogo']" class="text-primary">Volver a catálogo</a>

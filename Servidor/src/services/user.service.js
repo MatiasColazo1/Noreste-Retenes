@@ -5,48 +5,55 @@ const { checkDuplicateFields } = require('../validators/userValidator');
 
 
 const UserService = {
-    registerUser: async (userData) => {
-        try {
-            const validationResult = validateUser(userData);
-            if (!validationResult.isValid) {
-                const error = new Error('Datos de usuario inválidos');
-                error.details = validationResult.errors;
-                throw error;
-            }
+   registerUser: async (userData) => {
+    try {
+        const validationResult = validateUser(userData);
+        if (!validationResult.isValid) {
+            const error = new Error('Datos de usuario inválidos');
+            error.details = validationResult.errors;
+            throw error;
+        }
 
-            const duplicateErrors = await checkDuplicateFields(userData);
-            if (duplicateErrors.length > 0) {
-                const error = new Error('Datos duplicados');
-                error.details = duplicateErrors;
-                throw error;
-            }
+        const duplicateErrors = await checkDuplicateFields(userData);
+        if (duplicateErrors.length > 0) {
+            const error = new Error('Datos duplicados');
+            error.details = duplicateErrors;
+            throw error;
+        }
 
-            // Encriptar y crear
-            const salt = await bcrypt.genSalt(10);
-            userData.password = await bcrypt.hash(userData.password, salt);
+        // Encriptar contraseña
+        const salt = await bcrypt.genSalt(10);
+        userData.password = await bcrypt.hash(userData.password, salt);
 
-            return await UserDAO.create(userData);
+        // 🔢 Asignar número incremental
+        const userCount = await UserDAO.countUsers();  // 👈 Te muestro abajo cómo implementarlo
+        userData.numero = (userCount + 1).toString().padStart(4, '0');  // "0001", "0010", etc.
 
-        } catch (error) {
-            // Si el error tiene detalles, responder con esos detalles
-            if (error.details) {
-                return {
-                    status: 400,
-                    message: error.message || 'Error al procesar los datos del usuario',
-                    details: error.details  // Detalles de los errores
-                };
-            }
+        // Crear usuario
+        const newUser = await UserDAO.create(userData);
 
-            // Enviar un error general si no se proporcionan detalles específicos
+        return {
+            status: 201,
+            message: 'Usuario registrado exitosamente',
+            user: newUser
+        };
+
+    } catch (error) {
+        if (error.details) {
             return {
-                status: error.status || 500,
-                message: error.message || 'Error interno del servidor',
-                details: []  // Aquí no hay detalles de errores específicos
+                status: 400,
+                message: error.message || 'Error al procesar los datos del usuario',
+                details: error.details
             };
         }
 
-    },
-
+        return {
+            status: error.status || 500,
+            message: error.message || 'Error interno del servidor',
+            details: []
+        };
+    }
+},
 
     loginUser: async (email, password) => {
         try {

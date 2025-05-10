@@ -10,6 +10,16 @@ const UserDAO = {
             throw new Error('Error al crear usuario: ' + error.message);
         }
     },
+
+    // Cuenta todos los usuarios
+    countUsers: async () => {
+        try {
+            return await User.countDocuments();
+        } catch (error) {
+            throw new Error('Error al contar usuarios: ' + error.message);
+        }
+    },
+
     // Busca un usuario por su email.
     findByEmail: async (email) => {
         try {
@@ -58,28 +68,28 @@ const UserDAO = {
         }
     },
     // Obtiene todos los usuarios.
-   getAllUsers: async (redisClient, page = 1, limit = 20) => {
-    const cacheKey = `users:page:${page}:limit:${limit}`;
+    getAllUsers: async (redisClient, page = 1, limit = 20) => {
+        const cacheKey = `users:page:${page}:limit:${limit}`;
 
-    try {
-        const cachedData = await redisClient.get(cacheKey);
-        if (cachedData) {
-            return JSON.parse(cachedData);
+        try {
+            const cachedData = await redisClient.get(cacheKey);
+            if (cachedData) {
+                return JSON.parse(cachedData);
+            }
+
+            const users = await User.find()
+                .sort({ _id: 1 })
+                .skip((page - 1) * limit)
+                .limit(limit)
+                .lean();
+
+            await redisClient.setEx(cacheKey, 600, JSON.stringify(users)); // Cache por 10 minutos
+
+            return users;
+        } catch (error) {
+            throw new Error('Error al obtener usuarios: ' + error.message);
         }
-
-        const users = await User.find()
-            .sort({ _id: 1 })
-            .skip((page - 1) * limit)
-            .limit(limit)
-            .lean();
-
-        await redisClient.setEx(cacheKey, 600, JSON.stringify(users)); // Cache por 10 minutos
-
-        return users;
-    } catch (error) {
-        throw new Error('Error al obtener usuarios: ' + error.message);
     }
-}
 };
 
 module.exports = UserDAO;
