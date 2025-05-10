@@ -2,6 +2,7 @@ const UserService = require('../services/user.service');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 dotenv.config();
+const UserDAO = require('../daos/user.daos')
 
 const UserController = {
     // Registro de usuario
@@ -204,7 +205,37 @@ const UserController = {
                 error: error.message,
             });
         }
+    },
+
+    // user.controller.js
+ getUsersByFiltroParcial: async (req, res) => {
+    try {
+      const { filtro } = req.query;
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 20;
+      const skip = (page - 1) * limit;
+      const redisClient = req.app.locals.redisClient;
+  
+      const cacheKey = `users_filtro:${filtro}_page:${page}_limit:${limit}`;
+  
+      const cached = await redisClient.get(cacheKey);
+      if (cached) {
+        return res.status(200).json(JSON.parse(cached));
+      }
+  
+      const { users, total } = await UserDAO.getUsersByFiltroParcial(filtro, skip, limit);
+  
+      const result = { users, total };
+  
+      await redisClient.setEx(cacheKey, 300, JSON.stringify(result)); // 5 minutos
+  
+      return res.status(200).json(result);
+    } catch (error) {
+      console.error("❌ Error en getUsersByFiltroParcial:", error);
+      return res.status(500).json({ error: "Error al buscar usuarios por filtro parcial" });
     }
+  }
+  
 
 };
 

@@ -9,6 +9,7 @@ router.post('/register', UserController.registerUser);
 // Ruta para iniciar sesión
 router.post('/login', UserController.loginUser);
 
+router.get('/buscar', verifyToken, UserController.getUsersByFiltroParcial);
 // Ruta para obtener un usuario por ID (requiere autenticación)
 router.get('/:userId', verifyToken, UserController.getUserById);
 
@@ -23,5 +24,7 @@ router.get('/', verifyToken, UserController.getAllUsers);
 
 // Actualizar descuentos de un usuario
 router.put('/:userId/descuentos', verifyToken, UserController.updateUserDiscounts);
+
+
 
 module.exports = router;

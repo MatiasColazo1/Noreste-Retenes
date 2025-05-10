@@ -89,7 +89,33 @@ const UserDAO = {
         } catch (error) {
             throw new Error('Error al obtener usuarios: ' + error.message);
         }
-    }
+    },
+
+      getUsersByFiltroParcial: async (filtro, skip = 0, limit = 20) => {
+        try {
+          const regex = new RegExp(filtro, 'i');
+      
+          const searchFilter = filtro
+            ? {
+                $or: [
+                  { nombre: { $regex: regex } },
+                  { apellido: { $regex: regex } },
+                  { ciudad: { $regex: regex } },
+                  { numero: { $regex: regex } }
+                ]
+              }
+            : {};
+      
+          const users = await User.find(searchFilter).skip(skip).limit(limit).lean();
+          const total = await User.countDocuments(searchFilter);
+      
+          return { users, total };
+        } catch (error) {
+          console.error('❌ Error en getUsersByFiltroParcial:', error);
+          throw error;
+        }
+      }
 };
+
 
 module.exports = UserDAO;
