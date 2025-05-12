@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+//prueba
 const ProductSchema = new mongoose.Schema({
     Prefijo: String,
     Codigo: String,
