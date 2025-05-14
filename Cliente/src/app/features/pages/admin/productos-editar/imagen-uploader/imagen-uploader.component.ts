@@ -22,7 +22,7 @@ export class ImagenUploaderComponent {
 
   onImageError(event: Event) {
     const target = event.target as HTMLImageElement;
-    target.src = 'https://res.cloudinary.com/dlish6q5r/image/upload/v1743873476/no-imagen_jyqyup.png';
+    target.src = 'https://res.cloudinary.com/dlish6q5r/image/upload/v1747076097/download_vbzenr.jpg';
   }
 
   subirImagen() {

@@ -25,7 +25,7 @@ export class ProductoDetalleComponent {
 
   onImageError(event: Event) {
     const target = event.target as HTMLImageElement;
-    target.src = 'https://res.cloudinary.com/dlish6q5r/image/upload/v1743873476/no-imagen_jyqyup.png'; // Ruta local a imagen default
+    target.src = 'https://res.cloudinary.com/dlish6q5r/image/upload/v1747076097/download_vbzenr.jpg'; // Ruta local a imagen default
   }  
 
 

@@ -4,7 +4,8 @@ const dotenv = require('dotenv');
 const userRoutes = require('./src/routes/user.routes');
 const productRoutes = require('./src/routes/products.routes'); // 🔹 Importa las rutas de productos
 const pdfRoutes = require('./src/routes/pdf.routes');
-const carritoRoutes = require('./src/routes/carrito.routes')
+const carritoRoutes = require('./src/routes/carrito.routes');
+const aplicacionRoutes = require('./src/routes/aplicacion.routes');
 
 dotenv.config(); // Cargar variables de entorno
 
@@ -24,5 +25,6 @@ app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes); // 🔹 Agrega las rutas de productos
 app.use('/api/pdf', pdfRoutes);
 app.use('/api/carrito', carritoRoutes);
+app.use('/api/aplicacion', aplicacionRoutes);
 
 module.exports = app;
