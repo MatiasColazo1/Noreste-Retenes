@@ -3,66 +3,90 @@ const Product = require('../models/products.model');
 class ProductDAO {
   // Obtener productos con paginación y cache en Redis
 
-  static async getProducts(redisClient, page = 1, limit = 20) {
-    const cacheKey = `products:page:${page}:limit:${limit}`;
+static async getProducts(redisClient, page = 1, limit = 20) {
+  const cacheKey = `products:page:${page}:limit:${limit}`;
+  const totalCacheKey = `products:total`;
 
-    try {
-      const cachedData = await redisClient.get(cacheKey);
-      if (cachedData) {
-        return JSON.parse(cachedData);
-      }
+  try {
+    const [cachedProducts, cachedTotal] = await Promise.all([
+      redisClient.get(cacheKey),
+      redisClient.get(totalCacheKey)
+    ]);
 
-      const products = await Product.find()
+    let products;
+    if (cachedProducts) {
+      products = JSON.parse(cachedProducts);
+    } else {
+      products = await Product.find()
         .sort({ _id: 1 })
         .skip((page - 1) * limit)
         .limit(limit)
         .lean();
-
       await redisClient.setEx(cacheKey, 600, JSON.stringify(products));
-
-      return products;
-    } catch (error) {
-      console.error('❌ Error al obtener productos:', error);
-      throw error;
     }
+
+    let total;
+    if (cachedTotal) {
+      total = parseInt(cachedTotal);
+    } else {
+      total = await Product.countDocuments();
+      await redisClient.setEx(totalCacheKey, 600, total.toString());
+    }
+
+    const totalPages = Math.ceil(total / limit);
+
+    return { products, page, limit, total, totalPages };
+  } catch (error) {
+    console.error('❌ Error al obtener productos:', error);
+    throw error;
   }
+}
+
 
   // Insertar, actualizar y eliminar productos según el nuevo Excel
-  static async syncProducts(productsFromExcel, redisClient) {
-    try {
-      const bulkOps = [];
-      const cacheUpdates = {};
+static async syncProducts(productsFromExcel, redisClient) {
+  try {
+    const bulkOps = [];
+    const cacheUpdates = {};
 
-      // Crear operaciones de bulkWrite y actualizar caché en Redis
-      productsFromExcel.forEach(product => {
-        const identifier = `${product.Codigo}`;
+    // 🔽 ORDENAR productos estrictamente por el string del Código (con ceros a la izquierda)
+    productsFromExcel.sort((a, b) => {
+      const codeA = a.Codigo?.toString() || '';
+      const codeB = b.Codigo?.toString() || '';
+      return codeA.localeCompare(codeB, 'es', { sensitivity: 'base' });
+    });
 
-        bulkOps.push({
-          updateOne: {
-            filter: { Codigo: product.Codigo },
-            update: { $set: product },
-            upsert: true
-          }
-        });
+    // Crear operaciones de bulkWrite y actualizar caché en Redis
+    productsFromExcel.forEach(product => {
+      const identifier = `${product.Codigo}`;
 
-        cacheUpdates[identifier] = product;
+      bulkOps.push({
+        updateOne: {
+          filter: { Codigo: product.Codigo },
+          update: { $set: product },
+          upsert: true
+        }
       });
 
-      if (bulkOps.length > 0) {
-        await Product.bulkWrite(bulkOps);
-      }
+      cacheUpdates[identifier] = product;
+    });
 
-      // Guardar los productos en Redis de forma más eficiente (en lotes)
-      for (const [key, value] of Object.entries(cacheUpdates)) {
-        await redisClient.setEx(`product:${key}`, 600, JSON.stringify(value));
-      }
-
-      return { message: "Productos sincronizados correctamente" };
-    } catch (error) {
-      console.error('❌ Error en syncProducts:', error);
-      throw error;
+    if (bulkOps.length > 0) {
+      await Product.bulkWrite(bulkOps);
     }
+
+    // Guardar los productos en Redis de forma más eficiente (en lotes)
+    for (const [key, value] of Object.entries(cacheUpdates)) {
+      await redisClient.setEx(`product:${key}`, 600, JSON.stringify(value));
+    }
+
+    return { message: "Productos sincronizados correctamente" };
+  } catch (error) {
+    console.error('❌ Error en syncProducts:', error);
+    throw error;
   }
+}
+
 
   // Obtener producto por ID
   static async getProductById(id) {
@@ -180,20 +204,25 @@ class ProductDAO {
   }
 
   // Buscar productos cuyo código contenga el valor ingresado (parcial)
-  static async getProductsByCodigoParcial(codigo, skip = 0, limit = 20) {
-    try {
-      const regex = new RegExp(codigo, 'i');
-      const filter = codigo ? { Codigo: { $regex: regex } } : {};
+static async getProductsByCodigoParcial(codigo, page = 1, limit = 20) {
+  try {
+    const regex = new RegExp(codigo, 'i');
+    const filter = codigo ? { Codigo: { $regex: regex } } : {};
 
-      const products = await Product.find(filter).skip(skip).limit(limit).lean();
-      const total = await Product.countDocuments(filter);
+    const products = await Product.find(filter)
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .lean();
 
-      return { products, total };
-    } catch (error) {
-      console.error('❌ Error en getProductsByCodigoParcial:', error);
-      throw error;
-    }
-  };
+    const total = await Product.countDocuments(filter);
+    const totalPages = Math.ceil(total / limit);
+
+    return { products, total, page, limit, totalPages };
+  } catch (error) {
+    console.error('❌ Error en getProductsByCodigoParcial:', error);
+    throw error;
+  }
+}
 
 
   // Actualizar una equivalencia específica
@@ -260,53 +289,48 @@ class ProductDAO {
   };
 
   // Buscar productos por coincidencia parcial en equivalencias
-  static async getProductsByEquivalencia(equivalenciaParcial = '', skip = 0, limit = 20) {
-    try {
-      const regex = new RegExp(equivalenciaParcial, 'i');
-      const filter = equivalenciaParcial ? { equivalencias: { $elemMatch: { $regex: regex } } } : {};
+static async getProductsByEquivalencia(equivalenciaParcial = '', page = 1, limit = 20) {
+  try {
+    const regex = new RegExp(equivalenciaParcial, 'i');
+    const filter = equivalenciaParcial ? { equivalencias: { $elemMatch: { $regex: regex } } } : {};
 
-      const products = await Product.find(filter).skip(skip).limit(limit).lean();
-      const total = await Product.countDocuments(filter);
+    const skip = (page - 1) * limit;
+    const products = await Product.find(filter).skip(skip).limit(limit).lean();
+    const total = await Product.countDocuments(filter);
+    const totalPages = Math.ceil(total / limit);
 
-      return { products, total };
-    } catch (error) {
-      console.error('❌ Error en getProductsByEquivalencia:', error);
-      throw error;
-    }
+    return { products, total, page, limit, totalPages };
+  } catch (error) {
+    console.error('❌ Error en getProductsByEquivalencia:', error);
+    throw error;
   }
+}
 
   // filtro por medidas
-  static async getProductsByMedidas(filters = {}, page = 1, limit = 20) {
-    try {
-      const query = {};
+static async getProductsByMedidas(filters = {}, page = 1, limit = 20) {
+  try {
+    const query = {};
 
-      if (filters.INTERIOR !== undefined) {
-        query.INTERIOR = Number(filters.INTERIOR);
-      }
-      if (filters.EXTERIOR !== undefined) {
-        query.EXTERIOR = Number(filters.EXTERIOR);
-      }
-      if (filters.ANCHO !== undefined) {
-        query.ANCHO = Number(filters.ANCHO);
-      }
-      if (filters.NombreRubro) {
-        query.NombreRubro = filters.NombreRubro;
-      }
+    if (filters.INTERIOR !== undefined) query.INTERIOR = Number(filters.INTERIOR);
+    if (filters.EXTERIOR !== undefined) query.EXTERIOR = Number(filters.EXTERIOR);
+    if (filters.ANCHO !== undefined) query.ANCHO = Number(filters.ANCHO);
+    if (filters.NombreRubro) query.NombreRubro = filters.NombreRubro;
 
-      const products = await Product.find(query)
-        .sort({ _id: 1 })
-        .skip((page - 1) * limit)
-        .limit(limit)
-        .lean();
+    const products = await Product.find(query)
+      .sort({ _id: 1 })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .lean();
 
-      const total = await Product.countDocuments(query);
+    const total = await Product.countDocuments(query);
+    const totalPages = Math.ceil(total / limit);
 
-      return { products, total };
-    } catch (error) {
-      console.error('❌ Error en getProductsByMedidas:', error);
-      throw error;
-    }
+    return { products, total, page, limit, totalPages };
+  } catch (error) {
+    console.error('❌ Error en getProductsByMedidas:', error);
+    throw error;
   }
+}
 
 
 

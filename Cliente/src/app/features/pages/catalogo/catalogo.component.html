@@ -1,4 +1,5 @@
 <app-buttons text="Cerrar sesión" type="secondary" (buttonClick)="logout()"></app-buttons>
+<app-buttons text="Perfil" type="secondary" [routerLink]="['/perfil']"></app-buttons>
 
 <app-buttons [isAdmin]="authService.isAdmin()" text="Panel de administrador" type="primary"
 route="/admin/dashboard"></app-buttons>
@@ -34,11 +35,13 @@ route="/admin/dashboard"></app-buttons>
         (productSelected)="selectProduct($event)">
       </app-producto-listado>
 
-      <app-paginacion 
-        [currentPage]="currentPage" 
-        [hasNextPage]="hasNextPage" 
-        (pageChanged)="changePage($event)">
-      </app-paginacion>
+    <app-paginacion 
+  [currentPage]="currentPage" 
+  [hasNextPage]="hasNextPage"
+  [totalPages]="totalPages"
+  (pageChanged)="changePage($event)">
+</app-paginacion>
+
     </div>
 
     <div class="detalle" *ngIf="selectedProduct">

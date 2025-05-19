@@ -1,3 +1,4 @@
+import { Aplicacion } from './aplicacion'; // asegurate de importar la interfaz
 
 export interface Product {
   _id: string;
@@ -20,4 +21,7 @@ export interface Product {
   precioFinal?: number;
   descuentoAplicado?: number;
   equivalencias: string[];
+
+  // 🔽 Agregado para reflejar la relación virtual de Mongoose
+  aplicaciones?: Aplicacion[];
 }

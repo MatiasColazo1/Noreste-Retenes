@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { ProductosListadoComponent } from './producto-listado/producto-listado.component';
 import { CarritoModule } from '../carrito/carrito.module';
+import { PerfilUserComponent } from './perfil-user/perfil-user.component';
 
 
 @NgModule({
@@ -16,8 +17,10 @@ import { CarritoModule } from '../carrito/carrito.module';
     ProductosListadoComponent,
     ProductoDetalleComponent,
     FiltersComponent,
+    PerfilUserComponent
 
   ],
+  exports: [ProductoDetalleComponent],
   imports: [
     CommonModule,
     CatalogoRoutingModule,

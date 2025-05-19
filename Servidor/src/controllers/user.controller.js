@@ -78,8 +78,9 @@ const UserController = {
                     _id: user._id,
                     email: user.email,
                     role: user.role,
-                    listaPrecio: user.listaPrecio, // 👈 Agregado aquí
-                    descuentos: user.descuentos
+                    listaPrecio: user.listaPrecio,
+                    descuentos: user.descuentos,
+                    tipoCliente: user.tipoCliente 
                 },
                 process.env.JWT_SECRET,
                 { expiresIn: '1h' }
@@ -93,8 +94,9 @@ const UserController = {
                     email: user.email,
                     name: user.nombre,
                     role: user.role,
-                    listaPrecio: user.listaPrecio, // 👈 También podés retornarlo por separado si lo usás en el frontend
-                    descuentos: user.descuentos
+                    listaPrecio: user.listaPrecio,
+                    descuentos: user.descuentos,
+                    tipoCliente: user.tipoCliente 
                 },
             });
         } catch (error) {

@@ -2,6 +2,7 @@
   <button class="btn btn-outline-primary me-2" (click)="setFiltro('codigo')">Código</button>
   <button class="btn btn-outline-secondary me-2" (click)="setFiltro('equivalencia')">Equivalencia</button>
   <button class="btn btn-outline-success" (click)="setFiltro('medidas')">Medidas</button>
+  <button class="btn btn-outline-dark" [routerLink]="['/filtro-aplicacion']">Catálogo</button>
 </div>
 
 <!-- Input para buscar por código -->
@@ -48,3 +49,4 @@
     <button class="btn btn-success" (click)="onBuscarMedidas()">Buscar</button>
   </div>
 </div>
+

@@ -9,6 +9,9 @@ const router = express.Router();
 router.get('/filtro/marcas', verifyToken, AplicacionController.getMarcasUnicas); // Obtener marcas únicas
 router.get('/filtro/modelos/:marcaVehiculo', verifyToken, AplicacionController.getModelosByMarca); // Modelos por marca
 router.get('/filtro', verifyToken, AplicacionController.getAplicacionesByMarcaModelo); // Filtro combinado marca + modelo
+router.get('/filtro/rubros/:marcaVehiculo/:modeloVehiculo', verifyToken, AplicacionController.getRubrosByMarcaModelo);
+router.get('/descripciones/:marcaVehiculo/:modeloVehiculo/:nombreRubro', verifyToken, AplicacionController.getDescripcionesByMarcaModeloYRubro);
+router.get('/productos/:marcaVehiculo/:modeloVehiculo/:nombreRubro/:descripcion', verifyToken, AplicacionController.getProductosFiltrados);
 
 // 🔹 Para obtener aplicaciones de un producto específico (puede usarse en ficha de producto)
 router.get('/producto/:productoId', verifyToken, AplicacionController.getAplicacionesByProducto);

@@ -20,11 +20,24 @@ export class ProductService {
   }
 
   // Obtener productos con paginación
-  getProducts(page: number = 1, limit: number = 20): Observable<Product[]> {
-    return this.http.get<Product[]>(`${this.apiUrl}?page=${page}&limit=${limit}`, {
-      headers: this.getAuthHeaders(),
-    });
-  }
+getProducts(page: number = 1, limit: number = 20): Observable<{
+  products: Product[];
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}> {
+  return this.http.get<{
+    products: Product[];
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  }>(`${this.apiUrl}?page=${page}&limit=${limit}`, {
+    headers: this.getAuthHeaders(),
+  });
+}
+
 
   // Obtener producto por ID
   getProductById(id: string): Observable<Product> {
@@ -64,18 +77,29 @@ getProductsByUser(): Observable<Product[]> {
 }
 
 //filtro codigo
-getProductsByPartialCode(codigo: string | null, pagina: number = 1, limite: number = 20): Observable<any> {
+getProductsByPartialCode(codigo: string | null, pagina: number = 1, limite: number = 20): Observable<{
+  products: Product[];
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}> {
   let url = `${this.apiUrl}/buscar?page=${pagina}&limit=${limite}`;
-
-  // Si hay código, lo agregamos como parámetro
   if (codigo) {
     url += `&codigo=${codigo}`;
   }
 
-  return this.http.get(url, {
+  return this.http.get<{
+    products: Product[];
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  }>(url, {
     headers: this.getAuthHeaders(),
   });
 }
+
 
 updateProductImage(productId: string, imageUrl: string): Observable<any> {
   return this.http.put(`${this.apiUrl}/${productId}/image`, { Imagen: imageUrl }, {
@@ -107,28 +131,50 @@ removeEquivalencia(productId: string, equivalencia: string): Observable<any> {
 }
 
 // Obtener productos filtrados por equivalencia
-getProductsByEquivalencia(equivalencia: string, page: number = 1, limit: number = 20): Observable<Product[]> {
-  const url = `${this.apiUrl}/equivalencias/buscar?equivalencia=${equivalencia}&page=${page}&limit=${limit}`;
-  return this.http.get<Product[]>(url, {
+getProductsByEquivalencia(
+  equivalencia: string,
+  page: number = 1,
+  limit: number = 20
+): Observable<{
+  products: Product[];
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}> {
+  const url = `${this.apiUrl}/equivalencias/buscar?equivalenciaParcial=${equivalencia}&page=${page}&limit=${limit}`;
+  return this.http.get<{
+    products: Product[];
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  }>(url, {
     headers: this.getAuthHeaders(),
   });
 }
 
-getProductsByMedidas(interior?: number, exterior?: number, ancho?: number, nombreRubro?: string, page: number = 1, limit: number = 20): Observable<any> {
+
+getProductsByMedidas(interior?: number, exterior?: number, ancho?: number, nombreRubro?: string, page: number = 1, limit: number = 20): Observable<{
+  products: Product[];
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}> {
   let url = `${this.apiUrl}/medidas/buscar?page=${page}&limit=${limit}`;
-  if (interior !== undefined) {
-    url += `&INTERIOR=${interior}`;
-  }
-  if (exterior !== undefined) {
-    url += `&EXTERIOR=${exterior}`;
-  }
-  if (ancho !== undefined) {
-    url += `&ANCHO=${ancho}`;
-  }
-  if (nombreRubro) {
-    url += `&NombreRubro=${encodeURIComponent(nombreRubro)}`;
-  }
-  return this.http.get(url, {
+  if (interior !== undefined) url += `&INTERIOR=${interior}`;
+  if (exterior !== undefined) url += `&EXTERIOR=${exterior}`;
+  if (ancho !== undefined) url += `&ANCHO=${ancho}`;
+  if (nombreRubro) url += `&NombreRubro=${encodeURIComponent(nombreRubro)}`;
+
+  return this.http.get<{
+    products: Product[];
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  }>(url, {
     headers: this.getAuthHeaders(),
   });
 }

@@ -16,6 +16,7 @@ import { IdentificadorFormComponent } from './productos-editar/identificador-for
 import { DescripcionFormComponent } from './productos-editar/descripcion-form/descripcion-form.component';
 import { DatosGeneralesFormComponent } from './productos-editar/datos-generales-form/datos-generales-form.component';
 import { MarcaFormComponent } from './productos-editar/marca-form/marca-form.component';
+import { AplicacionFormComponent } from './productos-editar/aplicacion-form/aplicacion-form.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { MarcaFormComponent } from './productos-editar/marca-form/marca-form.com
     IdentificadorFormComponent,
     DescripcionFormComponent,
     DatosGeneralesFormComponent,
-    MarcaFormComponent
+    MarcaFormComponent,
+    AplicacionFormComponent
   ],
   imports: [
     CommonModule,

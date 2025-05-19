@@ -1,0 +1,40 @@
+<div class="card-body">
+  <form (ngSubmit)="guardarAplicacion()" class="mb-3">
+    <div class="row g-2">
+      <div class="col-md-3">
+        <input [(ngModel)]="nuevaAplicacion.marcaVehiculo" name="marca" class="form-control" placeholder="Marca vehículo" required>
+      </div>
+      <div class="col-md-3">
+        <input [(ngModel)]="nuevaAplicacion.modeloVehiculo" name="modelo" class="form-control" placeholder="Modelo vehículo" required>
+      </div>
+      <div class="col-md-3">
+        <input [(ngModel)]="nuevaAplicacion.descripcion" name="descripcion" class="form-control" placeholder="Descripción">
+      </div>
+      <div class="col-md-3">
+        <input [(ngModel)]="nuevaAplicacion.observacion" name="observacion" class="form-control" placeholder="Observación">
+      </div>
+    </div>
+    <div class="mt-2">
+      <button type="submit" class="btn btn-primary btn-sm me-2">
+        {{ editandoId ? 'Actualizar' : 'Agregar' }}
+      </button>
+      <button *ngIf="editandoId" type="button" (click)="cancelarEdicion()" class="btn btn-secondary btn-sm">
+        Cancelar
+      </button>
+    </div>
+  </form>
+
+  <ul class="list-group">
+    <li *ngFor="let app of aplicaciones" class="list-group-item d-flex justify-content-between align-items-center">
+      <div>
+        <strong>{{ app.marcaVehiculo }}</strong> - {{ app.modeloVehiculo }}
+        <span *ngIf="app.descripcion">| {{ app.descripcion }}</span>
+        <span *ngIf="app.observacion">| <em>{{ app.observacion }}</em></span>
+      </div>
+      <div>
+        <button class="btn btn-sm btn-outline-secondary me-2" (click)="editarAplicacion(app)">Editar</button>
+        <button class="btn btn-sm btn-outline-danger" (click)="eliminarAplicacion(app._id!)">Eliminar</button>
+      </div>
+    </li>
+  </ul>
+</div>

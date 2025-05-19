@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { User } from '../models/user';
 import { Router } from '@angular/router';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root',
@@ -124,5 +125,32 @@ searchUsersByFiltroParcial(filtro: string, page: number = 1, limit: number = 10)
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.put<any>(`${this.apiUrl}/${userId}/descuentos`, { descuentos }, { headers });
   }
+
+  getTipoCliente(): string | null {
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  return user?.tipoCliente ?? null;
+}
+
+
+getUserIdFromToken(): string | null {
+  const token = this.getToken();
+  if (!token) return null;
+
+  try {
+    const decoded: any = jwtDecode(token);
+    return decoded._id || decoded.id || null; // Usá el campo que estás enviando desde tu backend
+  } catch (error) {
+    console.error('Error al decodificar el token:', error);
+    return null;
+  }
+}
+
+getCurrentUser(): Observable<any> {
+  const userId = this.getUserIdFromToken();
+  if (!userId) {
+    return throwError(() => new Error('ID de usuario no encontrado en el token.'));
+  }
+  return this.getUserById(userId);
+}
 
 }

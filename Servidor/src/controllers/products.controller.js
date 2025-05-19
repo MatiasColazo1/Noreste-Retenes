@@ -189,7 +189,6 @@ const getProductsByCodigoParcial = async (req, res) => {
     const { codigo } = req.query;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
-    const skip = (page - 1) * limit;
     const redisClient = req.app.locals.redisClient;
 
     const cacheKey = `products_codigo:${codigo}_page:${page}_limit:${limit}`;
@@ -200,10 +199,10 @@ const getProductsByCodigoParcial = async (req, res) => {
       return res.status(200).json(JSON.parse(cached));
     }
 
-    // Buscar en DB
-    const { products, total } = await ProductDAO.getProductsByCodigoParcial(codigo, skip, limit);
+    // Buscar en DB (pasa page y limit, no skip)
+    const { products, total, totalPages } = await ProductDAO.getProductsByCodigoParcial(codigo, page, limit);
 
-    const result = { products, total };
+    const result = { products, total, page, limit, totalPages };
 
     // Guardar en caché por 5 minutos
     await redisClient.setEx(cacheKey, 300, JSON.stringify(result));
@@ -214,6 +213,7 @@ const getProductsByCodigoParcial = async (req, res) => {
     return res.status(500).json({ error: "Error al buscar productos por código parcial" });
   }
 };
+
 
 
 // Actualizar una equivalencia específica
@@ -279,19 +279,34 @@ const removeEquivalencia = async (req, res) => {
 // Buscar por coincidencia parcial
 const getProductsByEquivalencia = async (req, res) => {
   try {
-    const { equivalencia = '' } = req.query;
+    const { equivalenciaParcial } = req.query;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
-    const skip = (page - 1) * limit;
+    const redisClient = req.app.locals.redisClient;
 
-    const { products, total } = await ProductDAO.getProductsByEquivalencia(equivalencia, skip, limit);
+    const cacheKey = `products_equivalencia:${equivalenciaParcial}_page:${page}_limit:${limit}`;
 
-    return res.status(200).json({ products, total });
+    // Buscar en caché
+    const cached = await redisClient.get(cacheKey);
+    if (cached) {
+      return res.status(200).json(JSON.parse(cached));
+    }
+
+    // Buscar en la base de datos
+    const { products, total, totalPages } = await ProductDAO.getProductsByEquivalencia(equivalenciaParcial, page, limit);
+
+    const result = { products, total, page, limit, totalPages };
+
+    // Guardar en caché por 5 minutos
+    await redisClient.setEx(cacheKey, 300, JSON.stringify(result));
+
+    return res.status(200).json(result);
   } catch (error) {
     console.error("❌ Error en getProductsByEquivalencia:", error);
     return res.status(500).json({ error: "Error al buscar productos por equivalencia" });
   }
 };
+
 
 //filtro medidas
 const getProductsByMedidas = async (req, res) => {

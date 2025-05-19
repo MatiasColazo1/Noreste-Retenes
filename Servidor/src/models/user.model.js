@@ -6,7 +6,8 @@ const UserSchema = new mongoose.Schema({
     tipoCliente: {
         type: String,
         enum: ['Mayorista', 'Minorista'],
-        required: true
+        required: true,
+         default: 'Minorista'
     },
     fechaNacimiento: { type: Date, required: true },
     cuit: { type: String, required: true, unique: true },

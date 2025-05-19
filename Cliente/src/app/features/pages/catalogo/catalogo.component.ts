@@ -19,6 +19,7 @@ export class CatalogoComponent implements OnInit {
   selectedProduct: any = null;
   imageFile: File | null = null;
   timestamp: number = Date.now();
+ totalPages: number = 1; 
 
   selectedFile: File | null = null;
   selectedPriceFile: File | null = null;
@@ -88,73 +89,83 @@ lastSearchParams: any = null;
     }
   }
 
-  buscarPorCodigoParcial(codigo: string) {
-    const valor = codigo.trim();
-    this.codigoBuscado = valor;
-  
-    if (!valor) {
-      this.mensajeUsuario = '';
-      this.currentPage = 1;
-      this.lastSearchType = null;
-      this.cargarProductos();
-      return;
-    }
-  
-    this.lastSearchType = 'codigo';
-    this.lastSearchParams = { codigo: valor };
-  
-    this.productService.getProductsByPartialCode(valor, 1, this.limit).subscribe({
-      next: (data) => {
-        this.products = data.products;
-        this.hasNextPage = data.products.length === this.limit;
-        this.mensajeUsuario = data.products.length ? '' : 'No se encontraron productos con ese código.';
-      },
-      error: () => {
-        this.products = [];
-        this.hasNextPage = false;
-        this.mensajeUsuario = 'Ocurrió un error al buscar productos.';
-      }
-    });
-  }
-  
+buscarPorCodigoParcial(codigo: string) {
+  const valor = codigo.trim();
+  this.codigoBuscado = valor;
 
-  getProductsByPartialCode(codigo: string, pagina: number) {
-    this.productService.getProductsByPartialCode(codigo, pagina, this.limit).subscribe({
-      next: (data) => {
-        this.products = data.products;
-        this.currentPage = pagina;
-        this.hasNextPage = (pagina * this.limit) < data.total;
-      },
-      error: (err) => {
-        console.error('Error al buscar productos', err);
-        this.products = [];
-        this.hasNextPage = false;
-      }
-    });
+  if (!valor) {
+    this.mensajeUsuario = '';
+    this.currentPage = 1;
+    this.lastSearchType = null;
+    this.cargarProductos();
+    return;
   }
 
-  changePage(pagina: number) {
-    this.currentPage = pagina;
-  
-    if (this.lastSearchType === 'codigo') {
-      this.getProductsByPartialCode(this.lastSearchParams.codigo, pagina);
-    } else if (this.lastSearchType === 'equivalencia') {
-      this.productService.getProductsByEquivalencia(this.lastSearchParams.equivalencia, pagina, this.limit)
-        .subscribe(/* manejar resultados */);
-    } else if (this.lastSearchType === 'medidas') {
-      this.buscarPorMedidas(this.lastSearchParams);
-    } else {
-      this.cargarProductos();
+  this.lastSearchType = 'codigo';
+  this.lastSearchParams = { codigo: valor };
+
+  this.productService.getProductsByPartialCode(valor, 1, this.limit).subscribe({
+    next: (data) => {
+      this.products = data.products;
+      this.currentPage = data.page;                // ✅ Actualiza página actual
+      this.totalProducts = data.total;             // ✅ Actualiza total productos
+      this.totalPages = Math.ceil(data.total / this.limit); // ✅ Actualiza total páginas
+      this.hasNextPage = this.currentPage < this.totalPages; // ✅ Actualiza flag siguiente página
+      this.mensajeUsuario = data.products.length ? '' : 'No se encontraron productos con ese código.';
+    },
+    error: () => {
+      this.products = [];
+      this.hasNextPage = false;
+      this.mensajeUsuario = 'Ocurrió un error al buscar productos.';
     }
+  });
+}
+
+  
+
+ getProductsByPartialCode(codigo: string, pagina: number) {
+  this.productService.getProductsByPartialCode(codigo, pagina, this.limit).subscribe({
+    next: (data) => {
+      this.products = data.products;
+      this.currentPage = data.page;
+      this.totalPages = Math.ceil(data.total / this.limit); // ⬅️ Agregado
+      this.hasNextPage = this.currentPage < this.totalPages;
+    },
+    error: (err) => {
+      console.error('Error al buscar productos', err);
+      this.products = [];
+      this.hasNextPage = false;
+    }
+  });
+}
+
+
+changePage(pagina: number) {
+  this.currentPage = pagina;
+
+  if (this.lastSearchType === 'codigo') {
+    this.getProductsByPartialCode(this.lastSearchParams.codigo, pagina);
+  } else if (this.lastSearchType === 'equivalencia') {
+    this.buscarPorEquivalencia(this.lastSearchParams.equivalencia, pagina); // ✅ ACÁ
+  } else if (this.lastSearchType === 'medidas') {
+    this.lastSearchParams.page = pagina;
+    this.buscarPorMedidas(this.lastSearchParams);
+  } else {
+    this.cargarProductos();
   }
+}
+
   
 
   cargarProductos() {
-    this.productService.getProducts(this.currentPage, this.limit).subscribe((response) => {
-      this.products = response;
-      this.hasNextPage = response.length === this.limit;
-      this.mensajeUsuario = '';
-    });
+    this.productService.getProducts(this.currentPage, this.limit).subscribe(response => {
+  this.products = response.products; // CORRECTO
+  this.currentPage = response.page;
+  this.totalPages = response.totalPages;
+  this.limit = response.limit;
+  this.hasNextPage = this.currentPage < this.totalPages; // Ya no uses length
+});
+
   }  
   selectProduct(id: string) {
     forkJoin({
@@ -212,77 +223,85 @@ lastSearchParams: any = null;
       });
   }
 
-  buscarPorEquivalencia(equivalencia: string) {
-    const valor = equivalencia.trim();
-  
-    if (!valor) {
-      this.mensajeUsuario = '';
-      this.currentPage = 1;
-      this.cargarProductos();
-      return;
-    }
+buscarPorEquivalencia(equivalencia: string, pagina: number = 1) {
+  const valor = equivalencia.trim();
 
-    this.lastSearchType = 'equivalencia'; 
-    this.lastSearchParams = { equivalencia: valor };
-  
-    this.productService.getProductsByEquivalencia(valor, 1, this.limit).subscribe({
-      next: (data: any) => {
-        this.products = data.products;
-        this.totalProducts = data.total;
-        this.hasNextPage = data.products.length === this.limit;
-        this.mensajeUsuario = data.products.length ? '' : 'No se encontraron productos con esa equivalencia.';
-      },
-      error: (error) => {
-        console.error('Error al buscar por equivalencia', error);
-        this.products = [];
-        this.hasNextPage = false;
-        this.mensajeUsuario = 'Ocurrió un error al buscar productos.';
-      }
-    });
-  }
-
-  buscarPorMedidas(filtros: { interior?: number, exterior?: number, ancho?: number, nombreRubro?: string }) {
+  if (!valor) {
     this.mensajeUsuario = '';
-    this.products = [];
-  
-    const interior = filtros.interior && !isNaN(filtros.interior) ? filtros.interior : undefined;
-    const exterior = filtros.exterior && !isNaN(filtros.exterior) ? filtros.exterior : undefined;
-    const ancho = filtros.ancho && !isNaN(filtros.ancho) ? filtros.ancho : undefined;
-    const nombreRubro = filtros.nombreRubro || undefined;
-  
-    if (interior === undefined && exterior === undefined && ancho === undefined && !nombreRubro) {
-      this.currentPage = 1;
-      this.cargarProductos();
-      return;
-    }
-
-    this.lastSearchType = 'medidas';
-this.lastSearchParams = { interior, exterior, ancho, nombreRubro };
-
-  
-    this.productService.getProductsByMedidas(
-      interior,
-      exterior,
-      ancho,
-      nombreRubro,
-      this.currentPage,
-      this.limit
-    ).subscribe({
-      next: (res: any) => {
-        this.products = res.products;
-        this.totalProducts = res.total;
-        this.hasNextPage = this.products.length === this.limit;
-        if (this.products.length === 0) {
-          this.mensajeUsuario = 'No se encontraron productos con esos filtros.';
-        }
-      },
-      error: (err) => {
-        console.error('❌ Error al buscar por medidas:', err);
-        this.mensajeUsuario = 'Ocurrió un error al buscar.';
-      },
-    });
+    this.currentPage = 1;
+    this.cargarProductos();
+    return;
   }
-  
+
+  this.lastSearchType = 'equivalencia'; 
+  this.lastSearchParams = { equivalencia: valor };
+
+  this.productService.getProductsByEquivalencia(valor, pagina, this.limit).subscribe({
+    next: (data) => {
+      this.products = data.products;
+      this.currentPage = data.page;
+      this.totalPages = data.totalPages;
+      this.totalProducts = data.total;
+      this.hasNextPage = this.currentPage < this.totalPages;
+
+      this.mensajeUsuario = data.products.length
+        ? ''
+        : 'No se encontraron productos con esa equivalencia.';
+    },
+    error: (error) => {
+      console.error('Error al buscar por equivalencia', error);
+      this.products = [];
+      this.hasNextPage = false;
+      this.mensajeUsuario = 'Ocurrió un error al buscar productos.';
+    }
+  });
+}
+
+
+ buscarPorMedidas(filtros: { interior?: number, exterior?: number, ancho?: number, nombreRubro?: string }) {
+  this.mensajeUsuario = '';
+  this.products = [];
+
+  const interior = filtros.interior && !isNaN(filtros.interior) ? filtros.interior : undefined;
+  const exterior = filtros.exterior && !isNaN(filtros.exterior) ? filtros.exterior : undefined;
+  const ancho = filtros.ancho && !isNaN(filtros.ancho) ? filtros.ancho : undefined;
+  const nombreRubro = filtros.nombreRubro || undefined;
+
+  if (interior === undefined && exterior === undefined && ancho === undefined && !nombreRubro) {
+    this.currentPage = 1;
+    this.cargarProductos();
+    return;
+  }
+
+  this.lastSearchType = 'medidas';
+  this.lastSearchParams = { interior, exterior, ancho, nombreRubro };
+
+  this.productService.getProductsByMedidas(
+    interior,
+    exterior,
+    ancho,
+    nombreRubro,
+    this.currentPage,
+    this.limit
+  ).subscribe({
+    next: (res: any) => {
+      this.products = res.products;
+      this.totalProducts = res.total;
+      this.totalPages = Math.ceil(res.total / this.limit); // ⬅️ Agregado
+      this.currentPage = res.page; // ⬅️ Asegura que sea correcto
+      this.hasNextPage = this.currentPage < this.totalPages;
+
+      if (this.products.length === 0) {
+        this.mensajeUsuario = 'No se encontraron productos con esos filtros.';
+      }
+    },
+    error: (err) => {
+      console.error('❌ Error al buscar por medidas:', err);
+      this.mensajeUsuario = 'Ocurrió un error al buscar.';
+    },
+  });
+}
+
   
   
   

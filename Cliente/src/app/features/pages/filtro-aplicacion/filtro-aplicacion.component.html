@@ -1,0 +1,106 @@
+<!-- Marca -->
+<div class="form-group">
+  <label for="marcaSelect">Marca:</label>
+  <select
+    id="marcaSelect"
+    class="form-control"
+    [(ngModel)]="marcaSeleccionada"
+    (change)="onMarcaChange()"
+  >
+    <option value="">-- Selecciona una marca --</option>
+    <option *ngFor="let marca of marcas" [value]="marca">{{ marca }}</option>
+  </select>
+</div>
+
+<!-- Modelo -->
+<div class="form-group" *ngIf="modelos.length > 0">
+  <label for="modeloSelect">Modelo:</label>
+  <select
+    id="modeloSelect"
+    class="form-control"
+    [(ngModel)]="modeloSeleccionado"
+    (change)="onModeloChange()"
+  >
+    <option value="">-- Selecciona un modelo --</option>
+    <option *ngFor="let modelo of modelos" [value]="modelo">{{ modelo }}</option>
+  </select>
+
+  <!-- Rubro -->
+<div class="form-group" *ngIf="rubros.length > 0">
+  <label for="rubroSelect">Partes:</label>
+ <select
+  id="rubroSelect"
+  class="form-control"
+  [(ngModel)]="rubroSeleccionado"
+  (change)="onRubroChange()"
+>
+
+    <option value="">-- Selecciona una parte --</option>
+    <option *ngFor="let rubro of rubros" [value]="rubro">{{ rubro }}</option>
+  </select>
+</div>
+
+<!-- Descripción -->
+<div class="form-group" *ngIf="descripciones.length > 0">
+  <label for="descripcionSelect">Parte:</label>
+  <select
+    id="descripcionSelect"
+    class="form-control"
+    [(ngModel)]="descripcionSeleccionada"
+  >
+    <option value="">-- Selecciona una descripción --</option>
+    <option *ngFor="let descripcion of descripciones" [value]="descripcion">{{ descripcion }}</option>
+  </select>
+</div>
+
+
+</div>
+<div class="form-group mt-3" *ngIf="descripcionSeleccionada">
+  <button class="btn btn-primary" (click)="buscarProductos()">
+    Buscar productos
+  </button>
+</div>
+<div class="mt-4" *ngIf="mostrarResultados && productosFiltrados.length > 0">
+  <h4>Resultados:</h4>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Prefijo</th>
+        <th>Código</th>
+        <th>Descripción</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let producto of productosFiltrados">
+        <td>{{ producto.prefijo }}</td>
+        <td>{{ producto.codigo }}</td>
+        <td>{{ producto.descripcion }}</td>
+        <td>
+          <button class="btn btn-sm btn-info" (click)="verDetalle(producto)">
+            Ver detalle
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Detalle del producto seleccionado -->
+<div class="mt-4" *ngIf="productoSeleccionado">
+  <app-producto-detalle [producto]="productoSeleccionado"></app-producto-detalle>
+</div>
+
+<!-- Caso sin resultados -->
+<div *ngIf="mostrarResultados && productosFiltrados.length === 0" class="alert alert-info mt-3">
+  No se encontraron productos con los filtros seleccionados.
+</div>
+
+
+
+
+
+
+
+
+

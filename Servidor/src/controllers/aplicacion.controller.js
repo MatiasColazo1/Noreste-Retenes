@@ -133,6 +133,62 @@ const getAplicacionesByProducto = async (req, res) => {
   }
 };
 
+const getRubrosByMarcaModelo = async (req, res) => {
+  try {
+    const { marcaVehiculo, modeloVehiculo } = req.params;
+
+    if (!marcaVehiculo || !modeloVehiculo) {
+      return res.status(400).json({ error: "Faltan parámetros marcaVehiculo o modeloVehiculo" });
+    }
+
+    const rubros = await AplicacionDAO.getRubrosByMarcaModelo(marcaVehiculo, modeloVehiculo);
+    return res.status(200).json(rubros);
+  } catch (error) {
+    console.error("❌ Error en getRubrosByMarcaModelo:", error);
+    return res.status(500).json({ error: "Error al obtener rubros" });
+  }
+};
+
+const getDescripcionesByMarcaModeloYRubro = async (req, res) => {
+  try {
+    const { marcaVehiculo, modeloVehiculo, nombreRubro } = req.params;
+
+    if (!marcaVehiculo || !modeloVehiculo || !nombreRubro) {
+      return res.status(400).json({ error: "Faltan parámetros requeridos" });
+    }
+
+    const descripciones = await AplicacionDAO.getDescripcionesByMarcaModeloYRubro(marcaVehiculo, modeloVehiculo, nombreRubro);
+    return res.status(200).json(descripciones);
+  } catch (error) {
+    console.error("❌ Error en getDescripcionesByMarcaModeloYRubro:", error);
+    return res.status(500).json({ error: "Error al obtener descripciones" });
+  }
+};
+
+// Obtener productos filtrados por marca, modelo, rubro y descripción
+const getProductosFiltrados = async (req, res) => {
+  try {
+    const { marcaVehiculo, modeloVehiculo, nombreRubro, descripcion } = req.params;
+
+    if (!marcaVehiculo || !modeloVehiculo || !nombreRubro || !descripcion) {
+      return res.status(400).json({ error: "Faltan parámetros requeridos" });
+    }
+
+    const productos = await AplicacionDAO.getProductosFiltrados({
+      marcaVehiculo,
+      modeloVehiculo,
+      nombreRubro,
+      descripcion
+    });
+
+    return res.status(200).json(productos);
+  } catch (error) {
+    console.error("❌ Error en getProductosFiltrados:", error);
+    return res.status(500).json({ error: "Error al obtener productos filtrados" });
+  }
+};
+
+
 module.exports = {
   getAplicaciones,
   getAplicacionById,
@@ -142,5 +198,8 @@ module.exports = {
   getMarcasUnicas,
   getModelosByMarca,
   getAplicacionesByMarcaModelo,
-  getAplicacionesByProducto
+  getAplicacionesByProducto,
+  getRubrosByMarcaModelo,
+  getDescripcionesByMarcaModeloYRubro,
+  getProductosFiltrados
 };

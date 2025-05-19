@@ -156,6 +156,78 @@ class AplicacionDAO {
             throw error;
         }
     }
+
+    static async getRubrosByMarcaModelo(marcaVehiculo, modeloVehiculo) {
+  try {
+    // Buscar las aplicaciones que coinciden con la marca y modelo
+    const aplicaciones = await Aplicacion.find({ marcaVehiculo, modeloVehiculo }).populate('producto');
+
+    // Extraer los productos de las aplicaciones
+    const productos = aplicaciones.map(a => a.producto).filter(p => p); // por si hay nulos
+
+    // Extraer los rubros únicos de esos productos
+    const rubros = [...new Set(productos.map(p => p.NombreRubro).filter(Boolean))];
+    rubros.sort();
+
+    return rubros;
+  } catch (error) {
+    console.error('❌ Error al obtener rubros por marca y modelo:', error);
+    throw error;
+  }
+}
+
+static async getDescripcionesByMarcaModeloYRubro(marcaVehiculo, modeloVehiculo, nombreRubro) {
+  try {
+    // Buscar aplicaciones por marca y modelo, con su producto
+    const aplicaciones = await Aplicacion.find({ marcaVehiculo, modeloVehiculo }).populate('producto');
+
+    // Filtrar las aplicaciones donde el producto tenga el NombreRubro deseado
+    const aplicacionesFiltradas = aplicaciones.filter(
+      a => a.producto && a.producto.NombreRubro === nombreRubro
+    );
+
+    // Extraer descripciones únicas desde la aplicación, no desde el producto
+    const descripciones = [...new Set(aplicacionesFiltradas.map(a => a.descripcion).filter(Boolean))];
+    descripciones.sort();
+
+    return descripciones;
+  } catch (error) {
+    console.error('❌ Error al obtener descripciones por marca, modelo y rubro:', error);
+    throw error;
+  }
+}
+
+static async getProductosFiltrados({ marcaVehiculo, modeloVehiculo, nombreRubro, descripcion }) {
+  try {
+    // Buscar aplicaciones que coincidan con todos los filtros
+    const aplicaciones = await Aplicacion.find({
+      marcaVehiculo,
+      modeloVehiculo,
+      descripcion
+    }).populate('producto');
+
+    // Filtrar las aplicaciones donde el producto tenga el NombreRubro deseado
+    const filtradas = aplicaciones.filter(
+      a => a.producto && a.producto.NombreRubro === nombreRubro
+    );
+
+    // Armar el resultado con los campos requeridos
+    const resultado = filtradas.map(a => ({
+      prefijo: a.producto.Prefijo,
+      codigo: a.producto.Codigo,
+      descripcion: a.descripcion
+    }));
+
+    return resultado;
+  } catch (error) {
+    console.error('❌ Error al obtener productos filtrados:', error);
+    throw error;
+  }
+}
+
+
+
+
 }
 
 module.exports = AplicacionDAO;
