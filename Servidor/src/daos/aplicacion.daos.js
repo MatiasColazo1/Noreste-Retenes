@@ -213,6 +213,7 @@ static async getProductosFiltrados({ marcaVehiculo, modeloVehiculo, nombreRubro,
 
     // Armar el resultado con los campos requeridos
     const resultado = filtradas.map(a => ({
+          _id: a.producto._id,
       prefijo: a.producto.Prefijo,
       codigo: a.producto.Codigo,
       descripcion: a.descripcion

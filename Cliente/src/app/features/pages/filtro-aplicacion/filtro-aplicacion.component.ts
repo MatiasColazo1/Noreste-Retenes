@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AplicacionService } from 'src/app/services/aplicacion.service';
+import { ProductService } from 'src/app/services/product.service';
 
 @Component({
   selector: 'app-filtro-aplicacion',
@@ -19,7 +20,7 @@ export class FiltroAplicacionComponent implements OnInit {
   descripcionSeleccionada: string = '';
   mostrarResultados: boolean = false;
 
-  constructor(private aplicacionService: AplicacionService) { }
+  constructor(private aplicacionService: AplicacionService, private productoService: ProductService) { }
 
   ngOnInit(): void {
     const token = localStorage.getItem('token'); // o sessionStorage, según corresponda
@@ -123,9 +124,18 @@ export class FiltroAplicacionComponent implements OnInit {
 }
 productoSeleccionado: any = null;
 
-verDetalle(producto: any): void {
-  this.productoSeleccionado = producto;
+verDetalle(producto: any) {
+  console.log('Producto clickeado:', producto);
+  if (!producto || !producto._id) {
+    console.error('❌ Producto inválido o sin ID:', producto);
+    return;
+  }
+
+  this.productoService.getProductById(producto._id).subscribe((detalle) => {
+    this.productoSeleccionado = detalle;
+  });
 }
+
 }
 
 
