@@ -341,6 +341,16 @@ const getRubroNames = async (req, res) => {
   }
 };
 
+const deleteProduct = async (req, res) => {
+  try {
+    const result = await ProductDAO.deleteProductById(req.params.id);
+    return res.status(200).json(result);
+  } catch (error) {
+    console.error("❌ Error al eliminar producto:", error);
+    return res.status(500).json({ error: error.message || "Error interno" });
+  }
+};
 
 
-module.exports = { uploadExcel, getProducts, getProductById, uploadPrices, updateProductImage, getProductsByUser, getPrecioProductoById, getProductsByCodigoParcial, updateEquivalencia, addEquivalencia, removeEquivalencia, getProductsByEquivalencia, getProductsByMedidas, getRubroNames };
+
+module.exports = { uploadExcel, getProducts, getProductById, uploadPrices, updateProductImage, getProductsByUser, getPrecioProductoById, getProductsByCodigoParcial, updateEquivalencia, addEquivalencia, removeEquivalencia, getProductsByEquivalencia, getProductsByMedidas, getRubroNames, deleteProduct};

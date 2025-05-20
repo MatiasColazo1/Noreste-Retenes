@@ -19,6 +19,8 @@ router.get('/buscar', verifyToken, ProductController.getProductsByCodigoParcial)
 router.get('/rubros', verifyToken, ProductController.getRubroNames); // esta primero
 router.get('/:id', verifyToken, ProductController.getProductById); // Obtener producto por ID
 router.get('/:id/precio', verifyToken, ProductController.getPrecioProductoById);
+router.delete('/:id', verifyToken, isAdmin, ProductController.deleteProduct);
+
 
 router.put('/:id/image', verifyToken, isAdmin, ProductController.updateProductImage);
 

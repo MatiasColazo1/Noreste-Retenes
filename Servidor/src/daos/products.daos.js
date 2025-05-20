@@ -333,6 +333,15 @@ static async getProductsByMedidas(filters = {}, page = 1, limit = 20) {
   }
 }
 
+static async deleteProductById(id) {
+  const product = await Product.findById(id);
+  if (!product) {
+    throw new Error("Producto no encontrado");
+  }
+
+  await Product.findByIdAndDelete(id);
+  return { message: "Producto eliminado correctamente" };
+}
 
 
 }
