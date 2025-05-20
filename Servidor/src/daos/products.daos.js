@@ -60,13 +60,14 @@ static async syncProducts(productsFromExcel, redisClient) {
     productsFromExcel.forEach(product => {
       const identifier = `${product.Codigo}`;
 
-      bulkOps.push({
-        updateOne: {
-          filter: { Codigo: product.Codigo },
-          update: { $set: product },
-          upsert: true
-        }
-      });
+   bulkOps.push({
+  updateOne: {
+    filter: { Codigo: product.Codigo, MARCA: product.MARCA },
+    update: { $set: product },
+    upsert: true
+  }
+});
+
 
       cacheUpdates[identifier] = product;
     });

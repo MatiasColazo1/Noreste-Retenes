@@ -1,6 +1,63 @@
-<div *ngIf="user">
-  <h2>Bienvenido, {{ user.nombre }}</h2>
-  <p>Email: {{ user.email }}</p>
-  <p>Tipo de cliente: {{ user.tipoCliente }}</p>
-  <!-- y más campos que tengas -->
+<div *ngIf="user" class="card shadow-sm border-0 rounded">
+  <div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow-sm border-0 rounded" style="max-width: 700px; width: 100%;">
+      <div class="card-header bg-success text-white d-flex align-items-center">
+        <div class="me-3 bg-white text-success rounded-circle p-2">
+          <i class="bi bi-person fs-4"></i>
+        </div>
+        <div>
+          <div class="small">¡Bienvenido!</div>
+          <h5 class="mb-0">{{ user.nombre }}</h5>
+        </div>
+      </div>
+
+      <div class="card-body row">
+        <!-- Información Personal -->
+        <div class="col-md-6 mb-3">
+          <h6 class="border-bottom pb-2">Información Personal</h6>
+          <p class="mb-1"><strong>Nombre:</strong> {{ user.nombre }}</p>
+          <p class="mb-1"><strong>Apellido:</strong> {{ user.apellido }}</p>
+          <p class="mb-1"><strong>Email:</strong> {{ user.email }}</p>
+          <p class="mb-1" *ngIf="user.telefono"><strong>Teléfono:</strong> {{ user.telefono }}</p>
+          <p class="mb-1" *ngIf="user.celular"><strong>Celular:</strong> {{ user.celular }}</p>
+          <p class="mb-1"><strong>Fecha de Nacimiento:</strong> {{ user.fechaNacimiento | date:'dd/MM/yyyy' }}</p>
+          <p class="mb-1" *ngIf="user.estadoCivil"><strong>Estado Civil:</strong> {{ user.estadoCivil }}</p>
+          <p class="mb-1" *ngIf="user.sitioWeb"><strong>Sitio Web:</strong>
+            <a href="{{ user.sitioWeb }}" target="_blank" rel="noopener noreferrer">{{ user.sitioWeb }}</a>
+          </p>
+          <p class="mb-1" *ngIf="user.barrio"><strong>Barrio:</strong> {{ user.barrio }}</p>
+          <p class="mb-1" *ngIf="user.ciudad"><strong>Ciudad:</strong> {{ user.ciudad }}</p>
+          <p class="mb-1" *ngIf="user.numero"><strong>Número:</strong> {{ user.numero }}</p>
+        </div>
+
+        <!-- Información Fiscal -->
+        <div class="col-md-6 mb-3">
+          <h6 class="border-bottom pb-2">Información Fiscal</h6>
+          <p class="mb-1"><strong>CUIT:</strong> {{ user.cuit }}</p>
+          <p class="mb-1" *ngIf="user.situacionIVA"><strong>Situación IVA:</strong> {{ user.situacionIVA }}</p>
+          <p class="mb-1"><strong>Tipo de Cliente:</strong>
+            <span class="badge bg-success">{{ user.tipoCliente }}</span>
+          </p>
+          <p class="mb-1" *ngIf="user.direccion"><strong>Dirección:</strong> {{ user.direccion }}</p>
+          <p class="mb-1" *ngIf="user.domicilioEntrega"><strong>Domicilio de Entrega:</strong> {{ user.domicilioEntrega
+            }}</p>
+          <p class="mb-1" *ngIf="user.listaPrecio"><strong>Lista de Precio:</strong> {{ user.listaPrecio }}</p>
+          <p class="mb-1" *ngIf="user.transporte"><strong>Transporte:</strong> {{ user.transporte }}</p>
+          <p class="mb-1" *ngIf="user.asociadoVendedor"><strong>Asociado Vendedor:</strong> {{ user.asociadoVendedor }}
+          </p>
+          <p class="mb-1" *ngIf="user.rutaVenta"><strong>Ruta de Venta:</strong> {{ user.rutaVenta }}</p>
+          <p class="mb-1" *ngIf="user.comentario"><strong>Comentario:</strong> {{ user.comentario }}</p>
+          <!-- Descuentos -->
+          <div *ngIf="user?.descuentos && getDescuentos().length">
+            <h6 class="border-bottom pb-2">Descuentos</h6>
+            <ul class="list-group">
+              <li class="list-group-item" *ngFor="let d of getDescuentos()">
+                <strong>{{ d.rubro }}:</strong> {{ d.porcentaje }}%
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

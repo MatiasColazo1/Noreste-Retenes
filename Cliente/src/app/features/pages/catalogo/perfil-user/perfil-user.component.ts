@@ -13,14 +13,23 @@ user: User | null = null;
   constructor(private authService: AuthService) {}
 
  ngOnInit(): void {
-  this.authService.getCurrentUser().subscribe({
-    next: (data) => {
+   
+   this.authService.getCurrentUser().subscribe({
+     next: (data) => {
+      console.log('Descuentos recibidos:', this.user?.descuentos);
       console.log('Usuario cargado:', data);
       this.user = data.user; // ✅ Acceder al objeto "user" dentro del resultado
     },
     error: (err) => console.error('Error al obtener perfil:', err)
   });
 }
+getDescuentos(): { rubro: string; porcentaje: number }[] {
+  return Array.isArray(this.user?.descuentos)
+    ? this.user!.descuentos
+    : [];
+}
+
+
 
 
 }

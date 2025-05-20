@@ -31,6 +31,8 @@ export class LoginComponent {
         // Guarda el token, el role y el usuario completo en localStorage
         this.authService.saveAuthData(response.token, response.user.role);
         this.authService.saveUser(response.user); // 👈 Guardamos el usuario completo
+
+          this.notificationService.success('Inicio de sesión exitoso');
   
         this.router.navigate(['/catalogo']); // Redirige después de login
       },
