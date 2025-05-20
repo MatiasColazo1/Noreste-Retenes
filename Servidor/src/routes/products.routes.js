@@ -21,7 +21,7 @@ router.get('/:id', verifyToken, ProductController.getProductById); // Obtener pr
 router.get('/:id/precio', verifyToken, ProductController.getPrecioProductoById);
 router.delete('/:id', verifyToken, isAdmin, ProductController.deleteProduct);
 
-
+//imagen
 router.put('/:id/image', verifyToken, isAdmin, ProductController.updateProductImage);
 
 router.post('/upload', verifyToken, isAdmin, upload.single('file'), ProductController.uploadExcel); // Subir archivo Excel (solo admin)
