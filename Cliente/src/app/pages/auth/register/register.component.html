@@ -1,96 +1,104 @@
 <div class="container mt-4">
   <h2>Registro de Usuario</h2>
   <form (ngSubmit)="onRegister()" #registerForm="ngForm">
-    
-    <!-- Nombre -->
-    <div class="mb-3">
-      <label for="nombre" class="form-label">Nombre</label>
-      <input type="text" id="nombre" class="form-control" [(ngModel)]="user.nombre" name="nombre" required>
-      <div *ngIf="registerForm.submitted && !registerForm.controls['nombre']?.valid" class="text-danger">
-        Nombre es obligatorio
+    <div class="row">
+      <!-- Columna izquierda -->
+      <div class="col-md-6">
+        <!-- Nombre -->
+        <div class="mb-3">
+          <label for="nombre" class="form-label">Nombre</label>
+          <input type="text" id="nombre" class="form-control" [(ngModel)]="user.nombre" name="nombre" required>
+          <div *ngIf="registerForm.submitted && !registerForm.controls['nombre']?.valid" class="text-danger">
+            Nombre es obligatorio
+          </div>
+        </div>
+
+        <!-- Apellido -->
+        <div class="mb-3">
+          <label for="apellido" class="form-label">Razon Social/Apellido</label>
+          <input type="text" id="apellido" class="form-control" [(ngModel)]="user.apellido" name="apellido" required>
+          <div *ngIf="registerForm.submitted && !registerForm.controls['apellido']?.valid" class="text-danger">
+            Razon social es obligatorio
+          </div>
+        </div>
+
+        <!-- Fecha de Nacimiento -->
+        <div class="mb-3">
+          <label for="fechaNacimiento" class="form-label">Fecha de Nacimiento</label>
+          <input type="date" id="fechaNacimiento" class="form-control" [(ngModel)]="user.fechaNacimiento" name="fechaNacimiento" required>
+        </div>
+
+        <!-- CUIT -->
+        <div class="mb-3">
+          <label for="cuit" class="form-label">CUIT</label>
+          <input type="text" id="cuit" class="form-control" [(ngModel)]="user.cuit" name="cuit" required>
+        </div>
+
+        <!-- Dirección -->
+        <div class="mb-3">
+          <label for="direccion" class="form-label">Dirección</label>
+          <input type="text" id="direccion" class="form-control" [(ngModel)]="user.direccion" name="direccion" required>
+        </div>
+
+        <!-- Domicilio de Entrega -->
+        <div class="mb-3">
+          <label for="domicilioEntrega" class="form-label">Domicilio de Entrega</label>
+          <input type="text" id="domicilioEntrega" class="form-control" [(ngModel)]="user.domicilioEntrega" name="domicilioEntrega" required>
+        </div>
+      </div>
+
+      <!-- Columna derecha -->
+      <div class="col-md-6">
+        <!-- Celular -->
+        <div class="mb-3">
+          <label for="celular" class="form-label">Celular</label>
+          <input type="text" id="celular" class="form-control" [(ngModel)]="user.celular" name="celular" required>
+        </div>
+
+        <!-- Ciudad -->
+        <div class="mb-3">
+          <label for="ciudad" class="form-label">Ciudad</label>
+          <input type="text" id="ciudad" class="form-control" [(ngModel)]="user.ciudad" name="ciudad" required>
+        </div>
+
+        <!-- Email -->
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" id="email" class="form-control" [(ngModel)]="user.email" name="email" required>
+        </div>
+
+        <!-- Contraseña -->
+        <div class="mb-3">
+          <label for="password" class="form-label">Contraseña</label>
+          <input type="password" id="password" class="form-control" [(ngModel)]="user.password" name="password" required minlength="6">
+          <div *ngIf="registerForm.submitted && registerForm.controls['password']?.errors?.['minlength']" class="text-danger">
+            La contraseña debe tener al menos 6 caracteres
+          </div>
+        </div>
+
+        <!-- Situación IVA (Opcional) -->
+        <div class="mb-3">
+          <label for="situacionIVA" class="form-label">Situación IVA (Opcional)</label>
+          <select id="situacionIVA" class="form-select" [(ngModel)]="user.situacionIVA" name="situacionIVA">
+            <option value="">Seleccionar...</option>
+            <option value="Responsable Inscripto">Responsable Inscripto</option>
+            <option value="Monotributista">Monotributista</option>
+            <option value="Exento">Exento</option>
+            <option value="Consumidor Final">Consumidor Final</option>
+            <option value="No Responsable">No Responsable</option>
+            <option value="Sujeto No Categorizado">Sujeto No Categorizado</option>
+          </select>
+        </div>
       </div>
     </div>
-
-    <!-- Apellido -->
-    <div class="mb-3">
-      <label for="apellido" class="form-label">Apellido</label>
-      <input type="text" id="apellido" class="form-control" [(ngModel)]="user.apellido" name="apellido" required>
-      <div *ngIf="registerForm.submitted && !registerForm.controls['apellido']?.valid" class="text-danger">
-        Apellido es obligatorio
-      </div>
-    </div>
-
-    <!-- Fecha de Nacimiento -->
-    <div class="mb-3">
-      <label for="fechaNacimiento" class="form-label">Fecha de Nacimiento</label>
-      <input type="date" id="fechaNacimiento" class="form-control" [(ngModel)]="user.fechaNacimiento" name="fechaNacimiento" required>
-    </div>
-
-    <!-- CUIT -->
-    <div class="mb-3">
-      <label for="cuit" class="form-label">CUIT</label>
-      <input type="text" id="cuit" class="form-control" [(ngModel)]="user.cuit" name="cuit" required>
-    </div>
-
-    <!-- Dirección -->
-    <div class="mb-3">
-      <label for="direccion" class="form-label">Dirección</label>
-      <input type="text" id="direccion" class="form-control" [(ngModel)]="user.direccion" name="direccion" required>
-    </div>
-
-    <!-- Domicilio de Entrega -->
-    <div class="mb-3">
-      <label for="domicilioEntrega" class="form-label">Domicilio de Entrega</label>
-      <input type="text" id="domicilioEntrega" class="form-control" [(ngModel)]="user.domicilioEntrega" name="domicilioEntrega" required>
-    </div>
-
-    <!-- Celular -->
-    <div class="mb-3">
-      <label for="celular" class="form-label">Celular</label>
-      <input type="text" id="celular" class="form-control" [(ngModel)]="user.celular" name="celular" required>
-    </div>
-
-    <!-- Ciudad -->
-    <div class="mb-3">
-      <label for="ciudad" class="form-label">Ciudad</label>
-      <input type="text" id="ciudad" class="form-control" [(ngModel)]="user.ciudad" name="ciudad" required>
-    </div>
-
-    <!-- Email -->
-    <div class="mb-3">
-      <label for="email" class="form-label">Email</label>
-      <input type="email" id="email" class="form-control" [(ngModel)]="user.email" name="email" required>
-    </div>
-
-    <!-- Contraseña -->
-    <div class="mb-3">
-      <label for="password" class="form-label">Contraseña</label>
-      <input type="password" id="password" class="form-control" [(ngModel)]="user.password" name="password" required minlength="6">
-      <div *ngIf="registerForm.submitted && registerForm.controls['password']?.errors?.['minlength']" class="text-danger">
-        La contraseña debe tener al menos 6 caracteres
-      </div>
-    </div>
-
-    <!-- Situación IVA (Opcional) -->
-<div class="mb-3">
-  <label for="situacionIVA" class="form-label">Situación IVA (Opcional)</label>
-  <select id="situacionIVA" class="form-select" [(ngModel)]="user.situacionIVA" name="situacionIVA">
-    <option value="">Seleccionar...</option>
-    <option value="Responsable Inscripto">Responsable Inscripto</option>
-    <option value="Monotributista">Monotributista</option>
-    <option value="Exento">Exento</option>
-    <option value="Consumidor Final">Consumidor Final</option>
-    <option value="No Responsable">No Responsable</option>
-    <option value="Sujeto No Categorizado">Sujeto No Categorizado</option>
-  </select>
-</div>
 
     <!-- Botón de Registro -->
-    <button type="submit" class="btn btn-primary">Registrarse</button>
-
+    <div class="mt-3">
+      <button type="submit" class="btn btn-primary">Registrarse</button>
+    </div>
   </form>
-</div>
 
-<a [routerLink]="['/login']" class="text-primary">
-  Volver
-     </a>
+  <div class="mt-3">
+    <a [routerLink]="['/login']" class="text-primary">Volver</a>
+  </div>
+</div>

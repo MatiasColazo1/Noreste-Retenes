@@ -64,12 +64,15 @@ export class ProductoDetalleComponent implements OnInit, OnChanges {
     target.src = 'https://res.cloudinary.com/dlish6q5r/image/upload/v1747076097/download_vbzenr.jpg';
   }
 
-  agregarAlCarrito(): void {
-    const item: Carrito = {
-      idProducto: this.producto._id,
-      codigo: this.producto.Codigo,
-      cantidad: this.cantidad
-    };
+agregarAlCarrito(): void {
+  const item: Carrito = {
+    idProducto: this.producto._id,
+    codigo: this.producto.Codigo,
+    cantidad: this.cantidad,
+    precioOriginal: this.producto.PrecioVenta, // o como se llame en tu modelo
+    precioFinal: this.producto.PrecioFinal,
+    marca: this.producto.MARCA
+  };
 
     this.carritoService.addToCart(item).subscribe({
       next: () => alert('Producto agregado al carrito'),

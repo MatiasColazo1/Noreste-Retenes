@@ -1,4 +1,5 @@
 const Product = require('../models/products.model');
+const Aplicacion = require('../models/aplicacion.model');
 
 class ProductDAO {
   // Obtener productos con paginación y cache en Redis
@@ -338,6 +339,7 @@ static async deleteProductById(id) {
   if (!product) {
     throw new Error("Producto no encontrado");
   }
+await Aplicacion.deleteMany({ producto: product._id });
 
   await Product.findByIdAndDelete(id);
   return { message: "Producto eliminado correctamente" };

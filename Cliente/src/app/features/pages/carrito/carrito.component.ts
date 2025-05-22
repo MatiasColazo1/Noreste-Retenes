@@ -14,16 +14,20 @@ export class CarritoComponent implements OnInit {
 
   constructor(private carritoService: CarritoService, private pdfService: PdfService, private authService: AuthService) {}
 
-  ngOnInit(): void {
-    this.carritoService.getCarritoObservable().subscribe({
-      next: (items) => {
-        this.carrito = items;
-      },
-      error: (err) => {
-        console.error('Error al cargar el carrito:', err);
-      },
-    });
-  }
+ngOnInit(): void {
+  // Forzar que se recargue el carrito al iniciar el componente
+  this.carritoService.loadCart(); // ⚠️ Hacelo público si es necesario
+
+  this.carritoService.getCarritoObservable().subscribe({
+    next: (items) => {
+      this.carrito = items;
+    },
+    error: (err) => {
+      console.error('Error al cargar el carrito:', err);
+    },
+  });
+}
+
 
   eliminarDelCarrito(idProducto: string): void {
     this.carritoService.removeFromCart(idProducto).subscribe();
@@ -59,6 +63,11 @@ export class CarritoComponent implements OnInit {
       console.error('Error al generar PDF:', error);
     });
   }
+
+  calcularTotal(): number {
+  return this.carrito.reduce((acc, item) => acc + (item.precioFinal * item.cantidad), 0);
+}
+
   
   
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from 'src/app/services/product.service';
 
 @Component({
@@ -12,7 +12,7 @@ export class ProductosEditarComponent implements OnInit {
   producto: any; // Asegúrate de tener esto definido
   selectedFile!: File;
   timestamp = Date.now(); // para forzar recarga de imagen
-  constructor(private productService: ProductService, private route: ActivatedRoute) {}
+  constructor(private productService: ProductService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -72,4 +72,24 @@ export class ProductosEditarComponent implements OnInit {
     }
   }
   
+  eliminarProducto() {
+  if (!this.producto || !this.producto._id) return;
+
+  const confirmacion = confirm(`¿Estás seguro de eliminar el producto "${this.producto.Nombre}"? Esta acción no se puede deshacer.`);
+
+  if (confirmacion) {
+    this.productService.deleteProduct(this.producto._id).subscribe({
+      next: (res) => {
+        alert('✅ Producto eliminado correctamente');
+        // Redirigir o recargar según necesites, por ejemplo:
+        this.router.navigate(['/catalogo']);
+      },
+      error: (err) => {
+        console.error('Error al eliminar producto:', err);
+        alert('❌ Hubo un error al eliminar el producto');
+      }
+    });
+  }
+}
+
 }

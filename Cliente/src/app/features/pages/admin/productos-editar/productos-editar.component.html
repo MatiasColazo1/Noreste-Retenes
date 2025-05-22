@@ -25,3 +25,9 @@
 <app-datos-generales-form [producto]="producto"></app-datos-generales-form>
 <app-marca-form [producto]="producto"></app-marca-form>
 <app-aplicacion-form [productoId]="producto?._id"></app-aplicacion-form>
+<!-- Botón eliminar producto -->
+<div class="text-end mt-4">
+  <button class="btn btn-danger" (click)="eliminarProducto()">
+    🗑️ Eliminar producto
+  </button>
+</div>

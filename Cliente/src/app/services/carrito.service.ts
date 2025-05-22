@@ -24,9 +24,10 @@ export class CarritoService {
     });
   }
 
-  private loadCart() {
-    this.getCart().subscribe((items) => this.carritoSubject.next(items));
-  }
+loadCart() {
+  this.getCart().subscribe((items) => this.carritoSubject.next(items));
+}
+
 
   getCart(): Observable<Carrito[]> {
     return this.http.get<Carrito[]>(`${this.apiUrl}`, {
@@ -62,4 +63,8 @@ export class CarritoService {
   getCarritoObservable(): Observable<Carrito[]> {
     return this.carrito$;
   }
+
+  resetCarrito() {
+  this.carritoSubject.next([]);
+}
 }

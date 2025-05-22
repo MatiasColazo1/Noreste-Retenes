@@ -3,3 +3,6 @@
 body {
     background: #d5e6ff;  /* fallback for old browsers */    
 }
+button {
+    width: 200px;
+}

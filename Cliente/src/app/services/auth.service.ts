@@ -4,6 +4,7 @@ import { catchError, map, Observable, throwError } from 'rxjs';
 import { User } from '../models/user';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
+import { CarritoService } from './carrito.service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +12,7 @@ import { jwtDecode } from 'jwt-decode';
 export class AuthService {
   private apiUrl = 'http://localhost:3000/api/users';
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, private carritoService: CarritoService) { }
 
   // Registro de usuario
   register(user: User): Observable<any> {
@@ -45,11 +46,16 @@ export class AuthService {
   }
 
   // Cerrar sesión
-  logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('role'); // También eliminamos el rol
-    this.router.navigate(['/login']);
-  }
+logout() {
+  localStorage.removeItem('token');
+  localStorage.removeItem('role');
+  localStorage.removeItem('user');
+
+  // Limpiar el observable del carrito
+  this.carritoService.resetCarrito(); // creá este método en el servicio
+
+  this.router.navigate(['/login']);
+}
 
   // Verificar si el usuario está autenticado
   isAuthenticated(): boolean {
