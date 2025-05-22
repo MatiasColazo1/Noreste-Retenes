@@ -59,16 +59,19 @@ static async syncProducts(productsFromExcel, redisClient) {
 
     // Crear operaciones de bulkWrite y actualizar caché en Redis
     productsFromExcel.forEach(product => {
-      const identifier = `${product.Codigo}`;
+      const identifier = `${product.Prefijo || ''}${product.Codigo || ''}${product.MARCA || ''}`;
 
-   bulkOps.push({
-  updateOne: {
-    filter: { Codigo: product.Codigo, MARCA: product.MARCA },
-    update: { $set: product },
-    upsert: true
-  }
-});
-
+      bulkOps.push({
+        updateOne: {
+          filter: {
+            Prefijo: product.Prefijo || '',
+            Codigo: product.Codigo || '',
+            MARCA: product.MARCA || ''
+          },
+          update: { $set: product },
+          upsert: true
+        }
+      });
 
       cacheUpdates[identifier] = product;
     });
@@ -77,7 +80,7 @@ static async syncProducts(productsFromExcel, redisClient) {
       await Product.bulkWrite(bulkOps);
     }
 
-    // Guardar los productos en Redis de forma más eficiente (en lotes)
+    // Guardar los productos en Redis
     for (const [key, value] of Object.entries(cacheUpdates)) {
       await redisClient.setEx(`product:${key}`, 600, JSON.stringify(value));
     }

@@ -9,9 +9,10 @@
     width="150" 
     height="150"
   >
-  
-    <p><strong>Nombre:</strong> {{ producto.Nombre }}</p>
-    <p><strong>Nombre Rubro:</strong> {{ producto.NombreRubro }}</p>
+
+    <p><strong>Identificador:</strong> {{ producto.Prefijo }} {{ producto.Codigo }}</p>
+    <p><strong>SubRubro:</strong> {{ producto.NombreSubRubro }}</p>
+    <p><strong>Rubro:</strong> {{ producto.NombreRubro }}</p>
    
     <p><strong>Precio:</strong>
       <span *ngIf="producto?.Descuento && producto?.Descuento > 0">

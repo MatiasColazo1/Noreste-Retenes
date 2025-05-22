@@ -12,13 +12,13 @@
       Precio Unitario: ${{ item.precioFinal | number: '1.2-2' }}<br>
       Subtotal: ${{ item.precioFinal * item.cantidad | number: '1.2-2' }}
     </div>
-    <div class="mt-3" *ngIf="carrito.length > 0">
-  <h5>Total: ${{ calcularTotal() | number: '1.2-2' }}</h5>
-</div>
-
+    
     <button class="btn btn-danger btn-sm" (click)="eliminarDelCarrito(item.idProducto)">Eliminar</button>
   </li>
 </ul>
+<div class="mt-3" *ngIf="carrito.length > 0">
+<h5>Total: ${{ calcularTotal() | number: '1.2-2' }}</h5>
+</div>
 
   
     <button class="btn btn-secondary mt-3" *ngIf="carrito.length > 0" (click)="vaciarCarrito()">Vaciar Carrito</button>

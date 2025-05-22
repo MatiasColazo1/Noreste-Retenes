@@ -21,6 +21,9 @@ const ProductSchema = new mongoose.Schema({
   equivalencias: [String]
 }, { timestamps: true });
 
+// Índice compuesto para identificación única
+ProductSchema.index({ Prefijo: 1, Codigo: 1, MARCA: 1 }, { unique: true });
+
 // Relación virtual para que se puedan consultar las aplicaciones desde el producto
 ProductSchema.virtual('aplicaciones', {
   ref: 'Aplicacion',                // El modelo referenciado
