@@ -1,12 +1,7 @@
 <!-- Marca -->
 <div class="form-group">
   <label for="marcaSelect">Marca:</label>
-  <select
-    id="marcaSelect"
-    class="form-control"
-    [(ngModel)]="marcaSeleccionada"
-    (change)="onMarcaChange()"
-  >
+  <select id="marcaSelect" class="form-control" [(ngModel)]="marcaSeleccionada" (change)="onMarcaChange()">
     <option value="">-- Selecciona una marca --</option>
     <option *ngFor="let marca of marcas" [value]="marca">{{ marca }}</option>
   </select>
@@ -15,43 +10,29 @@
 <!-- Modelo -->
 <div class="form-group" *ngIf="modelos.length > 0">
   <label for="modeloSelect">Modelo:</label>
-  <select
-    id="modeloSelect"
-    class="form-control"
-    [(ngModel)]="modeloSeleccionado"
-    (change)="onModeloChange()"
-  >
+  <select id="modeloSelect" class="form-control" [(ngModel)]="modeloSeleccionado" (change)="onModeloChange()">
     <option value="">-- Selecciona un modelo --</option>
     <option *ngFor="let modelo of modelos" [value]="modelo">{{ modelo }}</option>
   </select>
 
   <!-- Rubro -->
-<div class="form-group" *ngIf="rubros.length > 0">
-  <label for="rubroSelect">Partes:</label>
- <select
-  id="rubroSelect"
-  class="form-control"
-  [(ngModel)]="rubroSeleccionado"
-  (change)="onRubroChange()"
->
+  <div class="form-group" *ngIf="rubros.length > 0">
+    <label for="rubroSelect">Partes:</label>
+    <select id="rubroSelect" class="form-control" [(ngModel)]="rubroSeleccionado" (change)="onRubroChange()">
 
-    <option value="">-- Selecciona una parte --</option>
-    <option *ngFor="let rubro of rubros" [value]="rubro">{{ rubro }}</option>
-  </select>
-</div>
+      <option value="">-- Selecciona una parte --</option>
+      <option *ngFor="let rubro of rubros" [value]="rubro">{{ rubro }}</option>
+    </select>
+  </div>
 
-<!-- Descripción -->
-<div class="form-group" *ngIf="descripciones.length > 0">
-  <label for="descripcionSelect">Parte:</label>
-  <select
-    id="descripcionSelect"
-    class="form-control"
-    [(ngModel)]="descripcionSeleccionada"
-  >
-    <option value="">-- Selecciona una descripción --</option>
-    <option *ngFor="let descripcion of descripciones" [value]="descripcion">{{ descripcion }}</option>
-  </select>
-</div>
+  <!-- Descripción -->
+  <div class="form-group" *ngIf="descripciones.length > 0">
+    <label for="descripcionSelect">Parte:</label>
+    <select id="descripcionSelect" class="form-control" [(ngModel)]="descripcionSeleccionada">
+      <option value="">-- Selecciona una descripción --</option>
+      <option *ngFor="let descripcion of descripciones" [value]="descripcion">{{ descripcion }}</option>
+    </select>
+  </div>
 
 
 </div>
@@ -95,12 +76,3 @@
 <div *ngIf="mostrarResultados && productosFiltrados.length === 0" class="alert alert-info mt-3">
   No se encontraron productos con los filtros seleccionados.
 </div>
-
-
-
-
-
-
-
-
-
