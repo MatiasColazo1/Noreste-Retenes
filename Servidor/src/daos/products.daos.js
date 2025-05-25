@@ -211,18 +211,60 @@ static async syncProducts(productsFromExcel, redisClient) {
   // Buscar productos cuyo código contenga el valor ingresado (parcial)
 static async getProductsByCodigoParcial(codigo, page = 1, limit = 20) {
   try {
+    if (!codigo) {
+      const products = await Product.find()
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .lean();
+
+      const total = await Product.countDocuments();
+      const totalPages = Math.ceil(total / limit);
+      return { products, total, page, limit, totalPages };
+    }
+
+    const skip = (page - 1) * limit;
     const regex = new RegExp(codigo, 'i');
-    const filter = codigo ? { Codigo: { $regex: regex } } : {};
 
-    const products = await Product.find(filter)
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .lean();
+    // Crear un agregado para manejar el orden y la paginación
+    const products = await Product.aggregate([
+      {
+        $match: {
+          $or: [
+            { Codigo: codigo }, // Coincidencias exactas
+            { Codigo: { $regex: regex } } // Coincidencias parciales
+          ]
+        }
+      },
+      {
+        $addFields: {
+          exactMatch: { $eq: ["$Codigo", codigo] }
+        }
+      },
+      {
+        $sort: {
+          exactMatch: -1, // Primero las coincidencias exactas
+          _id: 1 // Luego ordenar por _id
+        }
+      },
+      {
+        $skip: skip
+      },
+      {
+        $limit: limit
+      }
+    ]);
 
-    const total = await Product.countDocuments(filter);
+    // Contar total de documentos que coinciden
+    const total = await Product.countDocuments({
+      $or: [
+        { Codigo: codigo },
+        { Codigo: { $regex: regex } }
+      ]
+    });
+
     const totalPages = Math.ceil(total / limit);
-
     return { products, total, page, limit, totalPages };
+
   } catch (error) {
     console.error('❌ Error en getProductsByCodigoParcial:', error);
     throw error;
