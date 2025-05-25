@@ -247,37 +247,53 @@ export class CatalogoComponent implements OnInit {
     });
   }
 
-  buscarPorMedidas(filtros: { interior?: number, exterior?: number, ancho?: number, nombreRubro?: string }) {
+  buscarPorMedidas(filtros: { interior?: number, exterior?: number, ancho?: number, nombreRubro?: string, page?: number }) {
     this.mensajeUsuario = '';
-    this.products = [];
+    if (!filtros.page) {
+      this.products = [];
+    }
 
     const interior = filtros.interior && !isNaN(filtros.interior) ? filtros.interior : undefined;
     const exterior = filtros.exterior && !isNaN(filtros.exterior) ? filtros.exterior : undefined;
     const ancho = filtros.ancho && !isNaN(filtros.ancho) ? filtros.ancho : undefined;
     const nombreRubro = filtros.nombreRubro || undefined;
+    const pagina = filtros.page || 1;
 
     if (interior === undefined && exterior === undefined && ancho === undefined && !nombreRubro) {
       this.currentPage = 1;
       this.cargarProductos();
       return;
     }
-    this.currentPage = 1;
-    this.lastSearchType = 'medidas';
-    this.lastSearchParams = { interior, exterior, ancho, nombreRubro };
+
+    if (!filtros.page) {
+      this.currentPage = 1;
+      this.lastSearchType = 'medidas';
+      this.lastSearchParams = { 
+        interior, 
+        exterior, 
+        ancho, 
+        nombreRubro,
+        page: pagina 
+      };
+    } else {
+      if (this.lastSearchParams) {
+        this.lastSearchParams.page = pagina;
+      }
+    }
 
     this.productService.getProductsByMedidas(
-      interior,
-      exterior,
-      ancho,
-      nombreRubro,
-      this.currentPage,
+      interior || this.lastSearchParams?.interior,
+      exterior || this.lastSearchParams?.exterior,
+      ancho || this.lastSearchParams?.ancho,
+      nombreRubro || this.lastSearchParams?.nombreRubro,
+      pagina,
       this.limit
     ).subscribe({
       next: (res: any) => {
         this.products = res.products;
         this.totalProducts = res.total;
-        this.totalPages = Math.ceil(res.total / this.limit); // ⬅️ Agregado
-        this.currentPage = res.page; // ⬅️ Asegura que sea correcto
+        this.totalPages = Math.ceil(res.total / this.limit);
+        this.currentPage = res.page;
         this.hasNextPage = this.currentPage < this.totalPages;
 
         if (this.products.length === 0) {
