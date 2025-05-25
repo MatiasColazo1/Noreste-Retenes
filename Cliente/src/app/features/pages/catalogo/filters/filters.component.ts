@@ -8,7 +8,7 @@ import { ProductService } from 'src/app/services/product.service'; // Asegurate 
 })
 export class FiltersComponent implements OnInit {
   tipoFiltro: 'codigo' | 'equivalencia' | 'medidas' | null = null;
-  currentPage: number = 1;
+
   codigo: string = '';
   equivalencia: string = '';
 
@@ -23,7 +23,7 @@ export class FiltersComponent implements OnInit {
   @Output() buscarPorEquivalencia = new EventEmitter<string>();
   @Output() buscarPorMedidas = new EventEmitter<{ interior?: number, exterior?: number, ancho?: number, nombreRubro?: string }>();
 
-  constructor(private productService: ProductService) { }
+  constructor(private productService: ProductService) {}
 
   ngOnInit(): void {
     this.cargarRubros();
@@ -31,7 +31,7 @@ export class FiltersComponent implements OnInit {
 
   setFiltro(tipo: 'codigo' | 'equivalencia' | 'medidas') {
     this.tipoFiltro = tipo;
-    this.currentPage = 1;
+
     if (tipo !== 'codigo') this.codigo = '';
     if (tipo !== 'equivalencia') this.equivalencia = '';
     if (tipo !== 'medidas') {
