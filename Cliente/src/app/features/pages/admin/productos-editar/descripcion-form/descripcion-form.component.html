@@ -1,1 +1,11 @@
-<p><strong>Descripcion:</strong> {{ descripcion }}</p>
+<div class="mb-3">
+  <p>
+    <strong>Descripción:</strong>
+    <ng-container *ngIf="modoEdicion; else descripcionView">
+      <input [(ngModel)]="descripcion" (ngModelChange)="emitirCambios()" class="form-control d-inline-block w-auto ms-2">
+    </ng-container>
+    <ng-template #descripcionView>
+      {{ descripcion }}
+    </ng-template>
+  </p>
+</div>

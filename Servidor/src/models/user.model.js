@@ -62,7 +62,8 @@ const UserSchema = new mongoose.Schema({
         type: String,
         enum: ['user', 'admin'],
         default: 'user'
-    }
+    },
+    ultimaCompra: { type: Date },
 }, {
     timestamps: true // Agrega `createdAt` y `updatedAt` automáticamente
 });

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-identificador-form',
@@ -8,25 +8,17 @@ import { Component, Input } from '@angular/core';
 export class IdentificadorFormComponent {
   @Input() prefijo!: string;
   @Input() codigo!: string;
+  @Input() modoEdicion = false;
 
-  isEditing = false;
-  editablePrefijo = '';
+  @Output() identificadorChange = new EventEmitter<{
+    Prefijo: string;
+    Codigo: string;
+  }>();
 
-  // Simulación: cambiar a tu lógica real para validar admin
-  esAdmin = true; // o usar algún AuthService real
-
-  editar() {
-    this.isEditing = true;
-    this.editablePrefijo = this.prefijo;
-  }
-
-  guardar() {
-    this.prefijo = this.editablePrefijo;
-    this.isEditing = false;
-    // Aquí podés emitir un evento o llamar a un servicio para persistir si hace falta
-  }
-
-  cancelar() {
-    this.isEditing = false;
+  emitirCambios() {
+    this.identificadorChange.emit({
+      Prefijo: this.prefijo,
+      Codigo: this.codigo
+    });
   }
 }

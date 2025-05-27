@@ -107,6 +107,32 @@ static async syncProducts(productsFromExcel, redisClient) {
     }
   }
 
+// Actualizar producto por ID
+static async updateProductById(id, updatedData, redisClient) {
+  try {
+    const updatedProduct = await Product.findByIdAndUpdate(id, updatedData, {
+      new: true,
+      runValidators: true,
+    }).lean();
+
+    if (!updatedProduct) {
+      throw new Error('Producto no encontrado');
+    }
+
+    // Opcional: actualizar caché si existe
+    if (redisClient) {
+      const identifier = `${updatedProduct.Prefijo || ''}${updatedProduct.Codigo || ''}${updatedProduct.MARCA || ''}`;
+      await redisClient.setEx(`product:${identifier}`, 600, JSON.stringify(updatedProduct));
+    }
+
+    return updatedProduct;
+  } catch (error) {
+    console.error('❌ Error al actualizar producto:', error);
+    throw error;
+  }
+}
+
+
   // Actualizar precios desde otro Excel
   static async syncPrices(pricesFromExcel) {
     try {

@@ -24,4 +24,6 @@ export interface User {
     comentario?: string;
     descuentos?: { [nombreRubro: string]: number }; 
     role?: 'user' | 'admin';
+    createdAt?: Date;
+    ultimaCompra?: Date;
   }

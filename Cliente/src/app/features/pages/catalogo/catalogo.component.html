@@ -4,15 +4,15 @@
 <app-buttons [isAdmin]="authService.isAdmin()" text="Panel de administrador" type="primary"
 route="/admin/dashboard"></app-buttons>
 
-<div *ngIf="authService.isAdmin()">
-  <!-- Subir productos -->
+<!-- <div *ngIf="authService.isAdmin()">
+
   <input type="file" (change)="onFileSelected($event)" accept=".xlsx" />
   <button (click)="uploadFile()" [disabled]="!selectedFile">Subir Productos</button>
   
-  <!-- Subir precios -->
+
   <input type="file" (change)="onPriceFileSelected($event)" accept=".xlsx" />
   <button (click)="uploadPrices()" [disabled]="!selectedPriceFile">Subir Precios</button>
-</div>
+</div> -->
 
 <app-carrito></app-carrito>
 

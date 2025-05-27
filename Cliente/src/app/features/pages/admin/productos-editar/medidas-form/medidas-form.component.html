@@ -1,3 +1,31 @@
-<p><strong>Interior:</strong> {{ interior }}</p>
-<p><strong>Exterior:</strong> {{ exterior }}</p>
-<p><strong>Ancho:</strong> {{ ancho }}</p>
+<div class="mb-3">
+  <p>
+    <strong>Interior:</strong>
+    <ng-container *ngIf="modoEdicion; else interiorView">
+      <input [(ngModel)]="interior" (ngModelChange)="emitirCambios()" class="form-control d-inline-block w-auto ms-2">
+    </ng-container>
+    <ng-template #interiorView>
+      {{ interior }}
+    </ng-template>
+  </p>
+
+  <p>
+    <strong>Exterior:</strong>
+    <ng-container *ngIf="modoEdicion; else exteriorView">
+      <input [(ngModel)]="exterior" (ngModelChange)="emitirCambios()" class="form-control d-inline-block w-auto ms-2">
+    </ng-container>
+    <ng-template #exteriorView>
+      {{ exterior }}
+    </ng-template>
+  </p>
+
+  <p>
+    <strong>Ancho:</strong>
+    <ng-container *ngIf="modoEdicion; else anchoView">
+      <input [(ngModel)]="ancho" (ngModelChange)="emitirCambios()" class="form-control d-inline-block w-auto ms-2">
+    </ng-container>
+    <ng-template #anchoView>
+      {{ ancho }}
+    </ng-template>
+  </p>
+</div>

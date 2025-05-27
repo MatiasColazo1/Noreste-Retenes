@@ -12,6 +12,7 @@
     class="form-control"
     placeholder="Ingresá el código exacto"
     [(ngModel)]="codigo"
+    (keyup.enter)="onBuscarCodigo()"
   />
   <button class="btn btn-primary" type="button" (click)="onBuscarCodigo()">Buscar</button>
 </div>
@@ -23,6 +24,7 @@
     class="form-control"
     placeholder="Ingresá la equivalencia"
     [(ngModel)]="equivalencia"
+    (keyup.enter)="onBuscarEquivalencia()"
   />
   <button class="btn btn-secondary" type="button" (click)="onBuscarEquivalencia()">Buscar</button>
 </div>
@@ -30,16 +32,30 @@
 <!-- Filtro por medidas -->
 <div class="row mb-3" *ngIf="tipoFiltro === 'medidas'">
   <div class="col">
-    <input type="number" class="form-control" placeholder="Interior" [(ngModel)]="interior" />
+    <input type="number" 
+           class="form-control" 
+           placeholder="Interior" 
+           [(ngModel)]="interior"
+           (keyup.enter)="onBuscarMedidas()" />
   </div>
   <div class="col">
-    <input type="number" class="form-control" placeholder="Exterior" [(ngModel)]="exterior" />
+    <input type="number" 
+           class="form-control" 
+           placeholder="Exterior" 
+           [(ngModel)]="exterior"
+           (keyup.enter)="onBuscarMedidas()" />
   </div>
   <div class="col">
-    <input type="number" class="form-control" placeholder="Ancho" [(ngModel)]="ancho" />
+    <input type="number" 
+           class="form-control" 
+           placeholder="Ancho" 
+           [(ngModel)]="ancho"
+           (keyup.enter)="onBuscarMedidas()" />
   </div>
   <div class="col">
-    <select class="form-select" [(ngModel)]="nombreRubro">
+    <select class="form-select" 
+            [(ngModel)]="nombreRubro"
+            (keyup.enter)="onBuscarMedidas()">
       <option value="">Todos los rubros</option>
       <option *ngFor="let rubro of rubros" [value]="rubro">{{ rubro }}</option>
     </select>

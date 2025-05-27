@@ -9,6 +9,7 @@ export class EquivalenciasFormComponent {
   @Input() equivalencias: string[] = [];
   @Input() productoId!: string;
 
+
   @Output() equivalenciasChange = new EventEmitter<string[]>();
 
   nuevaEquivalencia: string = '';

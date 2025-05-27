@@ -62,6 +62,22 @@ const getProductById = async (req, res) => {
   }
 };
 
+// Actualizar producto por ID
+const updateProductById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedData = req.body;
+    const redisClient = req.app.locals.redisClient;
+
+    const updatedProduct = await ProductDAO.updateProductById(id, updatedData, redisClient);
+
+    return res.status(200).json({ message: 'Producto actualizado correctamente', product: updatedProduct });
+  } catch (error) {
+    return res.status(500).json({ error: 'Error al actualizar el producto' });
+  }
+};
+
+
 const uploadPrices = async (req, res) => {
   try {
     if (!req.file) {
@@ -353,4 +369,4 @@ const deleteProduct = async (req, res) => {
 
 
 
-module.exports = { uploadExcel, getProducts, getProductById, uploadPrices, updateProductImage, getProductsByUser, getPrecioProductoById, getProductsByCodigoParcial, updateEquivalencia, addEquivalencia, removeEquivalencia, getProductsByEquivalencia, getProductsByMedidas, getRubroNames, deleteProduct};
+module.exports = { uploadExcel, getProducts, getProductById, updateProductById, uploadPrices, updateProductImage, getProductsByUser, getPrecioProductoById, getProductsByCodigoParcial, updateEquivalencia, addEquivalencia, removeEquivalencia, getProductsByEquivalencia, getProductsByMedidas, getRubroNames, deleteProduct};

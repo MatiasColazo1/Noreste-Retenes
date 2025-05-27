@@ -191,7 +191,7 @@
   </ng-template>
 </p>
 
-<p><strong>Asociado Vendedor:</strong>
+<p><strong>Vendedor Asociado:</strong>
   <ng-container *ngIf="!isEditing; else editAsociadoVendedor">
     {{ user.asociadoVendedor || 'No disponible' }}
   </ng-container>
@@ -218,6 +218,8 @@
   </ng-template>
 </p>
 
+<p>Registrado el: {{ user.createdAt | date:'medium' }}</p>
+<p>Última compra: {{ user.ultimaCompra | date:'medium' }}</p>
 <div *ngIf="isEditing">
   <h3>Descuentos por Rubro</h3>
 

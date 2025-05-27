@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-descripcion-form',
@@ -7,4 +7,11 @@ import { Component, Input } from '@angular/core';
 })
 export class DescripcionFormComponent {
   @Input() descripcion!: string;
+  @Input() modoEdicion = false;
+
+  @Output() descripcionChange = new EventEmitter<string>();
+
+  emitirCambios() {
+    this.descripcionChange.emit(this.descripcion);
+  }
 }

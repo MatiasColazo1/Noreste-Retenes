@@ -1,16 +1,22 @@
-<div>
-    <p><strong>Prefijo:</strong>
-      <ng-container *ngIf="isEditing; else showPrefijo">
-        <input [(ngModel)]="editablePrefijo" />
-        <button (click)="guardar()">Guardar</button>
-        <button (click)="cancelar()">Cancelar</button>
-      </ng-container>
-      <ng-template #showPrefijo>
-        {{ prefijo }}
-        <button *ngIf="esAdmin" (click)="editar()">Editar</button>
-      </ng-template>
-    </p>
-  
-    <p><strong>Código:</strong> {{ codigo }}</p>
-  </div>
+<div class="mb-3">
+  <p>
+    <strong>Prefijo:</strong>
+    <ng-container *ngIf="modoEdicion; else prefijoView">
+      <input [(ngModel)]="prefijo" (ngModelChange)="emitirCambios()" class="form-control d-inline-block w-auto ms-2">
+    </ng-container>
+    <ng-template #prefijoView>
+      {{ prefijo }}
+    </ng-template>
+  </p>
+
+  <p>
+    <strong>Código:</strong>
+    <ng-container *ngIf="modoEdicion; else codigoView">
+      <input [(ngModel)]="codigo" (ngModelChange)="emitirCambios()" class="form-control d-inline-block w-auto ms-2">
+    </ng-container>
+    <ng-template #codigoView>
+      {{ codigo }}
+    </ng-template>
+  </p>
+</div>
   

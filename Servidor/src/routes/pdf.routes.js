@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require('express'); 
 const router = express.Router();
 const { generarPDFCarrito } = require('../controllers/pdf.controller');
 const { verifyToken } = require('../middlewares/auth.middlewares'); 

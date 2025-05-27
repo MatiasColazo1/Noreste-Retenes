@@ -1,4 +1,12 @@
-<div *ngIf="producto">
-    <p><strong>Marca:</strong> {{ producto.MARCA }}</p>
-  </div>
+<div *ngIf="producto" class="mb-3">
+  <p>
+    <strong>Marca:</strong>
+    <ng-container *ngIf="modoEdicion; else marcaView">
+      <input [(ngModel)]="producto.MARCA" (ngModelChange)="emitirCambios()" class="form-control d-inline-block w-auto ms-2">
+    </ng-container>
+    <ng-template #marcaView>
+      {{ producto.MARCA }}
+    </ng-template>
+  </p>
+</div>
   

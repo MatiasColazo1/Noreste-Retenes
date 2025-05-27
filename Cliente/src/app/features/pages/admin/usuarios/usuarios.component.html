@@ -6,6 +6,7 @@
     [(ngModel)]="searchTerm"
     placeholder="Buscar por nombre, apellido, número o ciudad"
     class="form-control"
+    (keyup.enter)="buscarUsuarios()"
   />
   <button class="btn btn-primary" (click)="buscarUsuarios()">Buscar</button>
 </div>

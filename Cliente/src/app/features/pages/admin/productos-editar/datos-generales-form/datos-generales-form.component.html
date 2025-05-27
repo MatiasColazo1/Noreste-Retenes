@@ -1,8 +1,42 @@
-<div *ngIf="producto">
-    <p><strong>Precio Lista 1:</strong> {{ producto.PrecioLista1 | currency }}</p>
-    <p><strong>Precio Lista 2:</strong> {{ producto.PrecioLista2 | currency }}</p>
+<div *ngIf="producto" class="mb-3">
+  <p>
+    <strong>Precio Lista 1:</strong>
+    <ng-container *ngIf="modoEdicion; else precioLista1View">
+      <input type="number" [(ngModel)]="producto.PrecioLista1" (ngModelChange)="emitirCambios()" class="form-control d-inline-block w-auto ms-2">
+    </ng-container>
+    <ng-template #precioLista1View>
+      {{ producto.PrecioLista1 | currency }}
+    </ng-template>
+  </p>
 
-    <p><strong>Rubro:</strong> {{ producto.NombreRubro }}</p>
-    <p><strong>Subrubro:</strong> {{ producto.NombreSubRubro }}</p>
-  </div>
+  <p>
+    <strong>Precio Lista 2:</strong>
+    <ng-container *ngIf="modoEdicion; else precioLista2View">
+      <input type="number" [(ngModel)]="producto.PrecioLista2" (ngModelChange)="emitirCambios()" class="form-control d-inline-block w-auto ms-2">
+    </ng-container>
+    <ng-template #precioLista2View>
+      {{ producto.PrecioLista2 | currency }}
+    </ng-template>
+  </p>
+
+  <p>
+    <strong>Rubro:</strong>
+    <ng-container *ngIf="modoEdicion; else rubroView">
+      <input [(ngModel)]="producto.NombreRubro" (ngModelChange)="emitirCambios()" class="form-control d-inline-block w-auto ms-2">
+    </ng-container>
+    <ng-template #rubroView>
+      {{ producto.NombreRubro }}
+    </ng-template>
+  </p>
+
+  <p>
+    <strong>Subrubro:</strong>
+    <ng-container *ngIf="modoEdicion; else subrubroView">
+      <input [(ngModel)]="producto.NombreSubRubro" (ngModelChange)="emitirCambios()" class="form-control d-inline-block w-auto ms-2">
+    </ng-container>
+    <ng-template #subrubroView>
+      {{ producto.NombreSubRubro }}
+    </ng-template>
+  </p>
+</div>
   

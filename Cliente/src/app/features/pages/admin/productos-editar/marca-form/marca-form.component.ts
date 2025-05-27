@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-marca-form',
@@ -7,4 +7,12 @@ import { Component, Input } from '@angular/core';
 })
 export class MarcaFormComponent {
   @Input() producto: any;
+  @Input() modoEdicion = false;
+
+  @Output() marcaChange = new EventEmitter<string>();
+
+  emitirCambios() {
+    if (!this.producto) return;
+    this.marcaChange.emit(this.producto.MARCA);
+  }
 }

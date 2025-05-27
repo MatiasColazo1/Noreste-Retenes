@@ -17,10 +17,10 @@
 
   <!-- Rubro -->
   <div class="form-group" *ngIf="rubros.length > 0">
-    <label for="rubroSelect">Partes:</label>
+    <label for="rubroSelect">Rubro:</label>
     <select id="rubroSelect" class="form-control" [(ngModel)]="rubroSeleccionado" (change)="onRubroChange()">
 
-      <option value="">-- Selecciona una parte --</option>
+      <option value="">-- Selecciona un rubro --</option>
       <option *ngFor="let rubro of rubros" [value]="rubro">{{ rubro }}</option>
     </select>
   </div>

@@ -24,6 +24,6 @@
     <button class="btn btn-secondary mt-3" *ngIf="carrito.length > 0" (click)="vaciarCarrito()">Vaciar Carrito</button>
   </div>
 
-  <button (click)="generarPDF()">Descargar Carrito en PDF</button>
+  <button class="btn btn-primary mt-3" *ngIf="carrito.length > 0" (click)="generarPDF()">Realizar Compra</button>
 
   

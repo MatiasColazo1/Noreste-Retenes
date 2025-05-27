@@ -199,5 +199,11 @@ deleteProduct(id: string): Observable<any> {
   });
 }
 
+// Actualizar producto por ID
+updateProductById(id: string, updatedData: any): Observable<any> {
+  return this.http.put(`${this.apiUrl}/${id}`, updatedData, {
+    headers: this.getAuthHeaders(),
+  });
+}
 
 }

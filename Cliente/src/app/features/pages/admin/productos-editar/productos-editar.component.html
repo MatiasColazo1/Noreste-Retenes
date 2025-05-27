@@ -1,30 +1,69 @@
-<app-equivalencias-form
-  *ngIf="producto"
-  [equivalencias]="producto.equivalencias"
-  [productoId]="producto._id"
-  (equivalenciasChange)="producto.equivalencias = $event">
-</app-equivalencias-form>
 <app-imagen-uploader
   [imagenUrl]="producto?.Imagen"
   [isAdmin]="true" 
   (imagenSeleccionada)="onImagenSeleccionada($event)"
   (imagenSubida)="uploadProductImage()"
 ></app-imagen-uploader>
+
+<!-- Botón de edición -->
+<div class="text-end mb-4">
+  <button class="btn" [ngClass]="{'btn-warning': !modoEdicion, 'btn-secondary': modoEdicion}" (click)="toggleModoEdicion()">
+    {{ modoEdicion ? '❌ Cancelar edición' : '✏️ Editar producto' }}
+  </button>
+</div>
+
 <app-medidas-form
-  [interior]="producto?.INTERIOR"
-  [exterior]="producto?.EXTERIOR"
-  [ancho]="producto?.ANCHO"
+  [interior]="producto ? producto.INTERIOR : ''"
+  [exterior]="producto ? producto.EXTERIOR : ''"
+  [ancho]="producto ? producto.ANCHO : ''"
+  [modoEdicion]="modoEdicion"
+  (medidasChange)="onMedidasChange($event)"
 ></app-medidas-form>
+
 <app-identificador-form
-  [prefijo]="producto?.Prefijo"
-  [codigo]="producto?.Codigo"
+  [prefijo]="producto ? producto.Prefijo : ''"
+  [codigo]="producto ? producto.Codigo : ''"
+  [modoEdicion]="modoEdicion"
+  (identificadorChange)="onIdentificadorChange($event)"
 ></app-identificador-form>
+
 <app-descripcion-form
-  [descripcion]="producto?.Descripcion"
+  [descripcion]="producto ? producto.Descripcion : ''"
+  [modoEdicion]="modoEdicion"
+  (descripcionChange)="onDescripcionChange($event)"
 ></app-descripcion-form>
-<app-datos-generales-form [producto]="producto"></app-datos-generales-form>
-<app-marca-form [producto]="producto"></app-marca-form>
-<app-aplicacion-form [productoId]="producto?._id"></app-aplicacion-form>
+
+<app-datos-generales-form 
+  [producto]="producto"
+  [modoEdicion]="modoEdicion"
+  (datosChange)="onDatosGeneralesChange($event)"
+></app-datos-generales-form>
+
+<app-marca-form 
+  [producto]="producto"
+  [modoEdicion]="modoEdicion"
+  (marcaChange)="onMarcaChange($event)"
+></app-marca-form>
+
+<!-- Componentes con CRUD propio -->
+<app-equivalencias-form
+  *ngIf="producto"
+  [equivalencias]="producto.equivalencias || []"
+  [productoId]="producto._id"
+  (equivalenciasChange)="onEquivalenciasChange($event)"
+></app-equivalencias-form>
+
+<app-aplicacion-form 
+  [productoId]="producto ? producto._id : ''"
+></app-aplicacion-form>
+
+<!-- Botón actualizar producto -->
+<div class="text-end mt-4" *ngIf="modoEdicion">
+  <button class="btn btn-primary" (click)="actualizarProducto()">
+    ✅ Actualizar producto
+  </button>
+</div>
+
 <!-- Botón eliminar producto -->
 <div class="text-end mt-4">
   <button class="btn btn-danger" (click)="eliminarProducto()">
