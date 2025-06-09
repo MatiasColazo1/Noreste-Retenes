@@ -3,6 +3,8 @@ const bcrypt = require('bcrypt');
 const validateUser = require('../utils/validateUser');
 const { checkDuplicateFields } = require('../validators/userValidator');
 
+const crypto = require('crypto');
+const sendEmail = require('../utils/sendEmail');
 
 const UserService = {
    registerUser: async (userData) => {
@@ -118,8 +120,59 @@ const UserService = {
         } catch (error) {
             throw new Error('Error al actualizar descuentos del usuario: ' + error.message);
         }
+    },
+
+    forgotPassword: async (email) => {
+        const user = await UserDAO.findByEmail(email);
+        if (!user) {
+            throw new Error('Usuario no encontrado');
+        }
+    
+        const token = crypto.randomBytes(20).toString('hex');
+        const expires = Date.now() + 3600000; // 1 hora
+    
+        await UserDAO.updateById(user._id, {
+            resetPasswordToken: token,
+            resetPasswordExpires: expires
+        });
+    
+        const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${token}`;
+    
+        await sendEmail({
+            to: user.email,
+            subject: 'Restablecer contraseña',
+            text: `Hacé clic en el siguiente enlace para restablecer tu contraseña: ${resetUrl}`
+        });
+    
+        return { message: 'Se envió un correo con instrucciones para restablecer la contraseña' };
+    },
+    
+    resetPassword: async (token, newPassword) => {
+        const user = await UserDAO.findByResetToken(token);
+        if (!user || user.resetPasswordExpires < Date.now()) {
+            throw new Error('El token no es válido o ha expirado');
+        }
+    
+        // ⚠️ Validar nueva contraseña
+        const validation = validateUser({ password: newPassword });
+if (!validation.isValid) {
+    throw new Error(validation.errors.join(" "));
+}
+
+    
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+    
+        await UserDAO.updateById(user._id, {
+            password: hashedPassword,
+            resetPasswordToken: undefined,
+            resetPasswordExpires: undefined
+        }, true);
+    
+        return { message: 'Contraseña actualizada exitosamente' };
     }
 
 };
+
 
 module.exports = UserService;

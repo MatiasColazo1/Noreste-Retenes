@@ -46,18 +46,18 @@ const UserDAO = {
         }
     },
     //Actualiza un usuario por su ID..
-    updateById: async (userId, updateData) => {
+    updateById: async (userId, updateData, allowPasswordUpdate = false) => {
         try {
-            // Si updateData tiene password, eliminarlo antes de guardar
-            if (updateData.hasOwnProperty("password")) {
+            if (!allowPasswordUpdate && updateData.hasOwnProperty("password")) {
                 delete updateData.password;
             }
-
+    
             return await User.findByIdAndUpdate(userId, updateData, { new: true });
         } catch (error) {
             throw new Error('Error al actualizar usuario: ' + error.message);
         }
     },
+    
 
     //Elimina un usuario por su ID.
     deleteById: async (userId) => {
@@ -114,8 +114,17 @@ const UserDAO = {
           console.error('❌ Error en getUsersByFiltroParcial:', error);
           throw error;
         }
-      }
+      },
+
+      findByResetToken: async (token) => {
+        return await User.findOne({
+            resetPasswordToken: token,
+            resetPasswordExpires: { $gt: Date.now() }
+        });
+    },
 };
+
+
 
 
 module.exports = UserDAO;

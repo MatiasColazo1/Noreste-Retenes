@@ -1,0 +1,17 @@
+.contaner {
+    background-color: white
+}
+
+.icon-circle {
+    width: 100px;
+    height: 100px;
+    background-color: #0050b8; /* azul similar al de la imagen */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .icon-circle img {
+    width: 50%; /* ajustable según ícono */
+  }
+  

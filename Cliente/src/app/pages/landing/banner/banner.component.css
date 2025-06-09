@@ -1,0 +1,10 @@
+/* Asegura que la imagen cubra toda la altura en pantallas grandes */
+.object-fit-cover {
+    object-fit: cover;
+    height: 100%;
+  }
+
+  .shift-over-image {
+    transform: translateX(300px); /* Ajustá según lo que necesites */
+  }
+  

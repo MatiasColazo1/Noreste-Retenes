@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from 'src/app/services/product.service';
+import { NotificationService } from 'src/app/services/notification.service';
 
 @Component({
   selector: 'app-productos-editar',
@@ -13,7 +14,7 @@ export class ProductosEditarComponent implements OnInit {
   timestamp = Date.now();
   modoEdicion = false;
 
-  constructor(private productService: ProductService, private route: ActivatedRoute, private router: Router) {}
+  constructor(private productService: ProductService, private route: ActivatedRoute, private router: Router, private notificationService: NotificationService) {}
 
   ngOnInit(): void {
     this.loadProducto();
@@ -50,15 +51,20 @@ export class ProductosEditarComponent implements OnInit {
   
         this.productService.updateProductImage(this.producto._id, imageUrl).subscribe({
           next: (updatedProduct) => {
-            alert('✅ Imagen actualizada correctamente');
+            this.notificationService.success('Imagen actualizada correctamente');
             this.producto.Imagen = updatedProduct.product.Imagen;
             this.timestamp = Date.now();
           },
           error: (err) => {
             console.error('Error al actualizar imagen:', err);
-            alert('❌ Error al actualizar imagen');
+            const mensaje = err.error?.message || 'Error al actualizar imagen';
+            this.notificationService.error(mensaje);
           }
         });
+      })
+      .catch(error => {
+        console.error('Error al subir a Cloudinary:', error);
+        this.notificationService.error('❌ Error al subir imagen a Cloudinary');
       });
   }
 
@@ -101,13 +107,13 @@ export class ProductosEditarComponent implements OnInit {
     
     this.productService.updateProductById(this.producto._id, this.producto).subscribe({
       next: (response: any) => {
-        alert('✅ Producto actualizado correctamente');
+        this.notificationService.success('Producto actualizado correctamente');
         this.modoEdicion = false;
         this.loadProducto();
       },
       error: (error: any) => {
         console.error('Error al actualizar el producto:', error);
-        alert('❌ Error al actualizar el producto');
+        this.notificationService.error('Error al actualizar el producto');
       }
     });
   }
@@ -120,12 +126,12 @@ export class ProductosEditarComponent implements OnInit {
     if (confirmacion) {
       this.productService.deleteProduct(this.producto._id).subscribe({
         next: (res) => {
-          alert('✅ Producto eliminado correctamente');
+          this.notificationService.success('Producto eliminado correctamente');
           this.router.navigate(['/catalogo']);
         },
         error: (err) => {
           console.error('Error al eliminar producto:', err);
-          alert('❌ Hubo un error al eliminar el producto');
+          this.notificationService.error('Hubo un error al eliminar el producto');
         }
       });
     }

@@ -26,9 +26,10 @@ const validateUser = (userData) => {
         errors.push(...passwordErrors);
     }
 
-    // Validar CUIT
-    const cuit = userData.cuit;
+ // Validar CUIT solo si existe
+const cuit = userData.cuit;
 
+if (cuit !== undefined) {
     if (!/^\d{11}$/.test(cuit)) {
         errors.push("El CUIT debe tener exactamente 11 dígitos numéricos.");
     } else {
@@ -44,6 +45,7 @@ const validateUser = (userData) => {
             errors.push("El CUIT no es válido (dígito verificador incorrecto).");
         }
     }
+}
 
     return {
         isValid: errors.length === 0,

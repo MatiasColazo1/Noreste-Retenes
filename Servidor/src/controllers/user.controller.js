@@ -236,7 +236,31 @@ const UserController = {
       console.error("❌ Error en getUsersByFiltroParcial:", error);
       return res.status(500).json({ error: "Error al buscar usuarios por filtro parcial" });
     }
-  }
+  },
+
+  forgotPassword: async (req, res) => {
+    try {
+        const { email } = req.body;
+        const result = await UserService.forgotPassword(email);
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+},
+
+resetPassword: async (req, res) => {
+    try {
+        const { token } = req.params;
+        const { newPassword } = req.body;
+        const result = await UserService.resetPassword(token, newPassword);
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+
+  
   
 
 };

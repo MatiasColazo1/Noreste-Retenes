@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { NotificationService } from 'src/app/services/notification.service';
-import { User } from 'src/app/models/user'; // Asegúrate de importar correctamente
+import { User } from 'src/app/models/user';
 
 @Component({
   selector: 'app-register',
@@ -35,7 +35,7 @@ export class RegisterComponent {
     this.authService.register(this.user).subscribe({
       next: (response) => {
         this.notificationService.success(response.message || 'Registro exitoso');
-        this.router.navigate(['/login']); // ✅ Redirección después del registro
+        this.router.navigate(['/login']); 
       },
       error: (error) => {
         const message = error.error?.message || 'Error al registrarse';

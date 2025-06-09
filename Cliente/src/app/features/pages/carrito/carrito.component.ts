@@ -38,7 +38,7 @@ ngOnInit(): void {
   }
 
   generarPDF() {
-    const user = this.authService.getUser(); // Obtener usuario del localStorage
+    const user = this.authService.getUser();
 
     if (!user) {
       console.error('No se encontró el ID del usuario.');

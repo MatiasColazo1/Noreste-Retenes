@@ -25,6 +25,7 @@ router.get('/', verifyToken, UserController.getAllUsers);
 // Actualizar descuentos de un usuario
 router.put('/:userId/descuentos', verifyToken, UserController.updateUserDiscounts);
 
-
+router.post('/forgot-password', UserController.forgotPassword);
+router.post('/reset-password/:token', UserController.resetPassword);
 
 module.exports = router;

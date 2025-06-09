@@ -5,6 +5,7 @@ import { CarritoService } from 'src/app/services/carrito.service';
 import { ProductService } from 'src/app/services/product.service';
 import { AplicacionService } from 'src/app/services/aplicacion.service';
 import { Aplicacion } from 'src/app/models/aplicacion';
+import { NotificationService } from 'src/app/services/notification.service';
 
 @Component({
   selector: 'app-producto-detalle',
@@ -25,7 +26,8 @@ export class ProductoDetalleComponent implements OnInit, OnChanges {
     private productService: ProductService,
     private carritoService: CarritoService,
     private aplicacionService: AplicacionService,
-    private router: Router
+    private router: Router,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit() {
@@ -64,21 +66,24 @@ export class ProductoDetalleComponent implements OnInit, OnChanges {
     target.src = 'https://res.cloudinary.com/dlish6q5r/image/upload/v1747076097/download_vbzenr.jpg';
   }
 
-agregarAlCarrito(): void {
-  const item: Carrito = {
-    idProducto: this.producto._id,
-    codigo: this.producto.Codigo,
-    cantidad: this.cantidad,
-    precioOriginal: this.producto.PrecioVenta, // o como se llame en tu modelo
-    precioFinal: this.producto.PrecioFinal,
-    marca: this.producto.MARCA
-  };
-
+  agregarAlCarrito(): void {
+    const item: Carrito = {
+      idProducto: this.producto._id,
+      codigo: this.producto.Codigo,
+      cantidad: this.cantidad,
+      precioOriginal: this.producto.PrecioVenta,
+      precioFinal: this.producto.PrecioFinal,
+      marca: this.producto.MARCA
+    };
+  
     this.carritoService.addToCart(item).subscribe({
-      next: () => alert('Producto agregado al carrito'),
+      next: () => {
+        this.notificationService.success('Producto agregado al carrito');
+      },
       error: (error) => {
         console.error('Error al agregar al carrito:', error);
-        alert('Error al agregar al carrito');
+        const mensaje = error.error?.message || 'Error al agregar al carrito';
+        this.notificationService.error(mensaje);
       }
     });
   }
