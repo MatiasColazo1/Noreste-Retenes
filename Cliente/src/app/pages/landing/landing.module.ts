@@ -6,6 +6,9 @@ import { LandingRoutingModule } from './landing-routing.module';
 import { BannerComponent } from './banner/banner.component';
 import { BeneficiosComponent } from './beneficios/beneficios.component';
 import { NosotrosComponent } from './nosotros/nosotros.component';
+import { FooterComponent } from './footer/footer.component';
+import { MarcasComponent } from './marcas/marcas.component';
+import { ProductosComponent } from './productos/productos.component';
 
 @NgModule({
   declarations: [
@@ -13,7 +16,10 @@ import { NosotrosComponent } from './nosotros/nosotros.component';
     NavbarComponent,
     BannerComponent,
     BeneficiosComponent,
-    NosotrosComponent
+    NosotrosComponent,
+    FooterComponent,
+    MarcasComponent,
+    ProductosComponent
   ],
   imports: [
     CommonModule,
