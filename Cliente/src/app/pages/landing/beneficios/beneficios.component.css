@@ -1,5 +1,5 @@
-.contaner {
-    background-color: white
+.container-fluid {
+    height: 563px;
 }
 
 .icon-circle {
@@ -11,6 +11,7 @@
     align-items: center;
     justify-content: center;
   }
+
   .icon-circle img {
     width: 50%; /* ajustable según ícono */
   }
