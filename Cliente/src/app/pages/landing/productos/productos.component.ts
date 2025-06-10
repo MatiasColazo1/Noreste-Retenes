@@ -8,23 +8,23 @@ import { AfterViewInit, Component } from '@angular/core';
 })
 export class ProductosComponent {
 productosIzquierda = [
-  { nombre: 'Retenes', imagen: 'assets/imagenes/retenes.png' },
-  { nombre: 'Rodamientos', imagen: 'assets/imagenes/rodamientos.png' }
+  { nombre: 'Retenes', imagen: 'assets/product/p-retenes.webp' },
+  { nombre: 'Rodamientos', imagen: 'assets/product/p-rodamientos.webp' }
 ];
 
 productosGrilla = [
-  { nombre: 'Correas', imagen: '...' },
-  { nombre: 'Crapodinas', imagen: '...' },
-  { nombre: 'Tensores de Correa', imagen: '...' },
-  { nombre: 'Abrazaderas', imagen: '...' },
-  { nombre: 'Mangueras', imagen: '...' },
-  { nombre: 'Crucetas', imagen: '...' },
-  { nombre: 'Grasa de Litio', imagen: '...' },
-  { nombre: 'Masas de Rueda', imagen: '...' },
-  { nombre: 'Kit de Distribución', imagen: '...' },
-  { nombre: 'Autocentrantes', imagen: '...' },
-  { nombre: 'Centro de Cardan', imagen: '...' },
-  { nombre: 'Cadenas de Distribución', imagen: '...' }
+  { nombre: 'Correas', imagen: 'assets/product/p-correas.webp' },
+  { nombre: 'Crapodinas', imagen: 'assets/product/p-crapodinas.webp' },
+  { nombre: 'Tensores de Correa', imagen: 'assets/product/p-tensores.webp' },
+  { nombre: 'Abrazaderas', imagen: 'assets/product/p-abrazaderas.webp' },
+  { nombre: 'Mangueras', imagen: 'assets/product/p-mangueras.webp' },
+  { nombre: 'Crucetas', imagen: 'assets/product/p-crucetas.webp' },
+  { nombre: 'Grasa de Litio', imagen: 'assets/product/p-grasa.webp' },
+  { nombre: 'Masas de Rueda', imagen: 'assets/product/p-masas.webp' },
+  { nombre: 'Kit de Distribución', imagen: 'assets/product/p-distr.webp' },
+  { nombre: 'Autocentrantes', imagen: 'assets/product/p-autocentrantes.webp' },
+  { nombre: 'Centro de Cardan', imagen: 'assets/product/p-cardan.webp' },
+  { nombre: 'Cadenas de Distribución', imagen: 'assets/product/p-cadenas.webp' }
 ];
 
 }

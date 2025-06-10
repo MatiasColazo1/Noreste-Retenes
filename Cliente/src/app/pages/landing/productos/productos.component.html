@@ -14,7 +14,7 @@
 
     <!-- Grilla derecha: 4 columnas x 3 filas = 12 ítems -->
     <div class="col-12 col-md-9 d-flex flex-wrap gap-20 px-3">
-      <div class="card-producto d-flex flex-column justify-content-center align-items-center"
+      <div class="card-producto d-flex flex-column justify-content-center align-items-center text-center"
         *ngFor="let producto of productosGrilla">
         <img [src]="producto.imagen" [alt]="producto.nombre" class="img-fluid mb-2" />
         <span>{{ producto.nombre }}</span>

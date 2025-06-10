@@ -1,0 +1,46 @@
+section {
+    height: 730px;
+}
+
+.marcas-imp {
+    margin-bottom: 150px;
+}
+
+.marca-logo {
+  max-height: 50px;
+  object-fit: contain;
+}
+
+.mb-4 {
+    margin-bottom: 50px !important;
+}
+
+/* Carrusel horizontal animado */
+.marca-carousel {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  height: 60px;
+}
+
+.marca-track {
+  display: flex;
+  width: max-content;
+  animation: scroll 25s linear infinite;
+  gap: 40px;
+}
+
+.marca-track img {
+  max-height: 50px;
+  object-fit: contain;
+
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
