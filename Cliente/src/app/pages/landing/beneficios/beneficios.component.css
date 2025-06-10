@@ -1,18 +1,19 @@
 .container-fluid {
-    height: 563px;
+  height: 563px;
 }
 
 .icon-circle {
-    width: 100px;
-    height: 100px;
-    background-color: #0050b8; /* azul similar al de la imagen */
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+  width: 128px;
+  height: 128px;
+  background-color: #0050b8;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-  .icon-circle img {
-    width: 50%; /* ajustable según ícono */
-  }
-  
+.icon-circle img {
+  width: 50%;
+}
+
+

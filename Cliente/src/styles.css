@@ -1,8 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
 
-body {
-    background: #d5e6ff;  /* fallback for old browsers */    
-}
+
 button {
     width: 200px;
+}
+
+
+.tooltip-inner {
+  background-color: white !important; /* Fondo blanco */
+  color: black !important;            /* Texto negro */
+  border: 1px solid #ccc;             /* Opcional: borde gris claro */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Opcional: sombra suave */
+}
+
+.tooltip.bs-tooltip-bottom .tooltip-arrow::before {
+  border-bottom-color: white !important; /* Flechita del tooltip */
 }

@@ -1,1 +1,24 @@
-<p>productos works!</p>
+<div class="container-fluid d-flex justify-content-center productos py-5">
+  <div class="row gx-0 gy-0">
+    <!-- Columna izquierda -->
+    <div class="col-12 col-md-3 d-flex flex-column align-items-end justify-content-center">
+        <div class="container-titulo d-flex justify-content-start">
+            <h2 class="titulo-productos">Productos</h2>
+        </div>
+
+      <div class="card-producto card-izq d-flex flex-column justify-content-center align-items-center" *ngFor="let producto of productosIzquierda">
+        <img [src]="producto.imagen" [alt]="producto.nombre" class="img-fluid mb-2" />
+        <span>{{ producto.nombre }}</span>
+      </div>
+    </div>
+
+    <!-- Grilla derecha: 4 columnas x 3 filas = 12 ítems -->
+    <div class="col-12 col-md-9 d-flex flex-wrap gap-20 px-3">
+      <div class="card-producto d-flex flex-column justify-content-center align-items-center"
+        *ngFor="let producto of productosGrilla">
+        <img [src]="producto.imagen" [alt]="producto.nombre" class="img-fluid mb-2" />
+        <span>{{ producto.nombre }}</span>
+      </div>
+    </div>
+  </div>
+</div>

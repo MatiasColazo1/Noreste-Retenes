@@ -1,4 +1,16 @@
-<app-navbar></app-navbar>
-<app-banner></app-banner>
-<app-beneficios></app-beneficios>
-<app-nosotros></app-nosotros>
+<!-- Splash screen -->
+<div class="splash-screen" *ngIf="showSplash">
+    <div class="splash-content">
+        <img src="assets/logo-skf.png" alt="SKF logo" />
+    </div>
+</div>
+
+<!-- Contenido principal -->
+<div class="main-content" [class.hide]="showSplash">
+    <app-navbar></app-navbar>
+    <app-banner></app-banner>
+    <app-beneficios></app-beneficios>
+    <app-productos></app-productos>
+    <app-nosotros></app-nosotros>
+ 
+</div>
