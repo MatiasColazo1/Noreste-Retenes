@@ -8,10 +8,23 @@ declare var bootstrap: any;
   styleUrls: ['./beneficios.component.css']
 })
 export class BeneficiosComponent implements AfterViewInit {
-  ngAfterViewInit() {
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.forEach((tooltipTriggerEl: HTMLElement) => {
-      new bootstrap.Tooltip(tooltipTriggerEl);
+ngAfterViewInit() {
+  const tooltipElements = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+
+  tooltipElements.forEach((el) => {
+    const element = el as HTMLElement; // 👈 casteamos acá
+
+    const tooltipInstance = new bootstrap.Tooltip(element, {
+      trigger: 'manual'
     });
-  }
+
+    const showOnce = () => {
+      tooltipInstance.show();
+      element.removeEventListener('mouseenter', showOnce);
+    };
+
+    element.addEventListener('mouseenter', showOnce);
+  });
+}
+
 }
