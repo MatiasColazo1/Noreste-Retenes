@@ -19,6 +19,7 @@
 .navbar .nav-link {
   color: white;
   transition: color 0.3s ease;
+  font-family: "DMSans-Regular", Helvetica;
 }
 
 .navbar.scrolled .nav-link {
@@ -30,6 +31,11 @@
 }
 .navbar.scrolled img {
    filter: invert(1);
+}
+
+.catalogo {
+  font-family: "DMSans-Black", Helvetica;
+  font-size: 20px;
 }
 
 
