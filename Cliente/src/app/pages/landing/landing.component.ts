@@ -6,11 +6,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./landing.component.css']
 })
 export class LandingComponent implements OnInit {
+
   showSplash = true;
 
   ngOnInit() {
+    // Bloquear scroll
+    document.body.style.overflow = 'hidden';
+
     setTimeout(() => {
       this.showSplash = false;
-    }, 2000); // 3 segundos de splash
+      // Volver a permitir scroll
+      document.body.style.overflow = '';
+    }, 3000); // 3 segundos de splash
   }
 }

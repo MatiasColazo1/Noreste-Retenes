@@ -9,6 +9,7 @@ import { NosotrosComponent } from './nosotros/nosotros.component';
 import { FooterComponent } from './footer/footer.component';
 import { MarcasComponent } from './marcas/marcas.component';
 import { ProductosComponent } from './productos/productos.component';
+import { AsesoramientoComponent } from './asesoramiento/asesoramiento.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { ProductosComponent } from './productos/productos.component';
     NosotrosComponent,
     FooterComponent,
     MarcasComponent,
-    ProductosComponent
+    ProductosComponent,
+    AsesoramientoComponent
   ],
   imports: [
     CommonModule,

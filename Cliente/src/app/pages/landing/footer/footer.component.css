@@ -6,3 +6,39 @@ footer ul {
 footer i {
   font-size: 1.2rem;
 }
+
+/* Firma en la parte inferior */
+.firma {
+  text-decoration: none;
+  font-family: "Epilogue-Regular", Helvetica;
+  font-weight: 400;
+  color: #ffffff;
+  font-size: 12px;
+}
+
+.firma span {
+  font-family: "BebasNeue-Regular", Helvetica;
+  font-weight: 400;
+  color: #ffffff;
+  font-size: 19px;
+}
+
+@media screen and (max-width: 780px) {
+
+  .topadora {
+    margin-bottom: 22px;
+  }
+
+  .firma {
+    font-size: 10px;
+  }
+
+  span {
+    font-size: 15px;
+  }
+
+  .firma span {
+    margin-left: 4px;
+    font-size: 15px;
+  }
+}

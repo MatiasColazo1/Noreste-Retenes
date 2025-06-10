@@ -1,0 +1,13 @@
+.rounded-3xl {
+  border-radius: 1.5rem !important; /* equivalente a rounded-3xl */
+}
+
+.max-w-2xl {
+  max-width: 1067px; /* aprox 672px */
+  height: 193px;
+}
+
+button {
+    height: 52px;
+    width: auto;
+}
