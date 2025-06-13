@@ -35,3 +35,6 @@
 .tooltip.bs-tooltip-bottom .tooltip-arrow::before {
   border-bottom-color: white !important; /* Flechita del tooltip */
 }
+.tooltip {
+  z-index: 900 !important;
+}

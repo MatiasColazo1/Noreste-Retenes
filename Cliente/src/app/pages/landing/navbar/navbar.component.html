@@ -1,27 +1,52 @@
-<nav [class.scrolled]="isScrolled" class="navbar navbar-expand-lg sticky-top ">
-    <div class="container justify-content-between align-items-center">
-      <ul class="navbar-nav flex-row gap-4">
-        <li class="nav-item">
-          <a class="nav-link" href="#">Productos</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Nosotros</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Contáctenos</a>
-        </li>
-      </ul>
+<nav [class.scrolled]="isScrolled" class="navbar navbar-expand-lg sticky-top">
+  <!-- Logo que aparece SOLO en móvil -->
   
-      <a class="navbar-brand mx-auto" href="#">
-        <img src="assets/noreste-logo.webp" alt="Noreste Detenes" height="49" width="142" />
-      </a>
-  
-    <div>
-  <a class="catalogo btn btn-primary btn-flash d-flex align-items-center gap-2 px-4 py-2 rounded-pill" routerLink="/catalogo">
-    <i class="bi bi-cart"></i> Catálogo
-  </a>
-</div>
+  <div class="container justify-content-between align-items-center">
+    <div class="d-block d-lg-none text-center">
+      <img src="assets/noreste-logo.webp" alt="Logo móvil" height="40" />
+    </div>
+
+    <!-- Botón Hamburguesa -->
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarCollapse"
+      aria-controls="navbarCollapse"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Contenido colapsable -->
+    <div class="collapse navbar-collapse justify-content-between align-items-center" id="navbarCollapse">
+
+      <!-- Menú de navegación -->
+     <ul class="navbar-nav flex-column flex-lg-row gap-lg-4 mb-3 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Productos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Nosotros</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Contáctenos</a>
+          </li>
+        </ul>
+      <!-- Logo centrado -->
+   <a class="navbar-brand mx-auto d-none d-lg-block" href="#">
+  <img src="assets/noreste-logo.webp" alt="Noreste Detenes" height="49" width="142" />
+</a>
+
+
+      <!-- Botón catálogo -->
+      <div>
+        <a class="catalogo btn btn-flash d-flex align-items-center gap-2 rounded-pill" routerLink="/catalogo">
+          <i class="bi bi-cart"></i> Catálogo
+        </a>
+      </div>
 
     </div>
-  </nav>
-  
+  </div>
+</nav>

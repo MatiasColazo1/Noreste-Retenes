@@ -1,10 +1,25 @@
-/* Asegura que la imagen cubra toda la altura en pantallas grandes */
 .object-fit-cover {
-    object-fit: cover;
-    height: 100%;
-  }
+  object-fit: cover;
+  height: 100%;
+}
 
-  .shift-over-image {
-    transform: translateX(300px); /* Ajustá según lo que necesites */
-  }
-  
+.shift-over-image {
+  transform: translateX(300px);
+}
+
+small {
+  font-family: "DMSans-Regular", Helvetica;
+  font-size: 15px;
+}
+
+h1 {
+  font-family: "DMSans-Regular", Helvetica;
+  font-size: 52px;
+  font-weight: 400 !important;
+}
+
+a {
+  font-family: "DMSans-Black", Helvetica;
+  font-size: 15px;
+  padding: 14px 74px;
+}
