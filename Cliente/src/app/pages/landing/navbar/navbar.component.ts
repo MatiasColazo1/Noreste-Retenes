@@ -9,7 +9,15 @@ export class NavbarComponent {
   isScrolled = false;
 
   @HostListener('window:scroll', [])
+  @HostListener('window:resize', [])
   onWindowScroll() {
-    this.isScrolled = window.scrollY > 50;
+    const isMobile = window.innerWidth < 992; // Bootstrap breakpoint for lg
+    const scrolledEnough = window.scrollY > 50;
+
+    this.isScrolled = isMobile || scrolledEnough;
+  }
+
+  ngOnInit() {
+    this.onWindowScroll(); // Ejecuta al iniciar para detectar si ya está en móvil
   }
 }

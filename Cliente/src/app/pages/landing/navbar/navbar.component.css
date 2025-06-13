@@ -69,3 +69,18 @@
 .btn-flash {
   animation: flash 3s ease-in-out infinite;
 }
+
+@media (max-width: 991px) {
+
+  .navbar-nav {
+    margin-top: 56px;
+  }
+
+  .nav-link {
+    padding: 10px;
+    font-size: 24px;
+  }
+}
+
+
+
