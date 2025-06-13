@@ -23,3 +23,33 @@ a {
   font-size: 15px;
   padding: 14px 74px;
 }
+
+@media (max-width: 991px) {
+  .vh-100 {
+    height: 70vh !important;
+  }
+
+  small {
+    font-size: 9px;
+  }
+
+  h1 {
+    font-size: 30px;
+  }
+
+  a {
+    padding: 4px 30px;
+  }
+
+  .shift-over-image {
+    transform: none !important;
+  }
+
+  .col-md-4 {
+    width: 100%;
+  }
+
+  .justify-content-end {
+    justify-content: center !important;
+  }
+}
