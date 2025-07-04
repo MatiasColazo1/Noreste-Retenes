@@ -12,20 +12,24 @@
 }
 
 .titulo-productos {
-  font-size: 1.5rem;
-  font-weight: bold;
+  font-size: 30px;
+  font-family: "DMSans-Regular", Helvetica;
   margin-bottom: 50px;
 }
 
+span {
+  font-size: 19px;
+  font-family: "DMSans-Regular", Helvetica;
+}
+
 .card-producto {
-  background-color: #0053d9;
+  background-color: #0A51AF;
   border-radius: 12px;
   width: 198px;
   height: 212px;
   transition: transform 0.2s;
   cursor: pointer;
   padding: 1rem;
-  color: white;
 }
 
 .card-izq {
@@ -49,3 +53,23 @@
 .gap-20 {
   gap: 20px;
 }
+
+@media (max-width: 991px) {
+  .card-producto {
+    width: 166px;
+    height: 180px;
+  }
+
+  .align-items-end {
+    align-items: center !important;
+  }
+
+  .container-titulo {
+    width: auto;
+  }
+
+  .titulo-productos {
+    margin-bottom: 20px;
+  }
+}
+

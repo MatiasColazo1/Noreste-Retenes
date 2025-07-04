@@ -70,10 +70,18 @@
   animation: flash 3s ease-in-out infinite;
 }
 
-@media (max-width: 991px) {
 
+@media (max-width: 991px) {
   .navbar-nav {
     margin-top: 56px;
+  }
+
+  .navbar-toggler {
+    border: none;
+  }
+
+  .navbar-toggler:focus{
+    box-shadow: none;
   }
 
   .nav-link {

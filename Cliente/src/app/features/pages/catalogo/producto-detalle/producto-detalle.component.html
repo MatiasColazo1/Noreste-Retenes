@@ -1,74 +1,89 @@
 <div class="card">
-  <div class="card-header"><h5>Detalle del Producto</h5></div>
   <div class="card-body">
-    <p><strong>Imagen:</strong></p>
-    <img 
-    [src]="producto.Imagen + '?t=' + timestamp" 
-    (error)="onImageError($event)" 
-    alt="Imagen del producto" 
-    width="150" 
-    height="150"
-  >
-
-    <p><strong>Identificador:</strong> {{ producto.Prefijo }} {{ producto.Codigo }}</p>
+    <p><strong>Artículo:</strong> {{ producto.Prefijo }} {{ producto.Codigo }}</p>
     <p><strong>SubRubro:</strong> {{ producto.NombreSubRubro }}</p>
-    <p><strong>Rubro:</strong> {{ producto.NombreRubro }}</p>
-   
-    <p><strong>Precio:</strong>
-      <span *ngIf="producto?.Descuento && producto?.Descuento > 0">
-        <s>{{ producto?.PrecioOriginal | currency }}</s>
-        <strong class="text-danger ms-2">{{ producto?.Precio | currency }}</strong>
-        <span class="text-success ms-1" style="font-size: 0.9em;">
-          (-{{ producto?.Descuento }}%)
-        </span>
-      </span>
-      <span *ngIf="!producto?.Descuento || producto?.Descuento <= 0">
-        {{ producto?.Precio ?? producto?.PrecioLista1 ?? producto?.PrecioLista2 | currency }}
-      </span>
-    </p>
-    
-    
-    <p><strong>Interior:</strong> {{ producto.INTERIOR }}</p>
-    <p><strong>Exterior:</strong> {{ producto.EXTERIOR }}</p>
-    <p><strong>Ancho:</strong> {{ producto.ANCHO }}</p>
+    <div class="d-flex flex-column flex-md-row align-items-start gap-3">
+      <!-- Imagen -->
+      <div class="text-center">
+        <img [src]="producto.Imagen + '?t=' + timestamp" (error)="onImageError($event)" alt="Imagen del producto"
+          class="img-fluid rounded" style="max-width: 220px; height: auto;" />
+      </div>
+
+      <!-- Texto: precio + medidas -->
+      <div>
+
+
+        <div class="resumen-compra d-flex justify-content-between align-items-center p-3 rounded border">
+          <!-- Precios -->
+          <div>
+            <!-- Precio original -->
+            <div class="mb-1">
+              <strong>Precio:</strong>
+              <span *ngIf="producto?.Descuento && producto?.Descuento > 0">
+                <s>{{ producto?.PrecioOriginal | currency }}</s>
+              </span>
+              <span *ngIf="!producto?.Descuento || producto?.Descuento <= 0">
+                {{ producto?.PrecioOriginal | currency }}
+              </span>
+            </div>
+
+            <!-- Descuento -->
+            <div class="mb-1" *ngIf="producto?.Descuento && producto?.Descuento > 0">
+              <strong>Descuento:</strong>
+              <span class="text-success">-{{ producto?.Descuento }}%</span>
+            </div>
+
+            <!-- Precio final -->
+            <div>
+              <strong>Final:</strong>
+              <span class="text-danger">{{ producto?.Precio | currency }}</span>
+            </div>
+          </div>
+
+          <!-- Controles de cantidad -->
+          <div class="container-controles d-flex align-items-center gap-2">
+            <button class="btn fw-bold" (click)="restarCantidad()">-</button>
+            <span class="cantidad fw-bold">{{ cantidad }}</span>
+            <button class="btn fw-bold" (click)="sumarCantidad()">+</button>
+          </div>
+
+          <!-- Botón agregar -->
+          <button class="btn agregar d-flex  align-items-center" (click)="agregarAlCarrito()">Agregar al pedido</button>
+        </div>
+
+        <!-- Medidas -->
+        <p class="mb-1"><strong>Medidas</strong></p>
+        <p class="mb-1">Interior: {{ producto.INTERIOR }}</p>
+        <p class="mb-1">Exterior: {{ producto.EXTERIOR }}</p>
+        <p class="mb-1">Ancho: {{ producto.ANCHO }}</p>
+      </div>
+    </div>
+
+
+
+    <button *ngIf="isAdmin" (click)="irAEditar()">Editar</button>
+
+
+    <!-- EQUIVALENCIAS - SOLO LECTURA -->
+    <div *ngIf="producto?.equivalencias?.length > 0" class="card-body">
+      <p><strong>Equivalencias:</strong></p>
+      <ul>
+        <li *ngFor="let eq of producto.equivalencias">
+          {{ eq }}
+        </li>
+      </ul>
+    </div>
+
+    <!-- APLICACIONES - SOLO LECTURA -->
+    <div *ngIf="aplicaciones.length > 0" class="card-body">
+      <p><strong>Aplicaciones:</strong></p>
+      <ul>
+        <li *ngFor="let app of aplicaciones">
+          <strong>{{ app.marcaVehiculo }}</strong> - {{ app.modeloVehiculo }}
+          <span *ngIf="app.descripcion">| {{ app.descripcion }}</span>
+          <span *ngIf="app.observacion">| <em>{{ app.observacion }}</em></span>
+        </li>
+      </ul>
+    </div>
+
   </div>
-
-  <button class="btn btn-primary mt-3" (click)="agregarAlCarrito()">Agregar al carrito</button>
-  <div class="mb-3">
-    <label for="cantidad" class="form-label">Cantidad:</label>
-    <input
-      type="number"
-      id="cantidad"
-      [(ngModel)]="cantidad"
-      min="1"
-      class="form-control"
-      style="max-width: 70px;"
-    />
-  </div>
-  
-  <button *ngIf="isAdmin" (click)="irAEditar()">Editar</button>
-
-
-<!-- EQUIVALENCIAS - SOLO LECTURA -->
-<div *ngIf="producto?.equivalencias?.length > 0" class="card-body">
-  <p><strong>Equivalencias:</strong></p>
-  <ul>
-    <li *ngFor="let eq of producto.equivalencias">
-      {{ eq }}
-    </li>
-  </ul>
-</div>
-
-<!-- APLICACIONES - SOLO LECTURA -->
-<div *ngIf="aplicaciones.length > 0" class="card-body">
-  <p><strong>Aplicaciones:</strong></p>
-  <ul>
-    <li *ngFor="let app of aplicaciones">
-      <strong>{{ app.marcaVehiculo }}</strong> - {{ app.modeloVehiculo }}
-      <span *ngIf="app.descripcion">| {{ app.descripcion }}</span>
-      <span *ngIf="app.observacion">| <em>{{ app.observacion }}</em></span>
-    </li>
-  </ul>
-</div>
-
-</div>

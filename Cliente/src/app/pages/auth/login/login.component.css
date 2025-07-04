@@ -1,0 +1,74 @@
+.login-container {
+  background-color: #111;
+}
+
+.login-image img {
+  object-fit: cover;
+  height: 100%;
+}
+
+.login-form {
+  width: auto;
+  padding-left: 71px;
+}
+
+.login-logo {
+  height: 40px;
+}
+
+.banner {
+  width: 642px;
+}
+
+.navbar-container {
+  height: 73px;
+  background: #0A51AF;
+}
+
+
+h2,
+.small,
+label,
+button {
+  font-family: "DMSans-Regular", Helvetica;
+  color: #D6D6D6;
+}
+
+h2 {
+  font-size: 40px;
+}
+
+.small {
+  font-size: 15px;
+}
+
+label,
+button {
+  font-size: 20px;
+}
+
+/* Estilos individuales */
+a {
+  text-decoration: none;
+  color: #468CFF !important;
+}
+
+button {
+  background: #0A51AF !important;
+  color: #D6D6D6 !important;
+}
+
+input {
+  background: #37393B;
+}
+
+.form-control:focus {
+  background-color: initial !important;
+}
+
+input,
+button {
+  width: 374px;
+  height: 42px;
+  border-radius: 10px;
+}

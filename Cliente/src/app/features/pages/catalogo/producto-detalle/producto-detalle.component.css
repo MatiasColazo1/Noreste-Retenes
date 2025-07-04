@@ -1,0 +1,30 @@
+.card {
+    background-color: transparent;
+    color: #D6D6D6;
+}
+
+.card-body {
+    padding: 0;
+}
+
+.resumen-compra {
+  width: 462px;
+  border-color: #444;
+}
+
+
+.container-controles {
+    background-color: #D6D6D6;
+    color: #000;
+}
+
+.agregar {
+    background: #0A51AF;
+    color: #D6D6D6;
+}
+
+.container-controles,
+.agregar {
+     border-radius: 10px;
+     height: 30px;
+}

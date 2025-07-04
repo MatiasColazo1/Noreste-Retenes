@@ -1,20 +1,21 @@
+:host {
+  display: block;
+  background-color: #000;
+  min-height: 100vh;
+  width: 100%;
+}
 .contenedor {
-    margin-top: 1rem;
-    padding: 0 1rem;
-    width: 90%;
-  }
-  
-  .layout {
-    display: flex;
-    gap: 20px; /* espacio entre listado y detalle */
-    align-items: flex-start;
-  }
-  
-  .listado {
-    flex: 0.5; /* 2/3 del ancho */
-  }
-  
-  .detalle {
-    flex: 1; /* 1/3 del ancho */
-  }
-  
+  margin-top: 1rem;
+  padding: 40px 0 40px 40px;
+  width: 1081px;
+  background: #131314;
+}
+
+.layout {
+  display: flex;
+  align-items: flex-start;
+}
+
+.listado {
+  margin-right: 40px;
+}

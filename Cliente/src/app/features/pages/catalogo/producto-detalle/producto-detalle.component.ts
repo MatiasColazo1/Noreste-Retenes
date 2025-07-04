@@ -9,7 +9,8 @@ import { NotificationService } from 'src/app/services/notification.service';
 
 @Component({
   selector: 'app-producto-detalle',
-  templateUrl: './producto-detalle.component.html'
+  templateUrl: './producto-detalle.component.html',
+  styleUrls: ['./producto-detalle.component.css']
 })
 export class ProductoDetalleComponent implements OnInit, OnChanges {
   @Input() producto: any = null;
@@ -18,6 +19,7 @@ export class ProductoDetalleComponent implements OnInit, OnChanges {
 
   @Output() imagenSeleccionada = new EventEmitter<File>();
   @Output() imagenSubida = new EventEmitter<void>();
+  
 
   cantidad: number = 1;
   aplicaciones: Aplicacion[] = [];
@@ -28,10 +30,10 @@ export class ProductoDetalleComponent implements OnInit, OnChanges {
     private aplicacionService: AplicacionService,
     private router: Router,
     private notificationService: NotificationService
-  ) {}
+  ) { }
 
   ngOnInit() {
-     this.cargarAplicaciones();
+    this.cargarAplicaciones();
     if (this.producto && this.producto._id) {
       const token = localStorage.getItem('token'); // Ajustalo según cómo guardás tu token
       if (token) {
@@ -43,13 +45,13 @@ export class ProductoDetalleComponent implements OnInit, OnChanges {
     }
   }
 
-    ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges) {
     if (changes['producto'] && changes['producto'].currentValue?._id) {
       this.cargarAplicaciones();
     }
   }
 
-   private cargarAplicaciones(): void {
+  private cargarAplicaciones(): void {
     this.aplicaciones = []; // Limpiar para evitar que se muestre la anterior momentáneamente
     const token = localStorage.getItem('token');
     if (this.producto && this.producto._id && token) {
@@ -75,7 +77,7 @@ export class ProductoDetalleComponent implements OnInit, OnChanges {
       precioFinal: this.producto.PrecioFinal,
       marca: this.producto.MARCA
     };
-  
+
     this.carritoService.addToCart(item).subscribe({
       next: () => {
         this.notificationService.success('Producto agregado al carrito');
@@ -93,4 +95,15 @@ export class ProductoDetalleComponent implements OnInit, OnChanges {
       this.router.navigate(['/admin/productos', this.producto._id]);
     }
   }
+
+
+sumarCantidad() {
+  this.cantidad++;
+}
+
+restarCantidad() {
+  if (this.cantidad > 0) {
+    this.cantidad--;
+  }
+}
 }

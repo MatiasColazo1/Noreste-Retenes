@@ -2,7 +2,7 @@
 <app-buttons text="Perfil" type="secondary" [routerLink]="['/perfil']"></app-buttons>
 
 <app-buttons [isAdmin]="authService.isAdmin()" text="Panel de administrador" type="primary"
-route="/admin/dashboard"></app-buttons>
+  route="/admin/dashboard"></app-buttons>
 
 <!-- <div *ngIf="authService.isAdmin()">
 
@@ -16,43 +16,35 @@ route="/admin/dashboard"></app-buttons>
 
 <app-carrito></app-carrito>
 
-<app-filters 
-  (buscarPorCodigo)="buscarPorCodigoParcial($event)"
-  (buscarPorEquivalencia)="buscarPorEquivalencia($event)"
-  (buscarPorMedidas)="buscarPorMedidas($event)">
-</app-filters>
-<div *ngIf="mensajeUsuario" class="mensaje-usuario">
-  {{ mensajeUsuario }}
-</div>
 
-<div class="contenedor">
-  <h2>Listado de Productos</h2>
 
-  <div class="layout">
-    <div class="listado">
-      <app-producto-listado 
-        [products]="products" 
-        (productSelected)="selectProduct($event)">
-      </app-producto-listado>
+<div class="d-flex justify-content-center align-items-center">
+  <div class="contenedor">
 
-    <app-paginacion 
-  [currentPage]="currentPage" 
-  [hasNextPage]="hasNextPage"
-  [totalPages]="totalPages"
-  (pageChanged)="changePage($event)">
-</app-paginacion>
 
+    <app-filters (buscarPorCodigo)="buscarPorCodigoParcial($event)"
+      (buscarPorEquivalencia)="buscarPorEquivalencia($event)" (buscarPorMedidas)="buscarPorMedidas($event)">
+    </app-filters>
+    <div *ngIf="mensajeUsuario" class="mensaje-usuario">
+      {{ mensajeUsuario }}
     </div>
 
-    <div class="detalle" *ngIf="selectedProduct">
-      <app-producto-detalle 
-        [producto]="selectedProduct" 
-        [isAdmin]="authService.isAdmin()" 
-        [timestamp]="timestamp"
-        (imagenSeleccionada)="imageFile = $event"
-        (imagenSubida)="uploadProductImage()">
-      </app-producto-detalle>
+    <div class="layout">
+      <div class="listado">
+        <app-producto-listado [products]="products" (productSelected)="selectProduct($event)">
+        </app-producto-listado>
+
+        <app-paginacion [currentPage]="currentPage" [hasNextPage]="hasNextPage" [totalPages]="totalPages"
+          (pageChanged)="changePage($event)">
+        </app-paginacion>
+
+      </div>
+
+      <div class="detalle" *ngIf="selectedProduct">
+        <app-producto-detalle [producto]="selectedProduct" [isAdmin]="authService.isAdmin()" [timestamp]="timestamp"
+          (imagenSeleccionada)="imageFile = $event" (imagenSubida)="uploadProductImage()">
+        </app-producto-detalle>
+      </div>
     </div>
   </div>
 </div>
-

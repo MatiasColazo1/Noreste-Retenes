@@ -1,17 +1,21 @@
-<table class="table table-striped">
+<div class="tabla-contenedor">
+  <table class="table tabla-estilizada">
     <thead>
       <tr>
-        <th>PREFIJO</th>
-        <th>CODIGO</th>
-        <th>MARCA</th>
+        <th>Prefijo</th>
+        <th>Cód. Artículo</th>
+        <th>Marca</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let product of products" (click)="seleccionarProducto(product._id)" style="cursor: pointer;">
+      <tr *ngFor="let product of products" 
+          (click)="seleccionarProducto(product._id)" 
+          [class.fila-activa]="productoSeleccionado === product._id"
+          style="cursor: pointer;">
         <td>{{ product.Prefijo }}</td>
         <td>{{ product.Codigo }}</td>
         <td>{{ product.MARCA }}</td>
       </tr>
     </tbody>
   </table>
-  
+</div>

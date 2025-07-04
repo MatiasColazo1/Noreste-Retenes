@@ -42,3 +42,12 @@
 .tooltip {
   z-index: 900 !important;
 }
+
+
+
+@media (max-width: 991px) {
+  .container,
+  .container-fluid {
+    height: auto !important;
+  }
+}
