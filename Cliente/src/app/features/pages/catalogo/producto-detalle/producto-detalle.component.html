@@ -75,15 +75,7 @@
     </div>
 
     <!-- APLICACIONES - SOLO LECTURA -->
-    <div *ngIf="aplicaciones.length > 0" class="card-body">
-      <p><strong>Aplicaciones:</strong></p>
-      <ul>
-        <li *ngFor="let app of aplicaciones">
-          <strong>{{ app.marcaVehiculo }}</strong> - {{ app.modeloVehiculo }}
-          <span *ngIf="app.descripcion">| {{ app.descripcion }}</span>
-          <span *ngIf="app.observacion">| <em>{{ app.observacion }}</em></span>
-        </li>
-      </ul>
-    </div>
+  <app-aplicacion-lectura [aplicaciones]="aplicaciones"></app-aplicacion-lectura>
+
 
   </div>

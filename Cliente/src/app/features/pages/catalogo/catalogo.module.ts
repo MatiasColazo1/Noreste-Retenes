@@ -9,6 +9,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { ProductosListadoComponent } from './producto-listado/producto-listado.component';
 import { CarritoModule } from '../carrito/carrito.module';
 import { PerfilUserComponent } from './perfil-user/perfil-user.component';
+import { AplicacionLecturaComponent } from './aplicacion-lectura/aplicacion-lectura.component';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { PerfilUserComponent } from './perfil-user/perfil-user.component';
     ProductosListadoComponent,
     ProductoDetalleComponent,
     FiltersComponent,
-    PerfilUserComponent
+    PerfilUserComponent,
+    AplicacionLecturaComponent
 
   ],
   exports: [ProductoDetalleComponent],

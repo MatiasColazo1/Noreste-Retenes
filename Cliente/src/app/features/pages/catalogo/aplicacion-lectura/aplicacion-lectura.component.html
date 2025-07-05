@@ -1,0 +1,22 @@
+<div *ngIf="aplicaciones.length > 0" class="aplicaciones-contenedor mt-3">
+  <div class="table-responsive">
+    <table class="table table-sm tabla-aplicaciones">
+      <thead>
+        <tr>
+          <th>Marca</th>
+          <th>Modelo</th>
+          <th>Descripción</th>
+          <th>Observación</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let app of aplicaciones">
+          <td>{{ app.marcaVehiculo }}</td>
+          <td>{{ app.modeloVehiculo }}</td>
+          <td>{{ app.descripcion || '-' }}</td>
+          <td><em>{{ app.observacion || '-' }}</em></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

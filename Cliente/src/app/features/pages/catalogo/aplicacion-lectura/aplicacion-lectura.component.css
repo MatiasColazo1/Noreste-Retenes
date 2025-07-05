@@ -1,0 +1,78 @@
+.aplicaciones-contenedor {
+  background-color: #37393B;
+  border-radius: 8px;
+  padding: 12px;
+
+  width: 700px;
+  height: 124px;
+
+  overflow: auto; /* Activa scroll vertical y horizontal si es necesario */
+}
+
+.tabla-aplicaciones {
+  margin-bottom: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+
+  width: 100%;
+  table-layout: fixed;
+
+}
+
+.tabla-aplicaciones td {
+  white-space: nowrap;
+}
+
+.tabla-aplicaciones th,
+.tabla-aplicaciones td {
+  border-right: 1px solid #555;
+  vertical-align: middle;
+  background-color: #37393B;
+  color: #D6D6D6;
+}
+
+.tabla-aplicaciones th:last-child,
+.tabla-aplicaciones td:last-child {
+  border-right: none;
+}
+
+/* Scrollbar opcional */
+.table-responsive::-webkit-scrollbar {
+  height: 6px;
+}
+.table-responsive::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 10px;
+}
+
+.table {
+    background-color: #37393B !important;
+}
+
+
+.tabla-aplicaciones th,
+.tabla-aplicaciones td {
+  border-bottom: none !important; /* Elimina líneas horizontales */
+}
+
+
+
+.tabla-aplicaciones th:nth-child(1),
+.tabla-aplicaciones td:nth-child(1) {
+  width: 130px; /* Marca */
+}
+
+.tabla-aplicaciones th:nth-child(2),
+.tabla-aplicaciones td:nth-child(2) {
+  width: 90px; /* Modelo */
+}
+
+.tabla-aplicaciones th:nth-child(3),
+.tabla-aplicaciones td:nth-child(3) {
+  width: 160px; /* Descripción */
+}
+
+.tabla-aplicaciones th:nth-child(4),
+.tabla-aplicaciones td:nth-child(4) {
+  width: auto; /* Observación */
+}
