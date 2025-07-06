@@ -1,18 +1,17 @@
 <div class="card">
   <div class="card-body">
+    <div class="card-style">
     <p><strong>Artículo:</strong> {{ producto.Prefijo }} {{ producto.Codigo }}</p>
     <p><strong>SubRubro:</strong> {{ producto.NombreSubRubro }}</p>
+    </div>
     <div class="d-flex flex-column flex-md-row align-items-start gap-3">
       <!-- Imagen -->
       <div class="text-center">
         <img [src]="producto.Imagen + '?t=' + timestamp" (error)="onImageError($event)" alt="Imagen del producto"
           class="img-fluid rounded" style="max-width: 220px; height: auto;" />
       </div>
-
       <!-- Texto: precio + medidas -->
       <div>
-
-
         <div class="resumen-compra d-flex justify-content-between align-items-center p-3 rounded border">
           <!-- Precios -->
           <div>
@@ -26,34 +25,26 @@
                 {{ producto?.PrecioOriginal | currency }}
               </span>
             </div>
-
             <!-- Descuento -->
             <div class="mb-1" *ngIf="producto?.Descuento && producto?.Descuento > 0">
               <strong>Descuento:</strong>
               <span class="text-success">-{{ producto?.Descuento }}%</span>
             </div>
-
             <!-- Precio final -->
             <div>
               <strong>Final:</strong>
               <span class="text-danger">{{ producto?.Precio | currency }}</span>
             </div>
           </div>
-
           <!-- Controles de cantidad -->
           <div class="container-controles d-flex align-items-center gap-2">
             <button class="btn fw-bold" (click)="restarCantidad()">-</button>
             <span class="cantidad fw-bold">{{ cantidad }}</span>
             <button class="btn fw-bold" (click)="sumarCantidad()">+</button>
           </div>
-
           <!-- Botón agregar -->
           <button class="btn agregar d-flex  align-items-center"  [disabled]="cantidad <= 0" (click)="agregarAlCarrito()">Agregar al pedido</button>
-
-
-
         </div>
-
         <!-- Medidas -->
         <p class="mb-1"><strong>Medidas</strong></p>
         <p class="mb-1">Interior: {{ producto.INTERIOR }}</p>
@@ -61,12 +52,7 @@
         <p class="mb-1">Ancho: {{ producto.ANCHO }}</p>
       </div>
     </div>
-
-
-
     <button *ngIf="isAdmin" (click)="irAEditar()">Editar</button>
-
-
     <!-- EQUIVALENCIAS - SOLO LECTURA -->
     <div *ngIf="producto?.equivalencias?.length > 0" class="card-body">
       <p><strong>Equivalencias:</strong></p>
@@ -76,9 +62,7 @@
         </li>
       </ul>
     </div>
-
     <!-- APLICACIONES - SOLO LECTURA -->
   <app-aplicacion-lectura [aplicaciones]="aplicaciones"></app-aplicacion-lectura>
-
-
   </div>
+</div>

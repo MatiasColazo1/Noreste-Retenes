@@ -8,8 +8,8 @@
 }
 
 .resumen-compra {
-  width: 462px;
-  border-color: #444;
+    width: 462px;
+    border-color: #444;
 }
 
 
@@ -25,17 +25,16 @@
 
 .container-controles,
 .agregar {
-     border-radius: 10px;
-     height: 30px;
+    border-radius: 10px;
+    height: 30px;
 }
 
+.card-style p {
+    font-family: "DMSans-Regular", Helvetica;
+    font-size: 20px;
+}
 
-
-
-
-
-
-
-
-
-
+.card-style strong {
+    font-family: "DMSans-ExtraBold", Helvetica;
+    font-size: 12px;
+}
