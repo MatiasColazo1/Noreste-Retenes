@@ -1,5 +1,5 @@
-<div class="pagination">
-  <button (click)="cambiarPagina(currentPage - 1)" [disabled]="currentPage === 1">Anterior</button>
+<div class="pagination d-flex justify-content-center align-items-center">
+  <button (click)="cambiarPagina(currentPage - 1)" [disabled]="currentPage === 1"><i class='bx bx-chevron-left'></i></button>
   <span>Página {{ currentPage }} de {{ totalPages }}</span>
-  <button (click)="cambiarPagina(currentPage + 1)" [disabled]="currentPage === totalPages">Siguiente</button>
+  <button (click)="cambiarPagina(currentPage + 1)" [disabled]="currentPage === totalPages"><i class='bx bx-chevron-right'></i></button>
 </div>

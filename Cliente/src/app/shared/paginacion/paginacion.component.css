@@ -1,0 +1,10 @@
+.pagination {
+    margin-top: 6px;
+}
+
+span {
+    font-family: "DMSans-ExtraBold";
+    font-size: 12px;
+    color: #D6D6D6;
+    margin: 0 6px;
+}

@@ -4,7 +4,7 @@
   overflow: auto;
   background-color: #37393B;
   border-radius: 8px;
-  padding: 8px;
+  padding: 0 8px;
 }
 
 /* Estilo de la tabla */
@@ -29,7 +29,7 @@
 
 .tabla-estilizada td {
   vertical-align: middle;
-  padding: 10px 5px;
+  padding: 8px 5px;
   font-family: "DMSans-Regular", Helvetica;
   font-size: 20px;
   word-break: break-word;
@@ -70,3 +70,9 @@
 .tabla-estilizada td:nth-child(2) {
   width: 115px;
 }
+
+
+
+
+
+
