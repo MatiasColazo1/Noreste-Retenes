@@ -1,8 +1,8 @@
 <div class="card">
   <div class="card-body">
     <div class="card-style">
-    <p><strong>Artículo:</strong> {{ producto.Prefijo }} {{ producto.Codigo }}</p>
-    <p><strong>SubRubro:</strong> {{ producto.NombreSubRubro }}</p>
+      <p><span class="label">Artículo</span> {{ producto.Prefijo }} {{ producto.Codigo }}</p>
+      <p><span class="label">SubRubro</span> {{ producto.NombreSubRubro }}</p>
     </div>
     <div class="d-flex flex-column flex-md-row align-items-start gap-3">
       <!-- Imagen -->
@@ -43,7 +43,8 @@
             <button class="btn fw-bold" (click)="sumarCantidad()">+</button>
           </div>
           <!-- Botón agregar -->
-          <button class="btn agregar d-flex  align-items-center"  [disabled]="cantidad <= 0" (click)="agregarAlCarrito()">Agregar al pedido</button>
+          <button class="btn agregar d-flex  align-items-center" [disabled]="cantidad <= 0"
+            (click)="agregarAlCarrito()">Agregar al pedido</button>
         </div>
         <!-- Medidas -->
         <p class="mb-1"><strong>Medidas</strong></p>
@@ -63,6 +64,6 @@
       </ul>
     </div>
     <!-- APLICACIONES - SOLO LECTURA -->
-  <app-aplicacion-lectura [aplicaciones]="aplicaciones"></app-aplicacion-lectura>
+    <app-aplicacion-lectura [aplicaciones]="aplicaciones"></app-aplicacion-lectura>
   </div>
 </div>
