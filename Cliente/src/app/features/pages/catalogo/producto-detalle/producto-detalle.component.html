@@ -47,10 +47,12 @@
             (click)="agregarAlCarrito()">Agregar al pedido</button>
         </div>
         <!-- Medidas -->
-        <p class="mb-1"><strong>Medidas</strong></p>
-        <p class="mb-1">Interior: {{ producto.INTERIOR }}</p>
-        <p class="mb-1">Exterior: {{ producto.EXTERIOR }}</p>
-        <p class="mb-1">Ancho: {{ producto.ANCHO }}</p>
+        <div class="medidas-style">
+          <p class="mb-1"><strong>Medidas</strong></p>
+          <p class="mb-1">Interior: {{ producto.INTERIOR }}</p>
+          <p class="mb-1">Exterior: {{ producto.EXTERIOR }}</p>
+          <p class="mb-1">Ancho: {{ producto.ANCHO }}</p>
+        </div>
       </div>
     </div>
     <button *ngIf="isAdmin" (click)="irAEditar()">Editar</button>

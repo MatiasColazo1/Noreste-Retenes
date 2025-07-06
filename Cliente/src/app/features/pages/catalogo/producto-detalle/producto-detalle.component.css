@@ -34,10 +34,19 @@
     font-size: 20px;
 }
 
-
 .card-style .label {
   display: inline-block;
   width: 70px; /* ajustá este ancho hasta que los textos queden alineados */
   font-family: "DMSans-ExtraBold", Helvetica;
   font-size: 12px;
+}
+
+.medidas-style p{
+  font-family: "DMSans-Regular", Helvetica;
+font-size: 15px;
+}
+
+.medidas-style strong{
+ font-family: "DMSans-Bold", Helvetica;
+font-size: 15px;
 }
