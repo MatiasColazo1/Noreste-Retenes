@@ -15,6 +15,14 @@
 }
 
 @font-face {
+  font-family: 'DMSans-ExtraBold';
+  src: url('./assets/tipografias/DMSans_24pt-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
   font-family: 'DMSans-Black';
   src: url('./assets/tipografias/DMSans_24pt-Black.ttf') format('truetype');
   font-weight: 900;
@@ -61,9 +69,6 @@
 ::-webkit-scrollbar-button {
   display: none;
 }
-
-
-
 
 @media (max-width: 991px) {
   .container,
