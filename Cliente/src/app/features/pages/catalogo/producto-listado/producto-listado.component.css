@@ -9,33 +9,33 @@
 
 /* Estilo de la tabla */
 .tabla-estilizada {
-    table-layout: fixed;
+  table-layout: fixed;
   width: 100%;
 }
 
-.tabla-estilizada thead {
+
+.tabla-estilizada th,
+.tabla-estilizada td {
   background-color: #37393B;
+  color: #D6D6D6;
+  text-align: center;
+  border-right: 1px solid #555;
 }
 
 .tabla-estilizada th {
-  color: #ccc;
   font-size: 12px;
-  text-align: center;
-  background-color: #37393B;
+  font-family: "DMSans-ExtraBold", Helvetica;
 }
 
 .tabla-estilizada td {
-  color: white;
   vertical-align: middle;
-  background-color: #37393B;
   padding: 10px 5px;
-  text-align: center;
-
+  font-family: "DMSans-Regular", Helvetica;
+  font-size: 20px;
   word-break: break-word;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  /* evita que se expanda en múltiples líneas */
   max-width: 100px;
 }
 
@@ -46,11 +46,6 @@
 }
 
 
-/* Hover opcional */
-.tabla-estilizada tbody tr:hover {
-  background-color: #444;
-}
-
 /* Scrollbar custom (opcional para estética) */
 .tabla-contenedor::-webkit-scrollbar {
   width: 6px;
@@ -58,14 +53,20 @@
 
 
 
-.tabla-estilizada th,
-.tabla-estilizada td {
-  border-right: 1px solid #555;
-  /* línea entre columnas */
-}
 
 .tabla-estilizada th:last-child,
 .tabla-estilizada td:last-child {
   border-right: none;
-  /* sin línea en la última columna */
+}
+
+.tabla-estilizada th:nth-child(1),
+.tabla-estilizada td:nth-child(1),
+.tabla-estilizada th:nth-child(3),
+.tabla-estilizada td:nth-child(3) {
+  width: 75px;
+}
+
+.tabla-estilizada th:nth-child(2),
+.tabla-estilizada td:nth-child(2) {
+  width: 115px;
 }
