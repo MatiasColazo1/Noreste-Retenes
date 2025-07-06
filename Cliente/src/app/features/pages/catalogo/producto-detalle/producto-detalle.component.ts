@@ -68,27 +68,32 @@ export class ProductoDetalleComponent implements OnInit, OnChanges {
     target.src = 'https://res.cloudinary.com/dlish6q5r/image/upload/v1747076097/download_vbzenr.jpg';
   }
 
-  agregarAlCarrito(): void {
-    const item: Carrito = {
-      idProducto: this.producto._id,
-      codigo: this.producto.Codigo,
-      cantidad: this.cantidad,
-      precioOriginal: this.producto.PrecioVenta,
-      precioFinal: this.producto.PrecioFinal,
-      marca: this.producto.MARCA
-    };
-
-    this.carritoService.addToCart(item).subscribe({
-      next: () => {
-        this.notificationService.success('Producto agregado al carrito');
-      },
-      error: (error) => {
-        console.error('Error al agregar al carrito:', error);
-        const mensaje = error.error?.message || 'Error al agregar al carrito';
-        this.notificationService.error(mensaje);
-      }
-    });
+agregarAlCarrito(): void {
+  if (this.cantidad <= 0) {
+    this.notificationService.error('La cantidad debe ser mayor a 0');
+    return;
   }
+
+  const item: Carrito = {
+    idProducto: this.producto._id,
+    codigo: this.producto.Codigo,
+    cantidad: this.cantidad,
+    precioOriginal: this.producto.PrecioVenta,
+    precioFinal: this.producto.PrecioFinal,
+    marca: this.producto.MARCA
+  };
+
+  this.carritoService.addToCart(item).subscribe({
+    next: () => {
+      this.notificationService.success('Producto agregado al carrito');
+    },
+    error: (error) => {
+      console.error('Error al agregar al carrito:', error);
+      const mensaje = error.error?.message || 'Error al agregar al carrito';
+      this.notificationService.error(mensaje);
+    }
+  });
+}
 
   irAEditar() {
     if (this.producto && this.producto._id) {

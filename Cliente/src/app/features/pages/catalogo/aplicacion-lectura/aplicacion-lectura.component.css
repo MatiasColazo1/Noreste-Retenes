@@ -1,8 +1,8 @@
 .aplicaciones-contenedor {
   background-color: #37393B;
   border-radius: 8px;
-  padding: 12px;
-
+  padding: 6px 8px 0 8px;
+font-size: 15px;
   width: 700px;
   height: 124px;
 
@@ -19,9 +19,7 @@
 
 }
 
-.tabla-aplicaciones td {
-  white-space: nowrap;
-}
+
 
 .tabla-aplicaciones th,
 .tabla-aplicaciones td {
@@ -29,6 +27,10 @@
   vertical-align: middle;
   background-color: #37393B;
   color: #D6D6D6;
+  padding: 1px 0 1px 15px;
+border-bottom: none !important;
+    white-space: nowrap;    
+  text-overflow: ellipsis;
 }
 
 .tabla-aplicaciones th:last-child,
@@ -36,40 +38,34 @@
   border-right: none;
 }
 
-/* Scrollbar opcional */
-.table-responsive::-webkit-scrollbar {
-  height: 6px;
-}
-.table-responsive::-webkit-scrollbar-thumb {
-  background-color: #888;
-  border-radius: 10px;
-}
 
 .table {
     background-color: #37393B !important;
+    margin-bottom: 6px;
 }
 
 
-.tabla-aplicaciones th,
-.tabla-aplicaciones td {
-  border-bottom: none !important; /* Elimina líneas horizontales */
+.table-responsive {
+     margin-bottom: 6px;
 }
-
 
 
 .tabla-aplicaciones th:nth-child(1),
 .tabla-aplicaciones td:nth-child(1) {
   width: 130px; /* Marca */
+   overflow: hidden;
 }
 
 .tabla-aplicaciones th:nth-child(2),
 .tabla-aplicaciones td:nth-child(2) {
   width: 90px; /* Modelo */
+   overflow: hidden;
 }
 
 .tabla-aplicaciones th:nth-child(3),
 .tabla-aplicaciones td:nth-child(3) {
   width: 160px; /* Descripción */
+   overflow: hidden;
 }
 
 .tabla-aplicaciones th:nth-child(4),

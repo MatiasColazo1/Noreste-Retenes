@@ -48,7 +48,10 @@
           </div>
 
           <!-- Botón agregar -->
-          <button class="btn agregar d-flex  align-items-center" (click)="agregarAlCarrito()">Agregar al pedido</button>
+          <button class="btn agregar d-flex  align-items-center"  [disabled]="cantidad <= 0" (click)="agregarAlCarrito()">Agregar al pedido</button>
+
+
+
         </div>
 
         <!-- Medidas -->

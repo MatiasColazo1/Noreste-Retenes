@@ -11,9 +11,16 @@
       </thead>
       <tbody>
         <tr *ngFor="let app of aplicaciones">
-          <td>{{ app.marcaVehiculo }}</td>
-          <td>{{ app.modeloVehiculo }}</td>
-          <td>{{ app.descripcion || '-' }}</td>
+          <td #cell [attr.title]="isTextOverflow(cell) ? app.marcaVehiculo : null">
+            {{ app.marcaVehiculo }}
+          </td>
+          <td #cell2 [attr.title]="isTextOverflow(cell2) ? app.modeloVehiculo : null">
+            {{ app.modeloVehiculo }}
+          </td>
+
+          <td #cell3 [attr.title]="isTextOverflow(cell3) ? app.descripcion : null">
+            {{ app.descripcion || '-' }}
+          </td>
           <td><em>{{ app.observacion || '-' }}</em></td>
         </tr>
       </tbody>

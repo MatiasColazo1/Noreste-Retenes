@@ -8,4 +8,8 @@ import { Aplicacion } from 'src/app/models/aplicacion';
 })
 export class AplicacionLecturaComponent {
  @Input() aplicaciones: Aplicacion[] = [];
+
+ isTextOverflow(element: HTMLElement): boolean {
+  return element.scrollWidth > element.clientWidth;
+}
 }
