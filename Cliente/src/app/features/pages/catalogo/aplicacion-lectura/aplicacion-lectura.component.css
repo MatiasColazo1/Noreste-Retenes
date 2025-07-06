@@ -2,11 +2,12 @@
   background-color: #37393B;
   border-radius: 8px;
   padding: 6px 8px 0 8px;
-font-size: 15px;
+  font-size: 15px;
   width: 700px;
   height: 124px;
 
-  overflow: auto; /* Activa scroll vertical y horizontal si es necesario */
+  overflow: auto;
+  /* Activa scroll vertical y horizontal si es necesario */
 }
 
 .tabla-aplicaciones {
@@ -28,9 +29,18 @@ font-size: 15px;
   background-color: #37393B;
   color: #D6D6D6;
   padding: 1px 0 1px 15px;
-border-bottom: none !important;
-    white-space: nowrap;    
+  border-bottom: none !important;
+  white-space: nowrap;
   text-overflow: ellipsis;
+  font-size: 15px;
+}
+
+th {
+  font-family: "DMSans-Bold", Helvetica;
+}
+
+td {
+    font-family: "DMSans-Regular", Helvetica;
 }
 
 .tabla-aplicaciones th:last-child,
@@ -40,35 +50,39 @@ border-bottom: none !important;
 
 
 .table {
-    background-color: #37393B !important;
-    margin-bottom: 6px;
+  background-color: #37393B !important;
+  margin-bottom: 6px;
 }
 
 
 .table-responsive {
-     margin-bottom: 6px;
+  margin-bottom: 6px;
 }
 
 
 .tabla-aplicaciones th:nth-child(1),
 .tabla-aplicaciones td:nth-child(1) {
-  width: 130px; /* Marca */
-   overflow: hidden;
+  width: 130px;
+  /* Marca */
+  overflow: hidden;
 }
 
 .tabla-aplicaciones th:nth-child(2),
 .tabla-aplicaciones td:nth-child(2) {
-  width: 90px; /* Modelo */
-   overflow: hidden;
+  width: 90px;
+  /* Modelo */
+  overflow: hidden;
 }
 
 .tabla-aplicaciones th:nth-child(3),
 .tabla-aplicaciones td:nth-child(3) {
-  width: 160px; /* Descripción */
-   overflow: hidden;
+  width: 160px;
+  /* Descripción */
+  overflow: hidden;
 }
 
 .tabla-aplicaciones th:nth-child(4),
 .tabla-aplicaciones td:nth-child(4) {
-  width: auto; /* Observación */
+  width: auto;
+  /* Observación */
 }
